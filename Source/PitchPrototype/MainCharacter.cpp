@@ -4,6 +4,7 @@
 #include "MainCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/ArrowComponent.h"
 
 //Credit from https://unrealcpp.com/debug-logging/
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
@@ -22,7 +23,24 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();
-	CapsuleComponent = FindComponentByClass<UCapsuleComponent>();
+
+	
+	TArray<UCapsuleComponent*> capsuleCollisions;
+	
+	//Get all our capsules
+	GetComponents<UCapsuleComponent>(capsuleCollisions);
+
+	//Assign the correct ones to their accessors
+	for (auto caps : capsuleCollisions)
+	{
+		if (caps->ComponentHasTag(FName("GroundCap"))) {
+			CapsuleComponent = caps;
+		}
+	}
+
+	check(IsValid(CapsuleComponent));
+
+	velocityArrow = FindComponentByClass<UArrowComponent>();
 
 	print(Mesh->GetName());
 	print(CapsuleComponent->GetName());
@@ -33,10 +51,12 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	printFString("X: %f", movementVector->X);
-	printFString("Y: %f", movementVector->Y);
+	movementVector->Set(moveX, moveY, 0);
 
-	CapsuleComponent->AddForce(*movementVector * 100000);
+	//printFString("X: %f", movementVector->X);
+	//printFString("Y: %f", movementVector->Y);
+
+	CapsuleComponent->AddForce(*movementVector * accelerationForce);
 
 	//movementVector->Set(0, 0, 0);
 }
@@ -48,16 +68,23 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 }
 
 void AMainCharacter::MoveForward(float Value)
 {
 	
-	movementVector->Set(Value, movementVector->Y, 0);
+	moveX = Value;
 
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
-	movementVector->Set(movementVector->X, Value, 0);
+	moveY = Value;
+}
+
+void AMainCharacter::Jump()
+{
+	print("Jump");
+	CapsuleComponent->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
 }
