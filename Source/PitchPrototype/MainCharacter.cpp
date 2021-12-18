@@ -2,6 +2,12 @@
 
 
 #include "MainCharacter.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+
+//Credit from https://unrealcpp.com/debug-logging/
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT(text), fstring))
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -15,7 +21,11 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	Mesh = FindComponentByClass<USkeletalMeshComponent>();
+	CapsuleComponent = FindComponentByClass<UCapsuleComponent>();
+
+	print(Mesh->GetName());
+	print(CapsuleComponent->GetName());
 }
 
 // Called every frame
@@ -23,6 +33,12 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	printFString("X: %f", movementVector->X);
+	printFString("Y: %f", movementVector->Y);
+
+	CapsuleComponent->AddForce(*movementVector * 100000);
+
+	//movementVector->Set(0, 0, 0);
 }
 
 // Called to bind functionality to input
@@ -30,5 +46,18 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 }
 
+void AMainCharacter::MoveForward(float Value)
+{
+	
+	movementVector->Set(Value, movementVector->Y, 0);
+
+}
+
+void AMainCharacter::MoveRight(float Value)
+{
+	movementVector->Set(movementVector->X, Value, 0);
+}
