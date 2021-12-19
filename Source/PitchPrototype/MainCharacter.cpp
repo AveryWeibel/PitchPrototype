@@ -22,9 +22,8 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Mesh = FindComponentByClass<USkeletalMeshComponent>();
+	Mesh = FindComponentByClass<USkeletalMeshComponent>();	
 
-	
 	TArray<UCapsuleComponent*> capsuleCollisions;
 	
 	//Get all our capsules
@@ -40,6 +39,10 @@ void AMainCharacter::BeginPlay()
 
 	check(IsValid(CapsuleComponent));
 
+	//bodyHitDelegate.BindUFunction(this, FName("HandleBodyHit"));
+
+	CapsuleComponent->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
+
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
 	print(Mesh->GetName());
@@ -51,12 +54,16 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	movementVector->Set(moveX, moveY, 0);
+	ApplyGravity(-9.81);
 
-	//printFString("X: %f", movementVector->X);
-	//printFString("Y: %f", movementVector->Y);
+	movementVector->Set(moveX, moveY, moveZ);
 
-	CapsuleComponent->AddForce(*movementVector * accelerationForce);
+	//printFString("X: %f", CapsuleComponent->GetPhysicsLinearVelocity().X);
+	//printFString("Y: %f", CapsuleComponent->GetPhysicsLinearVelocity().Y);
+	//printFString("Z: %f", CapsuleComponent->GetPhysicsLinearVelocity().Z);
+
+	CapsuleComponent->SetPhysicsLinearVelocity(*movementVector);
+	//CapsuleComponent->AddForce(*movementVector * accelerationForce);
 
 	//movementVector->Set(0, 0, 0);
 }
@@ -74,17 +81,27 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void AMainCharacter::MoveForward(float Value)
 {
 	
-	moveX = Value;
+	moveX = Value * accelerationForce;
 
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
-	moveY = Value;
+	moveY = Value * accelerationForce;
 }
 
 void AMainCharacter::Jump()
 {
 	print("Jump");
 	CapsuleComponent->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
+}
+
+void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	print("Hit Something");
+}
+
+void AMainCharacter::ApplyGravity(float gravityAccel)
+{
+	moveZ += gravityAccel;
 }

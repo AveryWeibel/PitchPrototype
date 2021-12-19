@@ -40,6 +40,9 @@ public:
 	UPROPERTY(Category = Movement, EditAnywhere)
 		float jumpDirectionalMultiplier;
 
+	UPROPERTY(Category = Movement, EditAnywhere)
+		float gravityAmount;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,10 +56,18 @@ protected:
 	/** Called for Jump input */
 	void Jump();
 
+	UFUNCTION()
+	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 private:
-	FVector* movementVector = new FVector();
+	FVector* movementVector = new FVector(FVector::ZeroVector);
 	float moveX = 0;
 	float moveY = 0;
+	float moveZ = 0;
+
+	void ApplyGravity(float gravityAccel);
+
+	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:	
 	// Called every frame
