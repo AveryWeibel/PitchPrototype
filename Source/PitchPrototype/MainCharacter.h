@@ -38,6 +38,9 @@ public:
 		float accelerationForce;
 
 	UPROPERTY(Category = Movement, EditAnywhere)
+		float maximumHorizontalVelocity;
+
+	UPROPERTY(Category = Movement, EditAnywhere)
 		float jumpForce;
 
 	UPROPERTY(Category = Movement, EditAnywhere)
@@ -62,11 +65,16 @@ protected:
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	UFUNCTION()
+	void HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 private:
+	//Character locomotion state variables
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	float moveX = 0;
 	float moveY = 0;
 	float moveZ = 0;
+	bool grounded = false;
 
 	void ApplyGravity(float gravityAccel);
 

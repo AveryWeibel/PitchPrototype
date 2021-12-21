@@ -46,7 +46,7 @@ void AMainCharacter::BeginPlay()
 	//bodyHitDelegate.BindUFunction(this, FName("HandleBodyHit"));
 
 	bodyCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
-	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
+	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
@@ -59,7 +59,12 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//ApplyGravity(-9.81);
+	if (!grounded) {
+		ApplyGravity(-gravityAmount);
+	}
+	else {
+		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
+	}
 
 
 	movementVector->Set(moveX, moveY, moveZ);
@@ -70,8 +75,13 @@ void AMainCharacter::Tick(float DeltaTime)
 	//printFString("Z: %f", feetCollider->GetPhysicsLinearVelocity().Z);
 
 	feetCollider->SetWorldRotation(FRotator(0,0,0));
-	feetCollider->SetPhysicsLinearVelocity(*movementVector);
-	//feetCollider->AddForce(*movementVector);
+
+
+
+	if (feetCollider->GetPhysicsLinearVelocity().Size() <= maximumHorizontalVelocity) {
+		UE_LOG(LogTemp, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, feetCollider->GetPhysicsLinearVelocity().Z);
+		feetCollider->AddForce(*movementVector);
+	}
 
 	//movementVector->Set(0, 0, 0);
 }
@@ -100,20 +110,35 @@ void AMainCharacter::MoveRight(float Value)
 
 void AMainCharacter::Jump()
 {
+	if (!grounded)
+		return;
+
 	print("Jump");
 	feetCollider->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
+	grounded = false;
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	print("Hit Something");
-	UE_LOG(Pla, Log, TEXT("ImpactNormal[X: %f, Y: %f, Z: %f]"), Hit.ImpactNormal.X, Hit.ImpactNormal.Y, Hit.ImpactNormal.Z);
-	moveX -= Hit.ImpactNormal.X;
-	moveY -= Hit.ImpactNormal.Y;
-	moveZ += Hit.ImpactNormal.Z;
+	print("Hit Body");
+	//UE_LOG(LogTemp, Log, TEXT("ImpactNormal[X: %f, Y: %f, Z: %f]"), Hit.ImpactNormal.X, Hit.ImpactNormal.Y, Hit.ImpactNormal.Z);
+	//moveX -= Hit.ImpactNormal.X;
+	//moveY -= Hit.ImpactNormal.Y;
+	//moveZ += Hit.ImpactNormal.Z;
+}
+
+void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	print("Hit Feets");
+	if (!grounded) {
+		grounded = true;
+		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
+		moveZ = 0;
+	}
 }
 
 void AMainCharacter::ApplyGravity(float gravityAccel)
 {
 	moveZ += gravityAccel;
+
 }
