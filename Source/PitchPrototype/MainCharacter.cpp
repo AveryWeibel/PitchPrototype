@@ -33,20 +33,25 @@ void AMainCharacter::BeginPlay()
 	for (auto caps : capsuleCollisions)
 	{
 		if (caps->ComponentHasTag(FName("GroundCap"))) {
-			CapsuleComponent = caps;
+			feetCollider = caps;
+		}
+		else if (caps->ComponentHasTag(FName("BodyCap"))) {
+			bodyCollider = caps;
 		}
 	}
 
-	check(IsValid(CapsuleComponent));
+	check(IsValid(bodyCollider));
+	check(IsValid(feetCollider));
 
 	//bodyHitDelegate.BindUFunction(this, FName("HandleBodyHit"));
 
-	CapsuleComponent->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
+	bodyCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
+	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
 	print(Mesh->GetName());
-	print(CapsuleComponent->GetName());
+	print(feetCollider->GetName());
 }
 
 // Called every frame
@@ -54,16 +59,19 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	ApplyGravity(-9.81);
+	//ApplyGravity(-9.81);
+
 
 	movementVector->Set(moveX, moveY, moveZ);
 
-	//printFString("X: %f", CapsuleComponent->GetPhysicsLinearVelocity().X);
-	//printFString("Y: %f", CapsuleComponent->GetPhysicsLinearVelocity().Y);
-	//printFString("Z: %f", CapsuleComponent->GetPhysicsLinearVelocity().Z);
 
-	CapsuleComponent->SetPhysicsLinearVelocity(*movementVector);
-	//CapsuleComponent->AddForce(*movementVector * accelerationForce);
+	//printFString("X: %f", feetCollider->GetPhysicsLinearVelocity().X);
+	//printFString("Y: %f", feetCollider->GetPhysicsLinearVelocity().Y);
+	//printFString("Z: %f", feetCollider->GetPhysicsLinearVelocity().Z);
+
+	feetCollider->SetWorldRotation(FRotator(0,0,0));
+	feetCollider->SetPhysicsLinearVelocity(*movementVector);
+	//feetCollider->AddForce(*movementVector);
 
 	//movementVector->Set(0, 0, 0);
 }
@@ -80,7 +88,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::MoveForward(float Value)
 {
-	
+
 	moveX = Value * accelerationForce;
 
 }
@@ -93,12 +101,16 @@ void AMainCharacter::MoveRight(float Value)
 void AMainCharacter::Jump()
 {
 	print("Jump");
-	CapsuleComponent->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
+	feetCollider->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	print("Hit Something");
+	UE_LOG(Pla, Log, TEXT("ImpactNormal[X: %f, Y: %f, Z: %f]"), Hit.ImpactNormal.X, Hit.ImpactNormal.Y, Hit.ImpactNormal.Z);
+	moveX -= Hit.ImpactNormal.X;
+	moveY -= Hit.ImpactNormal.Y;
+	moveZ += Hit.ImpactNormal.Z;
 }
 
 void AMainCharacter::ApplyGravity(float gravityAccel)

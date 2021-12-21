@@ -41,6 +41,8 @@
 *.VC.db
 *.VC.opendb
 
+*.ipch
+
 # Precompiled Assets
 SourceArt/**/*.png
 SourceArt/**/*.tga

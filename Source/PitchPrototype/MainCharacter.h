@@ -29,7 +29,10 @@ public:
 
 	/** The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
-		UCapsuleComponent* CapsuleComponent;
+		UCapsuleComponent* feetCollider;
+
+	UPROPERTY(Category = Character, EditAnywhere)
+		UCapsuleComponent* bodyCollider;
 
 	UPROPERTY(Category = Movement, EditAnywhere)
 		float accelerationForce;
