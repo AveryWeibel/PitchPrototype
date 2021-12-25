@@ -2,13 +2,9 @@
 
 
 #include "MainCharacter.h"
-#include "Components/SkeletalMeshComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/ArrowComponent.h"
-#include "StateMachine.h"
 #include "StateMC_NonCombatMove.h"
 
-DEFINE_LOG_CATEGORY(Log171);
+DEFINE_LOG_CATEGORY(Log171General);
 
 //Credit from https://unrealcpp.com/debug-logging/
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
@@ -30,9 +26,13 @@ void AMainCharacter::BeginPlay()
 
 	TArray<UCapsuleComponent*> capsuleCollisions;
 
+	//Create instances of state sub-classes
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
 
+	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
+
+	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
 	//Get all our capsules
@@ -68,6 +68,7 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Run the execute function for the currently active state
 	characterStateMachine->Execute(DeltaTime);
 
 	if (!grounded) {
@@ -90,7 +91,7 @@ void AMainCharacter::Tick(float DeltaTime)
 
 
 	if (feetCollider->GetPhysicsLinearVelocity().Size() <= maximumHorizontalVelocity) {
-		UE_LOG(Log171, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, feetCollider->GetPhysicsLinearVelocity().Z);
+		
 		feetCollider->AddForce(*movementVector);
 	}
 

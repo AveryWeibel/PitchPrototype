@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/ArrowComponent.h"
+#include "StateMachine.h"
 #include "MainCharacter.generated.h"
 
 //Forward declare components
-class UCapsuleComponent;
-class USekeletalMeshComponent;
-class UArrowComponent;
-class StateMachine;
 class State;
 
-DECLARE_LOG_CATEGORY_EXTERN(Log171, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(Log171General, Log, All);
 
 UCLASS()
 class PITCHPROTOTYPE_API AMainCharacter : public APawn

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "State_MainCharacter.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Log171NonCombatMove, Log, All);
 /**
  * 
  */
@@ -16,6 +17,4 @@ public:
 
 	void Start() override;
 	void Execute(float) override;
-
-	FString testStr = "Some test text";
 };
