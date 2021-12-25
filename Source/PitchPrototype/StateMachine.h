@@ -1,0 +1,27 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "State.h"
+
+/**
+ * 
+ */
+class PITCHPROTOTYPE_API StateMachine
+{
+public:
+	//Ctor/Dtor
+	StateMachine(TArray<State*>, StateName);
+	~StateMachine();
+
+	//Class functionality
+	StateName GetActiveStateName();
+	void ChangeState(StateName);
+	void Execute(float);
+
+private:
+	TMap<StateName, State*> states;
+	State* activeState;
+
+};

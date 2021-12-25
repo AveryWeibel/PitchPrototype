@@ -10,6 +10,10 @@
 class UCapsuleComponent;
 class USekeletalMeshComponent;
 class UArrowComponent;
+class StateMachine;
+class State;
+
+DECLARE_LOG_CATEGORY_EXTERN(Log171, Log, All);
 
 UCLASS()
 class PITCHPROTOTYPE_API AMainCharacter : public APawn
@@ -77,6 +81,9 @@ private:
 	bool grounded = false;
 
 	void ApplyGravity(float gravityAccel);
+
+	StateMachine* characterStateMachine;
+	TArray<State*> characterStateInstances;
 
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
