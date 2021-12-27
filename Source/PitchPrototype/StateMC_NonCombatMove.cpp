@@ -25,5 +25,13 @@ void StateMC_NonCombatMove::Start()
 
 void StateMC_NonCombatMove::Execute(float deltatime)
 {
-	UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	
+}
+
+void StateMC_NonCombatMove::MoveForward(float Value)
+{
+	if(Value != 0)
+		UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	
+	mainCharacter->moveX = Value * mainCharacter->accelerationForce;
 }

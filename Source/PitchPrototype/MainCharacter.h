@@ -12,6 +12,7 @@
 
 //Forward declare components
 class State;
+class State_MainCharacter;
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171General, Log, All);
 
@@ -53,6 +54,8 @@ public:
 	UPROPERTY(Category = Movement, EditAnywhere)
 		float gravityAmount;
 
+	float moveX = 0;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -75,7 +78,6 @@ protected:
 private:
 	//Character locomotion state variables
 	FVector* movementVector = new FVector(FVector::ZeroVector);
-	float moveX = 0;
 	float moveY = 0;
 	float moveZ = 0;
 	bool grounded = false;
@@ -85,6 +87,11 @@ private:
 	StateMachine* characterStateMachine;
 	TArray<State*> characterStateInstances;
 
+
+	//Create input delegates for state machine
+	StateAxisDelegate MoveForwardDelegate;
+
+	//Create collision delegates
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:	

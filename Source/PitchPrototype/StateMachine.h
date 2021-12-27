@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+DECLARE_DELEGATE_OneParam(StateAxisDelegate, float);
+
+
 /**
  * 
  */

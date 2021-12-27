@@ -15,6 +15,10 @@ public:
 	StateMC_NonCombatMove(AMainCharacter*);
 	~StateMC_NonCombatMove();
 
+	//State overrides
 	void Start() override;
 	void Execute(float) override;
+
+	//State_MainCharacter overrides
+	void MoveForward(float);
 };

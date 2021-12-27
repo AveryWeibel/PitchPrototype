@@ -28,12 +28,15 @@ void AMainCharacter::BeginPlay()
 
 	//Create instances of state sub-classes
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
-
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
-
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
+
+
+	//Bind input delegates to state machine
+	MoveForwardDelegate.BindRaw(NonCombatMove, &StateMC_NonCombatMove::MoveForward);
+
 
 	//Get all our capsules
 	GetComponents<UCapsuleComponent>(capsuleCollisions);
@@ -111,8 +114,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void AMainCharacter::MoveForward(float Value)
 {
 
-	moveX = Value * accelerationForce;
-
+	//moveX = Value * accelerationForce;
+	MoveForwardDelegate.ExecuteIfBound(Value);
 }
 
 void AMainCharacter::MoveRight(float Value)
