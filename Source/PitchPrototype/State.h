@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 
-enum StateName { NonCombatMove };
-enum StateAction { MoveForward, MoveRight, Jump };
+enum StateName { NonCombatMove, NonCombatInAir };
+enum StateAction { MoveForward, MoveRight, Jump, CollideFeet };
+
+class StateMachine;
 
 /**
  * Abstract state class
@@ -23,13 +25,22 @@ public:
 	StateName GetStateName();
 
 protected:
+
+	//Attempts to change the state to given StateName
+	void RequestStateChange(StateName);
+
+	//Fundamental state Overrides
 	virtual void Start() = 0;
 	virtual void Execute(float) = 0;
 
 	//Input function dispatchers
+	virtual void SendInput(StateAction Action) = 0;
 	virtual void SendInput(StateAction Action, float Value) = 0;
 
 	TMap<StateAction, NewFunction> StateAxisDelegates;
 
 	StateName stateName;
+
+private:
+	StateMachine* parentStateMachine;
 };

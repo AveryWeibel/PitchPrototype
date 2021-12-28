@@ -13,6 +13,20 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
+void State_MainCharacter::SendInput(StateAction Action)
+{
+	switch (Action) {
+	case StateAction::Jump:
+		Jump();
+		break;
+	case StateAction::CollideFeet:
+		CollideFeet();
+		break;
+	default:
+		break;
+	}
+}
+
 void State_MainCharacter::SendInput(StateAction Action, float Value)
 {
 	switch (Action) {
@@ -26,6 +40,23 @@ void State_MainCharacter::SendInput(StateAction Action, float Value)
 		break;
 	}
 
+}
+
+void State_MainCharacter::MoveForward(float)
+{
+}
+
+
+void State_MainCharacter::MoveRight(float)
+{
+}
+
+void State_MainCharacter::Jump()
+{
+}
+
+void State_MainCharacter::CollideFeet()
+{
 }
 
 State_MainCharacter::~State_MainCharacter()

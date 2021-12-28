@@ -15,13 +15,15 @@ public:
 	StateMC_NonCombatMove(AMainCharacter*);
 	~StateMC_NonCombatMove();
 
+
+protected:
 	//State overrides
 	void Start() override;
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
-	void MoveForward(float);
-	void MoveRight(float);
-	void Jump();
-
+	void MoveForward(float) override;
+	void MoveRight(float) override;
+	void Jump() override;
+	void CollideFeet() override;
 };

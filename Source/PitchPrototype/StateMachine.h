@@ -24,6 +24,7 @@ public:
 
 	//State action interface functions
 	//template<typename stateType>
+	void SendInput(StateAction);
 	void SendInput(StateAction, float);
 
 private:

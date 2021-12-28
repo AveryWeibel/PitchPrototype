@@ -18,13 +18,10 @@ StateMC_NonCombatMove::~StateMC_NonCombatMove()
 
 void StateMC_NonCombatMove::Start()
 {
-	//Testing code, temp temp temp
-	if (stateName == StateName::NonCombatMove) {
-		UE_LOG(LogTemp, Log, TEXT("Enter State"));
-	}
+	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
 }
 
-void StateMC_NonCombatMove::Execute(float deltatime)
+void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
 	movementVector->Set(moveX, moveY, moveZ);
 
@@ -55,4 +52,10 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 
 void StateMC_NonCombatMove::Jump()
 {
+	RequestStateChange(StateName::NonCombatInAir);
+}
+
+void StateMC_NonCombatMove::CollideFeet()
+{
+	
 }

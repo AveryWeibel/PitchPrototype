@@ -9,6 +9,7 @@ StateMachine::StateMachine(TArray<State*> newStates, StateName startingState)
 	check(newStates.Num() > 0);
 
 	for (auto state : newStates) {
+		state->parentStateMachine = this;
 		states.Add(state->GetStateName(), state);
 	}
 
@@ -37,6 +38,11 @@ void StateMachine::ChangeState(StateName newState)
 void StateMachine::Execute(float deltatime)
 {
 	activeState->Execute(deltatime);
+}
+
+void StateMachine::SendInput(StateAction Action)
+{
+	activeState->SendInput(Action);
 }
 
 void StateMachine::SendInput(StateAction Action, float Value)

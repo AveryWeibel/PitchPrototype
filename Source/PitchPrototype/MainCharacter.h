@@ -76,7 +76,7 @@ protected:
 private:
 	//Character locomotion state variables
 
-	void ApplyGravity(float gravityAccel);
+	//void ApplyGravity(float gravityAccel);
 
 	StateMachine* characterStateMachine;
 	TArray<State*> characterStateInstances;

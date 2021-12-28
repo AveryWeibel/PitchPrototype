@@ -3,6 +3,7 @@
 
 #include "MainCharacter.h"
 #include "StateMC_NonCombatMove.h"
+#include "StateMC_NonCombatInAir.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -28,8 +29,10 @@ void AMainCharacter::BeginPlay()
 
 	//Create instances of state sub-classes
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
+	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
+	characterStateInstances.Add(NonCombatInAir);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
@@ -74,12 +77,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	//Run the execute function for the currently active state
 	characterStateMachine->Execute(DeltaTime);
 
-	//if (!grounded) {
-	//	ApplyGravity(-gravityAmount);
-	//}
-	//else {
-	//	feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
-	//}
+
 
 
 
@@ -113,6 +111,7 @@ void AMainCharacter::MoveRight(float Value)
 
 void AMainCharacter::Jump()
 {
+	characterStateMachine->SendInput(StateAction::Jump);
 	/*if (!grounded)
 		return;
 
@@ -138,10 +137,4 @@ void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* Ot
 		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
 		moveZ = 0;
 	}*/
-}
-
-void AMainCharacter::ApplyGravity(float gravityAccel)
-{
-	//moveZ += gravityAccel;
-
 }

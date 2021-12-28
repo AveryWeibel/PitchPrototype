@@ -34,10 +34,13 @@ protected:
 	float moveZ = 0;
 
 	//Implement State SendInput
+	void SendInput(StateAction) override;
 	void SendInput(StateAction, float) override;
 
 	//Input delegate methods
-	virtual void MoveForward(float) = 0;
-	virtual void MoveRight(float) = 0;
-	virtual void Jump() = 0;
+	//Empty definitions here so that subclasses don't all have to implement them
+	virtual void MoveForward(float);
+	virtual void MoveRight(float);
+	virtual void Jump();
+	virtual void CollideFeet();
 };
