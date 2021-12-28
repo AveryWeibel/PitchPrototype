@@ -35,7 +35,7 @@ void AMainCharacter::BeginPlay()
 
 
 	//Bind input delegates to state machine
-	MoveForwardDelegate.BindRaw(NonCombatMove, &StateMC_NonCombatMove::MoveForward);
+	//MoveForwardDelegate.BindRaw(characterStateMachine, SendInput(StateAction));
 
 
 	//Get all our capsules
@@ -74,29 +74,15 @@ void AMainCharacter::Tick(float DeltaTime)
 	//Run the execute function for the currently active state
 	characterStateMachine->Execute(DeltaTime);
 
-	if (!grounded) {
-		ApplyGravity(-gravityAmount);
-	}
-	else {
-		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
-	}
-
-
-	movementVector->Set(moveX, moveY, moveZ);
-
-
-	//printFString("X: %f", feetCollider->GetPhysicsLinearVelocity().X);
-	//printFString("Y: %f", feetCollider->GetPhysicsLinearVelocity().Y);
-	//printFString("Z: %f", feetCollider->GetPhysicsLinearVelocity().Z);
-
-	feetCollider->SetWorldRotation(FRotator(0,0,0));
+	//if (!grounded) {
+	//	ApplyGravity(-gravityAmount);
+	//}
+	//else {
+	//	feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
+	//}
 
 
 
-	if (feetCollider->GetPhysicsLinearVelocity().Size() <= maximumHorizontalVelocity) {
-		
-		feetCollider->AddForce(*movementVector);
-	}
 
 	//movementVector->Set(0, 0, 0);
 }
@@ -115,22 +101,24 @@ void AMainCharacter::MoveForward(float Value)
 {
 
 	//moveX = Value * accelerationForce;
-	MoveForwardDelegate.ExecuteIfBound(Value);
+	//MoveForwardDelegate.ExecuteIfBound(Value);
+	characterStateMachine->SendInput(StateAction::MoveForward, Value);
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
-	moveY = Value * accelerationForce;
+	characterStateMachine->SendInput(StateAction::MoveRight, Value);
+	//moveY = Value * accelerationForce;
 }
 
 void AMainCharacter::Jump()
 {
-	if (!grounded)
+	/*if (!grounded)
 		return;
 
 	print("Jump");
 	feetCollider->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
-	grounded = false;
+	grounded = false;*/
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -144,16 +132,16 @@ void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* Ot
 
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	print("Hit Feets");
+	/*print("Hit Feets");
 	if (!grounded) {
 		grounded = true;
 		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
 		moveZ = 0;
-	}
+	}*/
 }
 
 void AMainCharacter::ApplyGravity(float gravityAccel)
 {
-	moveZ += gravityAccel;
+	//moveZ += gravityAccel;
 
 }

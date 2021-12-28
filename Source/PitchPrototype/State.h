@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 enum StateName { NonCombatMove };
+enum StateAction { MoveForward, MoveRight, Jump };
 
 /**
  * Abstract state class
@@ -14,6 +15,8 @@ class PITCHPROTOTYPE_API State
 {
 	friend class StateMachine;
 
+	typedef void (* NewFunction)(float);
+
 public:
 	State();
 	virtual  ~State();
@@ -22,6 +25,11 @@ public:
 protected:
 	virtual void Start() = 0;
 	virtual void Execute(float) = 0;
+
+	//Input function dispatchers
+	virtual void SendInput(StateAction Action, float Value) = 0;
+
+	TMap<StateAction, NewFunction> StateAxisDelegates;
 
 	StateName stateName;
 };

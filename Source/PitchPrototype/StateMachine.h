@@ -5,9 +5,8 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+
 DECLARE_DELEGATE_OneParam(StateAxisDelegate, float);
-
-
 /**
  * 
  */
@@ -22,6 +21,10 @@ public:
 	StateName GetActiveStateName();
 	void ChangeState(StateName);
 	void Execute(float);
+
+	//State action interface functions
+	//template<typename stateType>
+	void SendInput(StateAction, float);
 
 private:
 	TMap<StateName, State*> states;

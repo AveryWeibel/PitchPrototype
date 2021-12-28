@@ -21,4 +21,7 @@ public:
 
 	//State_MainCharacter overrides
 	void MoveForward(float);
+	void MoveRight(float);
+	void Jump();
+
 };

@@ -54,8 +54,6 @@ public:
 	UPROPERTY(Category = Movement, EditAnywhere)
 		float gravityAmount;
 
-	float moveX = 0;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -77,10 +75,6 @@ protected:
 
 private:
 	//Character locomotion state variables
-	FVector* movementVector = new FVector(FVector::ZeroVector);
-	float moveY = 0;
-	float moveZ = 0;
-	bool grounded = false;
 
 	void ApplyGravity(float gravityAccel);
 

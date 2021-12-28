@@ -38,3 +38,9 @@ void StateMachine::Execute(float deltatime)
 {
 	activeState->Execute(deltatime);
 }
+
+void StateMachine::SendInput(StateAction Action, float Value)
+{
+	activeState->SendInput(Action, Value);
+}
+
