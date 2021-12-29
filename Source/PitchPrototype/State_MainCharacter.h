@@ -23,15 +23,19 @@ public:
 	//Dictionary<MainCharacterActions, StateActionDelegate> StateActionDelegates;
 
 protected:
-	//Variables/Objects manipulated by this state
+	//Variables/Objects managed by this state
 	AMainCharacter* mainCharacter;
 
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	bool grounded = false;
 
+	//Move Inputs
 	float moveX = 0;
 	float moveY = 0;
 	float moveZ = 0;
+
+	//Functions for managed variables
+	void ConsumeMoveInputs();
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;

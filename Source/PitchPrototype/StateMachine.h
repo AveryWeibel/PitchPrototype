@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Log171StateMachine, Error, All);
 
 DECLARE_DELEGATE_OneParam(StateAxisDelegate, float);
 /**
@@ -26,6 +27,10 @@ public:
 	//template<typename stateType>
 	void SendInput(StateAction);
 	void SendInput(StateAction, float);
+
+
+	//Utility
+	FString GetStateNameString(StateName);
 
 private:
 	TMap<StateName, State*> states;

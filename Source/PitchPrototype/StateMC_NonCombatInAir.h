@@ -5,9 +5,9 @@
 #include "CoreMinimal.h"
 #include "State_MainCharacter.h"
 
-/**
- * 
- */
+///	<summary>
+/// This state handles in-air behavior in all circumstances
+///	</summary>
 class PITCHPROTOTYPE_API StateMC_NonCombatInAir : public State_MainCharacter
 {
 public:
@@ -20,7 +20,11 @@ protected:
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
+	void CollideFeet() override;
 
 	//Internal functions
 	void ApplyGravity();
+
+	//Internal variables
+	float gravityAccumulation = 0;
 };

@@ -6,9 +6,10 @@
 #include "State_MainCharacter.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171NonCombatMove, Log, All);
-/**
- * 
- */
+
+///	<summary>
+/// This state handles standard Locomotion when on the ground
+///	</summary>
 class PITCHPROTOTYPE_API StateMC_NonCombatMove : public State_MainCharacter
 {
 public:

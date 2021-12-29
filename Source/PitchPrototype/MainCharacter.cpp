@@ -4,12 +4,10 @@
 #include "MainCharacter.h"
 #include "StateMC_NonCombatMove.h"
 #include "StateMC_NonCombatInAir.h"
+#include "StateMC_NonCombatJump.h"
+#include "CustomDefines.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
-
-//Credit from https://unrealcpp.com/debug-logging/
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
-#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT(text), fstring))
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -30,9 +28,11 @@ void AMainCharacter::BeginPlay()
 	//Create instances of state sub-classes
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
 	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
+	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
+	characterStateInstances.Add(NonCombatJump);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
@@ -76,13 +76,6 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	//Run the execute function for the currently active state
 	characterStateMachine->Execute(DeltaTime);
-
-
-
-
-
-
-	//movementVector->Set(0, 0, 0);
 }
 
 // Called to bind functionality to input
@@ -97,44 +90,25 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::MoveForward(float Value)
 {
-
-	//moveX = Value * accelerationForce;
-	//MoveForwardDelegate.ExecuteIfBound(Value);
 	characterStateMachine->SendInput(StateAction::MoveForward, Value);
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
 	characterStateMachine->SendInput(StateAction::MoveRight, Value);
-	//moveY = Value * accelerationForce;
 }
 
 void AMainCharacter::Jump()
 {
 	characterStateMachine->SendInput(StateAction::Jump);
-	/*if (!grounded)
-		return;
-
-	print("Jump");
-	feetCollider->AddImpulse( FVector(movementVector->X * jumpDirectionalMultiplier, movementVector->Y * jumpDirectionalMultiplier, jumpForce) );
-	grounded = false;*/
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	print("Hit Body");
-	//UE_LOG(LogTemp, Log, TEXT("ImpactNormal[X: %f, Y: %f, Z: %f]"), Hit.ImpactNormal.X, Hit.ImpactNormal.Y, Hit.ImpactNormal.Z);
-	//moveX -= Hit.ImpactNormal.X;
-	//moveY -= Hit.ImpactNormal.Y;
-	//moveZ += Hit.ImpactNormal.Z;
 }
 
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	/*print("Hit Feets");
-	if (!grounded) {
-		grounded = true;
-		feetCollider->SetPhysicsLinearVelocity(FVector(feetCollider->GetPhysicsLinearVelocity().X, feetCollider->GetPhysicsLinearVelocity().Y, 0));
-		moveZ = 0;
-	}*/
+	characterStateMachine->SendInput(StateAction::CollideFeet);
 }

@@ -23,8 +23,7 @@ void StateMC_NonCombatMove::Start()
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
-	movementVector->Set(moveX, moveY, moveZ);
-
+	ConsumeMoveInputs();
 
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
 
@@ -52,7 +51,7 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 
 void StateMC_NonCombatMove::Jump()
 {
-	RequestStateChange(StateName::NonCombatInAir);
+	RequestStateChange(StateName::NonCombatJump);
 }
 
 void StateMC_NonCombatMove::CollideFeet()

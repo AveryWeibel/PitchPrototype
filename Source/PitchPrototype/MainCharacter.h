@@ -39,20 +39,23 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* bodyCollider;
 
-	UPROPERTY(Category = Movement, EditAnywhere)
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
 
-	UPROPERTY(Category = Movement, EditAnywhere)
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float maximumHorizontalVelocity;
 
-	UPROPERTY(Category = Movement, EditAnywhere)
+	UPROPERTY(Category = Jumping, EditAnywhere)
 		float jumpForce;
 
-	UPROPERTY(Category = Movement, EditAnywhere)
+	UPROPERTY(Category = Jumping, EditAnywhere)
 		float jumpDirectionalMultiplier;
 
-	UPROPERTY(Category = Movement, EditAnywhere)
-		float gravityAmount;
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float risingGravityAmount;
+
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float fallingGravityAmount;
 
 protected:
 	// Called when the game starts or when spawned
