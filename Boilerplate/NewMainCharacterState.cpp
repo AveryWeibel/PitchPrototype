@@ -10,7 +10,7 @@
 <ClassName>::<ClassName>(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
-	//stateName = StateName::NonCombatInAir;
+	//stateName = StateName::<EnumName>;
 }
 
 <ClassName>::~<ClassName>()

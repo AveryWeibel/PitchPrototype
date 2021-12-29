@@ -33,7 +33,7 @@ void StateMachine::ChangeState(StateName newStateName)
 {
 	try {
 		if (states.Contains(newStateName) != false) {
-			activeState = *states.Find(newStateName);
+			activeState = states[newStateName];
 			activeState->Start();
 		}
 		else {

@@ -8,7 +8,7 @@
 StateMC_NonCombatJump::StateMC_NonCombatJump(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
-	//stateName = StateName::NonCombatInAir;
+	stateName = StateName::NonCombatJump;
 }
 
 StateMC_NonCombatJump::~StateMC_NonCombatJump()
