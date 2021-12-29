@@ -26,5 +26,6 @@ protected:
 	void MoveForward(float) override;
 	void MoveRight(float) override;
 	void Jump() override;
-	void CollideFeet() override;
+	void BeginOverlapFeet() override;
+	void EndOverlapFeet() override;
 };

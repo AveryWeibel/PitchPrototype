@@ -20,7 +20,7 @@ protected:
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
-	void CollideFeet() override;
+	void BeginOverlapFeet() override;
 
 	//Internal functions
 	void ApplyGravity();

@@ -26,8 +26,11 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::Jump:
 		Jump();
 		break;
-	case StateAction::CollideFeet:
-		CollideFeet();
+	case StateAction::BeginOverlapFeet:
+		BeginOverlapFeet();
+		break;
+	case StateAction::EndOverlapFeet:
+		EndOverlapFeet();
 		break;
 	default:
 		break;
@@ -62,7 +65,11 @@ void State_MainCharacter::Jump()
 {
 }
 
-void State_MainCharacter::CollideFeet()
+void State_MainCharacter::BeginOverlapFeet()
+{
+}
+
+void State_MainCharacter::EndOverlapFeet()
 {
 }
 

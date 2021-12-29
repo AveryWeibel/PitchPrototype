@@ -46,5 +46,6 @@ protected:
 	virtual void MoveForward(float);
 	virtual void MoveRight(float);
 	virtual void Jump();
-	virtual void CollideFeet();
+	virtual void BeginOverlapFeet();
+	virtual void EndOverlapFeet();
 };

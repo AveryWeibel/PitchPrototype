@@ -32,7 +32,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
-void StateMC_NonCombatInAir::CollideFeet()
+void StateMC_NonCombatInAir::BeginOverlapFeet()
 {
 	print("Hit Feets");
 	FVector actualCharacterVelocity = mainCharacter->feetCollider->GetPhysicsLinearVelocity();

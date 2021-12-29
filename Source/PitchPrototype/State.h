@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump };
-enum StateAction { MoveForward, MoveRight, Jump, CollideFeet };
+enum StateAction { MoveForward, MoveRight, Jump, BeginOverlapFeet, EndOverlapFeet };
 
 class StateMachine;
 

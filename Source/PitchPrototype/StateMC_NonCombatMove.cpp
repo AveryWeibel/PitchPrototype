@@ -54,7 +54,14 @@ void StateMC_NonCombatMove::Jump()
 	RequestStateChange(StateName::NonCombatJump);
 }
 
-void StateMC_NonCombatMove::CollideFeet()
+void StateMC_NonCombatMove::BeginOverlapFeet()
 {
 	
 }
+
+void StateMC_NonCombatMove::EndOverlapFeet()
+{
+	RequestStateChange(StateName::NonCombatInAir);
+}
+
+

@@ -67,6 +67,17 @@ void AMainCharacter::BeginPlay()
 	bodyCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
 	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
 
+	//Bind ComponentOverlap events
+	FScriptDelegate ComponentBeginOverlapDelegate;
+	ComponentBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
+
+	feetOverlap->OnComponentBeginOverlap.Add(ComponentBeginOverlapDelegate);
+
+	FScriptDelegate ComponentEndOverlapDelegate;
+	ComponentEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
+
+	feetOverlap->OnComponentEndOverlap.Add(ComponentEndOverlapDelegate);
+
 	//TODO read delegate documentation againnnn
 	//feetOverlap->OnComponentBeginOverlap.Add(&AMainCharacter::HandleFeetBeginOverlap);
 
@@ -121,9 +132,17 @@ void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* Ot
 
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	characterStateMachine->SendInput(StateAction::CollideFeet);
+	characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
 }
 
 void AMainCharacter::HandleFeetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(Log171General, Log, TEXT("Began Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
+}
+
+void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::EndOverlapFeet);
 }
