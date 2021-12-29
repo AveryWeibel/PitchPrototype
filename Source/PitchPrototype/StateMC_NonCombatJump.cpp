@@ -30,8 +30,6 @@ void StateMC_NonCombatJump::Start()
 
 void StateMC_NonCombatJump::Execute(float DeltaTime)
 {
-	
-	
 
 	//Setup moveVector	
 
@@ -40,10 +38,17 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	ConsumeMoveInputs();
 	//Apply moveVector
 
+	//Change to inair state once we start falling
+	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z < 0) {
+		gravityAccumulation = 0;
+		RequestStateChange(StateName::NonCombatInAir);
+	}
+
 	mainCharacter->feetCollider->AddForce(*movementVector);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
+
 
 void StateMC_NonCombatJump::ApplyGravity()
 {
