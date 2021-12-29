@@ -35,9 +35,10 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 void StateMC_NonCombatInAir::CollideFeet()
 {
 	print("Hit Feets");
+	FVector actualCharacterVelocity = mainCharacter->feetCollider->GetPhysicsLinearVelocity();
 
 	//Zero out vertical actual velocity and vertical input velocity
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, 0));
+	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(actualCharacterVelocity.X, actualCharacterVelocity.Y, 0));
 	gravityAccumulation = 0;
 
 	RequestStateChange(StateName::NonCombatMove);

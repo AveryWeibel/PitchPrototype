@@ -53,6 +53,9 @@ void AMainCharacter::BeginPlay()
 		else if (caps->ComponentHasTag(FName("BodyCap"))) {
 			bodyCollider = caps;
 		}
+		else if (caps->ComponentHasTag(FName("FeetOverlapCap"))) {
+			feetOverlap = caps;
+		}
 	}
 
 	check(IsValid(bodyCollider));
@@ -60,8 +63,16 @@ void AMainCharacter::BeginPlay()
 
 	//bodyHitDelegate.BindUFunction(this, FName("HandleBodyHit"));
 
+	//Bind ComponentHit events
 	bodyCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
 	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
+
+	//TODO read delegate documentation againnnn
+	//feetOverlap->OnComponentBeginOverlap.Add(&AMainCharacter::HandleFeetBeginOverlap);
+
+	//Bind Component
+	//bodyCollider->OnComponentEndOverlap.AddDynamic(this, &AMainCharacter::HandleBodyHit);
+	//feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
@@ -111,4 +122,8 @@ void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* Ot
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	characterStateMachine->SendInput(StateAction::CollideFeet);
+}
+
+void AMainCharacter::HandleFeetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 }
