@@ -98,6 +98,11 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	//Run the execute function for the currently active state
 	characterStateMachine->Execute(DeltaTime);
+
+	//Debug
+	currentPhysicsLinearVelocity = feetCollider->GetPhysicsLinearVelocity();
+
+	velocityArrow->SetWorldRotation(currentPhysicsLinearVelocity.Rotation());
 }
 
 // Called to bind functionality to input

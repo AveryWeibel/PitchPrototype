@@ -26,9 +26,11 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	ConsumeMoveInputs();
 
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
-
 		mainCharacter->feetCollider->AddForce(*movementVector);
 	}
+
+	if(movementVector->Size() > 0)
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(), movementVector->Rotation(), 0.05f));
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }

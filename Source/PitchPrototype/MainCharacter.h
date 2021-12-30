@@ -61,6 +61,10 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	//Properties for internal use
+	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
+		FVector currentPhysicsLinearVelocity;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
