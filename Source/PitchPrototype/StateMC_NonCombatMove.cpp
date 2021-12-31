@@ -42,14 +42,20 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+	*movementVector = FVector::ZeroVector;
 }
 
 void StateMC_NonCombatMove::MoveForward(float Value)
 {
-	if(Value != 0)
-		UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-	moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
+	//if(Value != 0)
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	 
+	FVector direction = mainCharacter->mainCamera->GetForwardVector();
+	direction.Z = 0;
+	direction.Normalize();
+	direction *= (Value * mainCharacter->accelerationForce);
+	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
 void StateMC_NonCombatMove::MoveRight(float Value)
@@ -58,7 +64,12 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 		UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
 
-	moveY = Value * mainCharacter->accelerationForce;
+	//moveY = Value * mainCharacter->accelerationForce;
+	FVector direction = mainCharacter->mainCamera->GetRightVector();
+	direction.Z = 0;
+	direction.Normalize();
+	direction *= (Value * mainCharacter->accelerationForce);
+	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 
 void StateMC_NonCombatMove::TurnRate(float Value)

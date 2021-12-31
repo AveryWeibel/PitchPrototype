@@ -16,13 +16,13 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 //Apply inputs for this frame to movement vector and reset them to zero
 void State_MainCharacter::ConsumeMoveInputs()
 {
-	movementVector->Set(moveX, moveY, moveZ);
 	moveX = moveY = moveZ = 0;
 }
 
 void State_MainCharacter::ConsumeCameraInput()
 {
-	cameraTurnVector->Add(cameraInputY, cameraInputX, 0);
+	cameraTurnVector->Add(-cameraInputY, cameraInputX, 0);
+	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
 	cameraInputX = cameraInputY = 0;
 }
 
