@@ -20,6 +20,12 @@ void State_MainCharacter::ConsumeMoveInputs()
 	moveX = moveY = moveZ = 0;
 }
 
+void State_MainCharacter::ConsumeCameraInput()
+{
+	cameraTurnVector->Add(cameraInputY, cameraInputX, 0);
+	cameraInputX = cameraInputY = 0;
+}
+
 void State_MainCharacter::SendInput(StateAction Action)
 {
 	switch (Action) {
@@ -46,6 +52,12 @@ void State_MainCharacter::SendInput(StateAction Action, float Value)
 	case StateAction::MoveRight:
 		MoveRight(Value);
 		break;
+	case StateAction::TurnRate:
+		TurnRate(Value);
+		break;
+	case StateAction::LookUpRate:
+		LookUpRate(Value);
+		break;
 	default:
 		break;
 	}
@@ -58,6 +70,14 @@ void State_MainCharacter::MoveForward(float)
 
 
 void State_MainCharacter::MoveRight(float)
+{
+}
+
+void State_MainCharacter::TurnRate(float)
+{
+}
+
+void State_MainCharacter::LookUpRate(float)
 {
 }
 

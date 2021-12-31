@@ -78,14 +78,11 @@ void AMainCharacter::BeginPlay()
 
 	feetOverlap->OnComponentEndOverlap.Add(ComponentEndOverlapDelegate);
 
-	//TODO read delegate documentation againnnn
-	//feetOverlap->OnComponentBeginOverlap.Add(&AMainCharacter::HandleFeetBeginOverlap);
-
-	//Bind Component
-	//bodyCollider->OnComponentEndOverlap.AddDynamic(this, &AMainCharacter::HandleBodyHit);
-	//feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
-
 	velocityArrow = FindComponentByClass<UArrowComponent>();
+
+	mainCamera = FindComponentByClass<UCameraComponent>();
+
+	cameraBoom = FindComponentByClass<USpringArmComponent>();
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
@@ -112,6 +109,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AMainCharacter::TurnRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpRate);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 }
 
@@ -123,6 +122,16 @@ void AMainCharacter::MoveForward(float Value)
 void AMainCharacter::MoveRight(float Value)
 {
 	characterStateMachine->SendInput(StateAction::MoveRight, Value);
+}
+
+void AMainCharacter::TurnRate(float Value)
+{
+	characterStateMachine->SendInput(StateAction::TurnRate, Value);
+}
+
+void AMainCharacter::LookUpRate(float Value)
+{
+	characterStateMachine->SendInput(StateAction::LookUpRate, Value);
 }
 
 void AMainCharacter::Jump()

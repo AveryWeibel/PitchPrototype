@@ -25,6 +25,8 @@ protected:
 	//State_MainCharacter overrides
 	void MoveForward(float) override;
 	void MoveRight(float) override;
+	void TurnRate(float) override;
+	void LookUpRate(float) override;
 	void Jump() override;
 	void BeginOverlapFeet() override;
 	void EndOverlapFeet() override;

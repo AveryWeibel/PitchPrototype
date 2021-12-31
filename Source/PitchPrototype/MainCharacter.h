@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
+#include "Camera/CameraComponent.h"
 #include "StateMachine.h"
 #include "MainCharacter.generated.h"
 
@@ -43,6 +45,12 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* bodyCollider;
 
+	UPROPERTY(Category = Character, EditAnywhere)
+		UCameraComponent* mainCamera;
+
+	UPROPERTY(Category = Character, EditAnywhere)
+		USpringArmComponent* cameraBoom;
+
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
 
@@ -74,6 +82,10 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+
+	void TurnRate(float Value);
+
+	void LookUpRate(float Value);
 
 	/** Called for Jump input */
 	void Jump();

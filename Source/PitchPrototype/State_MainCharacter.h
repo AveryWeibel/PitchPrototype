@@ -27,6 +27,7 @@ protected:
 	AMainCharacter* mainCharacter;
 
 	FVector* movementVector = new FVector(FVector::ZeroVector);
+	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
 
 	//Move Inputs
@@ -34,8 +35,13 @@ protected:
 	float moveY = 0;
 	float moveZ = 0;
 
+	//Camera Inputs
+	float cameraInputX = 0;
+	float cameraInputY = 0;
+
 	//Functions for managed variables
 	void ConsumeMoveInputs();
+	void ConsumeCameraInput();
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;
@@ -45,6 +51,8 @@ protected:
 	//Empty definitions here so that subclasses don't all have to implement them
 	virtual void MoveForward(float);
 	virtual void MoveRight(float);
+	virtual void TurnRate(float);
+	virtual void LookUpRate(float);
 	virtual void Jump();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
