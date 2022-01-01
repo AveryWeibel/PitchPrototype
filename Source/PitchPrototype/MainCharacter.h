@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
+#include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
 #include "MainCharacter.generated.h"
 
@@ -116,6 +117,9 @@ private:
 
 	//Create collision delegates
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
+
+	//Animation
+	UMainCharacterAnimInstance* Animator = nullptr;
 
 public:	
 	// Called every frame
