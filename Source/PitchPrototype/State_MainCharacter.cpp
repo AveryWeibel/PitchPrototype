@@ -16,7 +16,7 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 //Apply inputs for this frame to movement vector and reset them to zero
 void State_MainCharacter::ConsumeMoveInputs()
 {
-	moveX = moveY = moveZ = 0;
+	moveFwd = moveRht = moveZ = 0;
 }
 
 void State_MainCharacter::ConsumeCameraInput()

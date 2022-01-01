@@ -14,3 +14,13 @@ void UMainCharacterAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 {
 	Super::NativeUpdateAnimation(DeltaTimeX);
 }
+
+void UMainCharacterAnimInstance::SetTurnAmount(float Value)
+{
+	turnAmount = Value;
+}
+
+void UMainCharacterAnimInstance::SetTiltAmount(float Value)
+{
+	tiltAmount = Value;
+}

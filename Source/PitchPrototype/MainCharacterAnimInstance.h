@@ -34,12 +34,21 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
+	void SetTurnAmount(float Value);
+
+	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
+		void SetTiltAmount(float Value);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 		float turnAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
+		float tiltAmount;
 
 public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }

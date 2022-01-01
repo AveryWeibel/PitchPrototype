@@ -74,6 +74,9 @@ public:
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
 
+	//Animation
+	UMainCharacterAnimInstance* Animator = nullptr;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -117,9 +120,6 @@ private:
 
 	//Create collision delegates
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
-
-	//Animation
-	UMainCharacterAnimInstance* Animator = nullptr;
 
 public:	
 	// Called every frame
