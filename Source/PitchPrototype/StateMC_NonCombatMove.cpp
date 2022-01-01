@@ -24,8 +24,10 @@ void StateMC_NonCombatMove::Start()
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
 	//Apply skeletal forces
-	
-	mainCharacter->Animator->SetTiltAmount(FMath::Abs(moveFwd) + FMath::Abs(moveRht));
+	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
+	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
+
+
 	UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
 	ConsumeMoveInputs();

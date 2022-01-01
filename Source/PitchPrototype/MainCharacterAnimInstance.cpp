@@ -24,3 +24,8 @@ void UMainCharacterAnimInstance::SetTiltAmount(float Value)
 {
 	tiltAmount = Value;
 }
+
+float UMainCharacterAnimInstance::GetTiltAmount()
+{
+	return tiltAmount;
+}

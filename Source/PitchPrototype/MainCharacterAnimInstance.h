@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
 		void SetTiltAmount(float Value);
 
+	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
+		float GetTiltAmount();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
