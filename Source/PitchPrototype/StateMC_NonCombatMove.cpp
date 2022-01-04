@@ -34,10 +34,11 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	ConsumeCameraInput();
 
 	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
+	//if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
-		mainCharacter->feetCollider->AddForce(*movementVector);
-	}
+		//mainCharacter->feetCollider->AddForce(*movementVector);
+		mainCharacter->AddActorWorldOffset(*movementVector / 500000);
+	//}
 
 	//Move the camera
 	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
@@ -112,7 +113,7 @@ void StateMC_NonCombatMove::BeginOverlapFeet()
 
 void StateMC_NonCombatMove::EndOverlapFeet()
 {
-	RequestStateChange(StateName::NonCombatInAir);
+	//RequestStateChange(StateName::NonCombatInAir);
 }
 
 

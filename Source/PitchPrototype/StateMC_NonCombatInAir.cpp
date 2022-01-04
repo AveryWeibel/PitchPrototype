@@ -27,7 +27,8 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	ConsumeMoveInputs();
 
-	mainCharacter->feetCollider->AddForce(*movementVector);
+	//mainCharacter->feetCollider->AddForce(*movementVector);
+	mainCharacter->feetCollider->AddWorldOffset(*movementVector / 500000);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
