@@ -27,8 +27,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	ConsumeMoveInputs();
 
-	//mainCharacter->feetCollider->AddForce(*movementVector);
-	mainCharacter->feetCollider->AddWorldOffset(*movementVector / 500000);
+	mainCharacter->feetCollider->AddForce(*movementVector);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
@@ -46,7 +45,7 @@ void StateMC_NonCombatInAir::BeginOverlapFeet()
 
 void StateMC_NonCombatInAir::ApplyGravity()
 {
+	//New comments
 	gravityAccumulation -= mainCharacter->fallingGravityAmount;
 	moveZ = gravityAccumulation;
 }
-

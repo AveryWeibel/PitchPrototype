@@ -34,18 +34,18 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	ConsumeCameraInput();
 
 	//Move the character
-	//if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
+	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
-		//mainCharacter->feetCollider->AddForce(*movementVector);
-		mainCharacter->AddActorWorldOffset(*movementVector / 500000);
-	//}
+		mainCharacter->feetCollider->AddForce(*movementVector);
+		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
+	}
 
 	//Move the camera
 	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(), movementVector->Rotation(), 0.04f));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), 0.04f));
 
 		//float turnDelta = 
 		
