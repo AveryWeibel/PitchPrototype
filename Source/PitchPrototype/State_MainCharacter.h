@@ -31,8 +31,8 @@ protected:
 	bool grounded = false;
 
 	//Move Inputs
-	float moveX = 0;
-	float moveY = 0;
+	float moveFwd = 0;
+	float moveRht = 0;
 	float moveZ = 0;
 
 	//Camera Inputs

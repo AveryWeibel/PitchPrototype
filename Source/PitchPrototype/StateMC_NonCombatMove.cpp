@@ -23,6 +23,13 @@ void StateMC_NonCombatMove::Start()
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
+	//Apply skeletal forces
+	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
+	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
+
+
+	UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
+
 	ConsumeMoveInputs();
 	ConsumeCameraInput();
 
@@ -30,16 +37,21 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
 		mainCharacter->feetCollider->AddForce(*movementVector);
+		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
 
 	//Move the camera
-	//FVector RotationValue = ;
 	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
 
 	//Rotate model towards the movement vector
-	if(movementVector->Size() > 0)
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(), movementVector->Rotation(), 0.05f));
-	
+	if (movementVector->Size() > 0) {
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), 0.04f));
+
+		//float turnDelta = 
+		
+		//UE_LOG(Log171General, Log, TEXT("MovementDirection X[%f], Y[%f], Z[%f]"), movementVector->X, movementVector->Y, movementVector->Z);
+	}
+
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
@@ -47,9 +59,11 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 void StateMC_NonCombatMove::MoveForward(float Value)
 {
+	moveFwd = Value;
 	//if(Value != 0)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	 
+	
+
 	FVector direction = mainCharacter->mainCamera->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
@@ -60,9 +74,12 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 
 void StateMC_NonCombatMove::MoveRight(float Value)
 {
+	moveRht = Value;
+
 	if (Value != 0)
 		UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
+	mainCharacter->Animator->SetTurnAmount(moveRht);
 
 	//moveY = Value * mainCharacter->accelerationForce;
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
@@ -96,7 +113,7 @@ void StateMC_NonCombatMove::BeginOverlapFeet()
 
 void StateMC_NonCombatMove::EndOverlapFeet()
 {
-	RequestStateChange(StateName::NonCombatInAir);
+	//RequestStateChange(StateName::NonCombatInAir);
 }
 
 
