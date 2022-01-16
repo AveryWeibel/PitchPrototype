@@ -84,6 +84,8 @@ void AMainCharacter::BeginPlay()
 
 	cameraBoom = FindComponentByClass<USpringArmComponent>();
 
+	Animator = Cast<UMainCharacterAnimInstance>(Mesh->GetAnimInstance());
+
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
 }

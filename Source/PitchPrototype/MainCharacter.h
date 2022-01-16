@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
+#include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
 #include "MainCharacter.generated.h"
 
@@ -72,6 +73,9 @@ public:
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
+
+	//Animation
+	UMainCharacterAnimInstance* Animator = nullptr;
 
 protected:
 	// Called when the game starts or when spawned

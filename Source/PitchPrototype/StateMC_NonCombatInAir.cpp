@@ -45,7 +45,7 @@ void StateMC_NonCombatInAir::BeginOverlapFeet()
 
 void StateMC_NonCombatInAir::ApplyGravity()
 {
+	//New comments
 	gravityAccumulation -= mainCharacter->fallingGravityAmount;
 	moveZ = gravityAccumulation;
 }
-
