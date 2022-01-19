@@ -46,7 +46,6 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 void ABaseAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

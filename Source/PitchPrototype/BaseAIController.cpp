@@ -21,6 +21,14 @@ ABaseAIController::ABaseAIController()
 
 void ABaseAIController::SetMoveTarget(FVector target)
 {
+
+
+	if(BehaviorComp->IsRunning())
+	{
+		UE_LOG(LogTemp, Log, TEXT("Behavior Tree Running"))
+	}
+
+	
 	if(BlackboardComp)
 	{
 		UE_LOG(LogTemp, Log, TEXT("CallSetTarget()"));
@@ -42,7 +50,10 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 	{
 		if(AICharacter->BehaviorTree->BlackboardAsset)
 		{
-			BlackboardComp->InitializeBlackboard(*AICharacter->BehaviorTree->BlackboardAsset);
+			if(BlackboardComp->InitializeBlackboard(*AICharacter->BehaviorTree->BlackboardAsset))
+			{
+				UE_LOG(LogTemp, Log, TEXT("Successfully init blackboard"))
+			}
 			
 			//BlackboardComp->SetValueAsEnum()
 		}
