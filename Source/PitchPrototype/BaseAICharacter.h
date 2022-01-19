@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAIController.h"
 #include "GameFramework/Character.h"
+#include "Perception/PawnSensingComponent.h"
 #include "BaseAICharacter.generated.h"
 
 UCLASS()
@@ -19,11 +21,20 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	UPawnSensingComponent* pawnSensingComp;
+	
+	UFUNCTION()
+	void OnSeePlayer(APawn *Pawn);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	class UBehaviorTree* BehaviorTree;
 
 };
