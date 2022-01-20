@@ -9,13 +9,18 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
-				"Engine"
+				"Engine",
+				"AIModule"
 			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "Water",
+			"Enabled": true
+		},
+		{
+			"Name": "UnrealInk",
 			"Enabled": true
 		}
 	]
