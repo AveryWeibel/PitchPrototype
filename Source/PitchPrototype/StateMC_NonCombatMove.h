@@ -28,6 +28,7 @@ protected:
 	void TurnRate(float) override;
 	void LookUpRate(float) override;
 	void Jump() override;
+	void LockOn() override;
 	void BeginOverlapFeet() override;
 	void EndOverlapFeet() override;
 };

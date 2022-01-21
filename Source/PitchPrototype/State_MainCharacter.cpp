@@ -38,6 +38,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::EndOverlapFeet:
 		EndOverlapFeet();
 		break;
+	case StateAction::LockOn:
+		LockOn();
+		break;
 	default:
 		break;
 	}
@@ -82,6 +85,10 @@ void State_MainCharacter::LookUpRate(float)
 }
 
 void State_MainCharacter::Jump()
+{
+}
+
+void State_MainCharacter::LockOn()
 {
 }
 

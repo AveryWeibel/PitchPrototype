@@ -114,6 +114,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMainCharacter::TurnRate);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpRate);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
+	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -139,6 +140,11 @@ void AMainCharacter::LookUpRate(float Value)
 void AMainCharacter::Jump()
 {
 	characterStateMachine->SendInput(StateAction::Jump);
+}
+
+void AMainCharacter::LockOn()
+{
+	characterStateMachine->SendInput(StateAction::LockOn);
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

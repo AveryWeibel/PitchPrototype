@@ -94,6 +94,8 @@ protected:
 	/** Called for Jump input */
 	void Jump();
 
+	void LockOn();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
