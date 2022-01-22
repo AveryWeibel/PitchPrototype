@@ -109,8 +109,14 @@ void StateMC_NonCombatMove::Jump()
 
 void StateMC_NonCombatMove::LockOn()
 {
-	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("LockOn"));
+	for (auto AI : mainCharacter->AIList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			UE_LOG(Log171NonCombatMove, Log, TEXT("[%s]"), *AI->GetName())
+		}
+	}
 }
 
 void StateMC_NonCombatMove::BeginOverlapFeet()

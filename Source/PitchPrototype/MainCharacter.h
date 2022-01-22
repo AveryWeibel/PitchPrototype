@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -41,10 +42,12 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetCollider;
 
+	/** The CapsuleComponent being used for ground collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetOverlap;
 
-	UPROPERTY(Category  = INVALID_NAME_CHARACTERS, EditAnywhere)
+	/** The SphereComponent being used for AI range detection (by CharacterMovement).*/
+	UPROPERTY(Category  = Chracter, EditAnywhere)
 		USphereComponent* AIOverlap;
 
 	UPROPERTY(Category = Character, EditAnywhere)
@@ -77,6 +80,9 @@ public:
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
+
+	UPROPERTY()
+		TSet<ABaseAICharacter*> AIList;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;

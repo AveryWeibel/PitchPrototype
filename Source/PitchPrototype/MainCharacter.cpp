@@ -187,8 +187,9 @@ void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(Cast<ABaseAICharacter>(OtherActor))
+	if(const auto AIActor = Cast<ABaseAICharacter>(OtherActor))
 	{
+		AIList.Add(AIActor);
 		UE_LOG(Log171General, Log, TEXT("Began AI Overlap with %s"), *OtherActor->GetName());
 	}
 }
@@ -196,8 +197,9 @@ void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(Cast<ABaseAICharacter>(OtherActor))
+	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
 	{
+		AIList.Remove(AIActor);
 		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
 }
