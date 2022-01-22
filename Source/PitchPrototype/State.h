@@ -13,7 +13,8 @@ enum StateAction
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,
-	LookUpRate
+	LookUpRate,
+	LockOn
 };
 
 class StateMachine;

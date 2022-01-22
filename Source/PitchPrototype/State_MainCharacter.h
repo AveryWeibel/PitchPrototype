@@ -54,6 +54,7 @@ protected:
 	virtual void TurnRate(float);
 	virtual void LookUpRate(float);
 	virtual void Jump();
+	virtual void LockOn();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
 };

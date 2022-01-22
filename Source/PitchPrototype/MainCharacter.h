@@ -11,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
+#include "Components/SphereComponent.h"
 #include "MainCharacter.generated.h"
 
 //Forward declare components
@@ -42,6 +43,9 @@ public:
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetOverlap;
+
+	UPROPERTY(Category  = INVALID_NAME_CHARACTERS, EditAnywhere)
+		USphereComponent* AIOverlap;
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* bodyCollider;
@@ -94,6 +98,8 @@ protected:
 	/** Called for Jump input */
 	void Jump();
 
+	void LockOn();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -105,6 +111,12 @@ protected:
 
 	UFUNCTION()
 	void HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	//Character locomotion state variables
