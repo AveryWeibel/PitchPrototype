@@ -58,6 +58,9 @@ void AMainCharacter::BeginPlay()
 		}
 	}
 
+	AIOverlap = FindComponentByClass<USphereComponent>();
+
+	check(IsValid(AIOverlap));
 	check(IsValid(bodyCollider));
 	check(IsValid(feetCollider));
 
@@ -68,15 +71,25 @@ void AMainCharacter::BeginPlay()
 	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
 
 	//Bind ComponentOverlap events
-	FScriptDelegate ComponentBeginOverlapDelegate;
-	ComponentBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
+	//Bind Feet BeginOverlap
+	FScriptDelegate FeetBeginOverlapDelegate;
+	FeetBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
+	feetOverlap->OnComponentBeginOverlap.Add(FeetBeginOverlapDelegate);
 
-	feetOverlap->OnComponentBeginOverlap.Add(ComponentBeginOverlapDelegate);
+	//Bind Feet EndOverlap
+	FScriptDelegate FeetEndOverlapDelegate;
+	FeetEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
+	feetOverlap->OnComponentEndOverlap.Add(FeetEndOverlapDelegate);
 
-	FScriptDelegate ComponentEndOverlapDelegate;
-	ComponentEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
+	//Bind Feet BeginOverlap
+	FScriptDelegate AIBeginOverlapDelegate;
+	AIBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
+	feetOverlap->OnComponentBeginOverlap.Add(AIBeginOverlapDelegate);
 
-	feetOverlap->OnComponentEndOverlap.Add(ComponentEndOverlapDelegate);
+	//Bind Feet EndOverlap
+	FScriptDelegate AIEndOverlapDelegate;
+	AIEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
+	feetOverlap->OnComponentEndOverlap.Add(AIEndOverlapDelegate);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
@@ -167,4 +180,16 @@ void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
 		characterStateMachine->SendInput(StateAction::EndOverlapFeet);
+}
+
+void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	
+}
+
+void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
 }

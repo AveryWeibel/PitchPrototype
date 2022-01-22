@@ -109,6 +109,7 @@ void StateMC_NonCombatMove::Jump()
 
 void StateMC_NonCombatMove::LockOn()
 {
+	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("LockOn"));
 }
 
