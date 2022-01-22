@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
+
 class AMainCharacter;
 
 /**

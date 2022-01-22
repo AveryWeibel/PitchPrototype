@@ -1,29 +1,32 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+//SETTINGS IN VISUAL STUDIO 2022
+//Tools>Options>Text Editor>{Language}>Code Style>Formatting>"Choose When I paste, Indent, but do not format"
 
-#include "StateMC_NonCombatMove.h"
+#include "StateMC_LockedOnMove.h"
 #include "MainCharacter.h"
+#include "CustomDefines.h"
 
-DEFINE_LOG_CATEGORY(Log171NonCombatMove);
+DEFINE_LOG_CATEGORY(Log171LockedOnMove);
 
-// Call parent Ctor
-StateMC_NonCombatMove::StateMC_NonCombatMove(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
+StateMC_LockedOnMove::StateMC_LockedOnMove(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
-	stateName = StateName::NonCombatMove;
+	//Add new entry to StateName in State.h
+	stateName = StateName::LockedOnMove;
 }
 
-StateMC_NonCombatMove::~StateMC_NonCombatMove()
-{
-}
-
-void StateMC_NonCombatMove::Start()
-{
-	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
-}
-
-void StateMC_NonCombatMove::Execute(float DeltaTime)
+StateMC_LockedOnMove::~StateMC_LockedOnMove()
 {
 	
+}
+
+void StateMC_LockedOnMove::Start()
+{
+	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnMove"));
+}
+
+void StateMC_LockedOnMove::Execute(float DeltaTime)
+{
 	//Apply skeletal forces
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
@@ -58,11 +61,11 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	*movementVector = FVector::ZeroVector;
 }
 
-void StateMC_NonCombatMove::MoveForward(float Value)
+void StateMC_LockedOnMove::MoveForward(float Value)
 {
 	moveFwd = Value;
 	//if(Value != 0)
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
 
 	FVector direction = mainCharacter->mainCamera->GetForwardVector();
@@ -73,12 +76,12 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
-void StateMC_NonCombatMove::MoveRight(float Value)
+void StateMC_LockedOnMove::MoveRight(float Value)
 {
 	moveRht = Value;
 
 	//if (Value != 0)
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
 	mainCharacter->Animator->SetTurnAmount(moveRht);
 
@@ -90,44 +93,10 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 
-void StateMC_NonCombatMove::TurnRate(float Value)
+void StateMC_LockedOnMove::LockOn()
 {
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
-	cameraInputX += Value;
-}
-
-void StateMC_NonCombatMove::LookUpRate(float Value)
-{
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
-	cameraInputY += Value;
-}
-
-void StateMC_NonCombatMove::Jump()
-{
-	RequestStateChange(StateName::NonCombatJump);
-}
-
-void StateMC_NonCombatMove::LockOn()
-{
-	for (auto AI : mainCharacter->AIList)
-	{
-		if(IsInCameraView(AI->GetActorLocation()))
-		{
-			mainCharacter->lockedAI = AI;
-			RequestStateChange(StateName::LockedOnMove);
-			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
-		}
-	}
-}
-
-void StateMC_NonCombatMove::BeginOverlapFeet()
-{
+	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());
+	mainCharacter->lockedAI = nullptr;
+	RequestStateChange(StateName::NonCombatMove);
 	
 }
-
-void StateMC_NonCombatMove::EndOverlapFeet()
-{
-	//RequestStateChange(StateName::NonCombatInAir);
-}
-
-

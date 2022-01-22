@@ -4,6 +4,8 @@
 #include "State_MainCharacter.h"
 #include "MainCharacter.h"
 
+DEFINE_LOG_CATEGORY(Log171MainCharState);
+
 State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 {
 	mainCharacter = mainCharacterPtr;
@@ -38,7 +40,7 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 	//Get direction to obj from camera
 	FVector dirToObj = obj - cameraPos;
 	dirToObj.Normalize();
-	UE_LOG(Log171General, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
 
 	//2Dify camera forward vector
 	FVector cameraForward = mainCharacter->mainCamera->GetForwardVector();
@@ -47,7 +49,7 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 
 	//Get 2D dot product for basic direction checks
 	float dot = FVector::DotProduct(dirToObj, cameraForward);
-	UE_LOG(Log171General, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
 	
 	if(dot > cameraFrontThreshold) { return true; }
 	return false;

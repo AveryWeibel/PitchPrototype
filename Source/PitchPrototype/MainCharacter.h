@@ -84,6 +84,9 @@ public:
 	UPROPERTY()
 		TSet<ABaseAICharacter*> AIList;
 
+	UPROPERTY()
+		ABaseAICharacter* lockedAI = nullptr;
+
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
 

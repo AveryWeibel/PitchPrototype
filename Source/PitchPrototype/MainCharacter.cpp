@@ -8,6 +8,7 @@
 #include "StateMC_NonCombatInAir.h"
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
+#include "StateMC_LockedOnMove.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -31,10 +32,12 @@ void AMainCharacter::BeginPlay()
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
 	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
 	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
+	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
 	characterStateInstances.Add(NonCombatJump);
+	characterStateInstances.Add(LockedOnMove);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 

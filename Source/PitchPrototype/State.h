@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump };
+enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove };
 enum StateAction 
 { 
 	MoveForward,

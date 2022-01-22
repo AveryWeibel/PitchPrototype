@@ -22,7 +22,7 @@ void <ClassName>::Start()
 	UE_LOG(LogTemp, Log, TEXT("Enter State <ClassName>"));
 }
 
-void StateMC_NonCombatInAir::Execute(float DeltaTime)
+void <ClassName>::Execute(float DeltaTime)
 {
 	//UE_LOG(LogTemp, Log, TEXT("Execute State <ClassName>"));
 	//Setup moveVector	
