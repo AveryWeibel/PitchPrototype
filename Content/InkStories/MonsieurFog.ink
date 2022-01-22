@@ -7,6 +7,7 @@ VAR fogs_current_mood = 1
 - I looked at Monsieur Fogg 
 *   ... and I could contain myself no longer.
     'What is the purpose of our journey, Monsieur?'
+    {say_yes_to_everything()}
     ~ fogs_string_mood = "excellent"
     ~ fogs_current_mood = 2
     'A wager,' he replied. 
