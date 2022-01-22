@@ -23,12 +23,13 @@ void StateMC_NonCombatMove::Start()
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
+	
 	//Apply skeletal forces
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
 
 
-	UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
+	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
 	ConsumeMoveInputs();
 	ConsumeCameraInput();
@@ -76,8 +77,8 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 {
 	moveRht = Value;
 
-	if (Value != 0)
-		UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
+	//if (Value != 0)
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
 	mainCharacter->Animator->SetTurnAmount(moveRht);
 
@@ -91,19 +92,25 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 
 void StateMC_NonCombatMove::TurnRate(float Value)
 {
-	UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
 	cameraInputX += Value;
 }
 
 void StateMC_NonCombatMove::LookUpRate(float Value)
 {
-	UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
 	cameraInputY += Value;
 }
 
 void StateMC_NonCombatMove::Jump()
 {
 	RequestStateChange(StateName::NonCombatJump);
+}
+
+void StateMC_NonCombatMove::LockOn()
+{
+	
+	UE_LOG(Log171NonCombatMove, Log, TEXT("LockOn"));
 }
 
 void StateMC_NonCombatMove::BeginOverlapFeet()
