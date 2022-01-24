@@ -21,9 +21,9 @@
 		},
 		{
 			"Name": "UnrealInk",
-         "Enabled": true
-      },
-      {
+         		"Enabled": true
+     		},
+      		{
 			"Name": "FMODStudio",
 			"Enabled": true
 		}
