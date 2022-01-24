@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
+
 class AMainCharacter;
 
 /**
@@ -38,10 +40,12 @@ protected:
 	//Camera Inputs
 	float cameraInputX = 0;
 	float cameraInputY = 0;
+	float cameraFrontThreshold = 0.8f;
 
 	//Functions for managed variables
 	void ConsumeMoveInputs();
 	void ConsumeCameraInput();
+	bool IsInCameraView(FVector);
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;

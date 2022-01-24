@@ -4,6 +4,8 @@
 #include "State_MainCharacter.h"
 #include "MainCharacter.h"
 
+DEFINE_LOG_CATEGORY(Log171MainCharState);
+
 State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 {
 	mainCharacter = mainCharacterPtr;
@@ -24,6 +26,33 @@ void State_MainCharacter::ConsumeCameraInput()
 	cameraTurnVector->Add(-cameraInputY, cameraInputX, 0);
 	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
 	cameraInputX = cameraInputY = 0;
+}
+
+bool State_MainCharacter::IsInCameraView(FVector obj)
+{
+	//2Dify obj
+	obj.Z = 0;
+
+	//2Dify CameraPos
+	FVector cameraPos = mainCharacter->mainCamera->GetComponentLocation();
+	cameraPos = FVector(cameraPos.X, cameraPos.Y, 0);
+
+	//Get direction to obj from camera
+	FVector dirToObj = obj - cameraPos;
+	dirToObj.Normalize();
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
+
+	//2Dify camera forward vector
+	FVector cameraForward = mainCharacter->mainCamera->GetForwardVector();
+	cameraForward.Z = 0;
+	cameraForward.Normalize();
+
+	//Get 2D dot product for basic direction checks
+	float dot = FVector::DotProduct(dirToObj, cameraForward);
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
+	
+	if(dot > cameraFrontThreshold) { return true; }
+	return false;
 }
 
 void State_MainCharacter::SendInput(StateAction Action)

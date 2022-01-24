@@ -2,10 +2,13 @@
 
 
 #include "MainCharacter.h"
+
+#include "BaseAICharacter.h"
 #include "StateMC_NonCombatMove.h"
 #include "StateMC_NonCombatInAir.h"
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
+#include "StateMC_LockedOnMove.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -29,10 +32,12 @@ void AMainCharacter::BeginPlay()
 	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
 	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
 	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
+	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
 	characterStateInstances.Add(NonCombatJump);
+	characterStateInstances.Add(LockedOnMove);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
@@ -81,15 +86,15 @@ void AMainCharacter::BeginPlay()
 	FeetEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
 	feetOverlap->OnComponentEndOverlap.Add(FeetEndOverlapDelegate);
 
-	//Bind Feet BeginOverlap
+	//Bind AI BeginOverlap
 	FScriptDelegate AIBeginOverlapDelegate;
-	AIBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
-	feetOverlap->OnComponentBeginOverlap.Add(AIBeginOverlapDelegate);
+	AIBeginOverlapDelegate.BindUFunction(this, "HandleAIBeginOverlap");
+	AIOverlap->OnComponentBeginOverlap.Add(AIBeginOverlapDelegate);
 
-	//Bind Feet EndOverlap
+	//Bind AI EndOverlap
 	FScriptDelegate AIEndOverlapDelegate;
-	AIEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
-	feetOverlap->OnComponentEndOverlap.Add(AIEndOverlapDelegate);
+	AIEndOverlapDelegate.BindUFunction(this, "HandleAIEndOverlap");
+	AIOverlap->OnComponentEndOverlap.Add(AIEndOverlapDelegate);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
@@ -185,11 +190,19 @@ void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	if(const auto AIActor = Cast<ABaseAICharacter>(OtherActor))
+	{
+		AIList.Add(AIActor);
+		UE_LOG(Log171General, Log, TEXT("Began AI Overlap with %s"), *OtherActor->GetName());
+	}
 }
 
 void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	
+	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
+	{
+		AIList.Remove(AIActor);
+		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
+	}
 }
