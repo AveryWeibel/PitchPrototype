@@ -23,6 +23,7 @@ StateMC_LockedOnMove::~StateMC_LockedOnMove()
 void StateMC_LockedOnMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnMove"));
+	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
@@ -35,7 +36,6 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
 	ConsumeMoveInputs();
-	ConsumeCameraInput();
 
 	//Move the character
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
@@ -44,8 +44,39 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
 
-	//Move the camera
-	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
+	//Position the camera
+	//Lerp to proper camera boom length
+	if(mainCharacter->cameraBoom->TargetArmLength != cameraBoomTargetLength)
+	{
+		mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha);
+	}
+
+	//Lerp cameraBoom to rotate between player and target
+	//2D so the camera doesn't tilt with distance
+	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	dirToTarget.Z = 0;
+	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
+	if(mainCharacter->cameraBoom->GetComponentRotation() != cameraBoomRotationLerpTarget)
+	{
+		mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, mainCharacter->cameraLerpAlpha * 50));	
+	}
+
+	//Lerp to camera height
+	//& Kick camera to the side for framing
+	if(mainCharacter->cameraBoom->GetRelativeLocation().Z != mainCharacter->cameraLockedHeight)
+	{
+		mainCharacter->cameraBoom->SetRelativeLocation(
+			FVector (
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha)
+			)
+		);
+	}
+
+	//Lerp camera to face target
+	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha));
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
@@ -96,7 +127,21 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 void StateMC_LockedOnMove::LockOn()
 {
 	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());
+
+	//*cameraTurnVector = mainCharacter->cameraBoom->GetComponentRotation();
 	mainCharacter->lockedAI = nullptr;
 	RequestStateChange(StateName::NonCombatMove);
 	
+}
+
+void StateMC_LockedOnMove::TurnRate(float Value)
+{
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
+	//cameraInputX += Value;
+}
+
+void StateMC_LockedOnMove::LookUpRate(float Value)
+{
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
+	//cameraInputY += Value;
 }

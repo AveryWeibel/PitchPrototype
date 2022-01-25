@@ -37,6 +37,11 @@ protected:
 	float moveRht = 0;
 	float moveZ = 0;
 
+	//Camera variables
+	FRotator cameraRotationLerpTarget;
+	FRotator cameraBoomRotationLerpTarget;
+	float cameraBoomTargetLength;
+
 	//Camera Inputs
 	float cameraInputX = 0;
 	float cameraInputY = 0;

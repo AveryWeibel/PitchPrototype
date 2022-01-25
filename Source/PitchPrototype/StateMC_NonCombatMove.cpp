@@ -19,6 +19,8 @@ StateMC_NonCombatMove::~StateMC_NonCombatMove()
 void StateMC_NonCombatMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
+	cameraBoomTargetLength = mainCharacter->cameraUnLockedBoomLength;
+	*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
@@ -41,8 +43,37 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
 
-	//Move the camera
-	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
+	//Position the camera
+	//Rotate camera to face in same direction as cameraBoom
+	cameraRotationLerpTarget = mainCharacter->cameraBoom->GetComponentRotation();
+	if(mainCharacter->mainCamera->GetComponentRotation() != cameraRotationLerpTarget)
+	{
+		mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * 3));
+	}
+
+	//Lerp camera boom length to correct length
+	if(mainCharacter->cameraBoom->TargetArmLength != cameraBoomTargetLength)
+	{
+		mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha);
+	}
+
+	//Rotate cameraBoom to face turnvector
+	cameraBoomRotationLerpTarget = *cameraTurnVector;
+	if(mainCharacter->cameraBoom->GetRelativeRotation() != cameraBoomRotationLerpTarget)
+	{
+		mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget, mainCharacter->cameraLerpAlpha * 50));	
+	}
+
+	if(mainCharacter->cameraBoom->GetRelativeLocation().Z != mainCharacter->cameraUnLockedHeight)
+	{
+		mainCharacter->cameraBoom->SetRelativeLocation(
+			FVector (
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraUnLockedHeight, mainCharacter->cameraLerpAlpha)
+			)
+		);
+	}
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
