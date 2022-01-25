@@ -28,20 +28,6 @@ void AMainCharacter::BeginPlay()
 
 	TArray<UCapsuleComponent*> capsuleCollisions;
 
-	//Create instances of state sub-classes
-	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
-	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
-	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
-	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
-	//Add all to array
-	characterStateInstances.Add(NonCombatMove);
-	characterStateInstances.Add(NonCombatInAir);
-	characterStateInstances.Add(NonCombatJump);
-	characterStateInstances.Add(LockedOnMove);
-	//Initialize state machine
-	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
-
-
 	//Bind input delegates to state machine
 	//MoveForwardDelegate.BindRaw(characterStateMachine, SendInput(StateAction));
 
@@ -103,6 +89,20 @@ void AMainCharacter::BeginPlay()
 	cameraBoom = FindComponentByClass<USpringArmComponent>();
 
 	Animator = Cast<UMainCharacterAnimInstance>(Mesh->GetAnimInstance());
+
+    //Initialize states last so all the references they have in player are vaild
+	//Create instances of state sub-classes
+	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
+	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
+	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
+	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
+	//Add all to array
+	characterStateInstances.Add(NonCombatMove);
+	characterStateInstances.Add(NonCombatInAir);
+	characterStateInstances.Add(NonCombatJump);
+	characterStateInstances.Add(LockedOnMove);
+	//Initialize state machine
+	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());

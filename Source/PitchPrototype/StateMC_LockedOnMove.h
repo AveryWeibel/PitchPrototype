@@ -29,6 +29,8 @@ protected:
 	//virtual void Jump();
 	//virtual void CollideFeet();
 	virtual void LockOn() override;
+	virtual void TurnRate(float) override;
+	virtual void LookUpRate(float) override;
 
 	//Internal functions
 

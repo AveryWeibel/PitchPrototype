@@ -77,6 +77,28 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	//Value between 0 & 1
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLerpAlpha;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHorizontalOffset;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHorizontalOffset;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
