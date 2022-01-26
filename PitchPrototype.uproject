@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"AIModule"
+				"AIModule",
+				"Ink"
 			]
 		}
 	],
@@ -21,9 +22,9 @@
 		},
 		{
 			"Name": "UnrealInk",
-         		"Enabled": true
-     		},
-      		{
+			"Enabled": true
+		},
+		{
 			"Name": "FMODStudio",
 			"Enabled": true
 		}

@@ -3,6 +3,7 @@
 
 VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
+EXTERNAL test()
 
 - I looked at Monsieur Fogg 
 *   ... and I could contain myself no longer.
