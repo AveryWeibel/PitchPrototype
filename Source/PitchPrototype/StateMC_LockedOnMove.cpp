@@ -128,6 +128,13 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 
+void StateMC_LockedOnMove::Jump()
+{
+	State_MainCharacter::Jump();
+
+	RequestStateChange(StateName::SwordAttack);
+}
+
 void StateMC_LockedOnMove::LockOn()
 {
 	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());

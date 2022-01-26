@@ -26,7 +26,7 @@ protected:
 	//State_MainCharacter overrides
 	virtual void MoveForward(float) override;
 	virtual void MoveRight(float) override;
-	//virtual void Jump();
+	virtual void Jump() override;
 	//virtual void CollideFeet();
 	virtual void LockOn() override;
 	virtual void TurnRate(float) override;
