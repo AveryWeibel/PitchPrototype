@@ -25,6 +25,9 @@ public:
 	//Dictionary<MainCharacterActions, StateActionDelegate> StateActionDelegates;
 
 protected:
+	//State overrides
+	void RequestStateChange(StateName) override;
+	
 	//Variables/Objects managed by this state
 	AMainCharacter* mainCharacter;
 

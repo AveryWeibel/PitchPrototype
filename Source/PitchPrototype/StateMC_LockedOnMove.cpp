@@ -28,17 +28,20 @@ void StateMC_LockedOnMove::Start()
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
 {
-	//Apply skeletal forces
+	
+	
+	//Update animation variables
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
 
+	mainCharacter->Animator->SetControlDirection(FVector(moveFwd, moveRht, 0));
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
 	ConsumeMoveInputs();
 
 	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
+	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity / 3) {
 		//FVector forceDirection(, , 0);
 		mainCharacter->feetCollider->AddForce(*movementVector);
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
@@ -80,7 +83,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), 0.04f));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), 0.04f));
 
 		//float turnDelta = 
 		
