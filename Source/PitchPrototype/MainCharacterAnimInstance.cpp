@@ -30,6 +30,11 @@ void UMainCharacterAnimInstance::SetTiltAmount(float Value)
 	tiltAmount = Value;
 }
 
+void UMainCharacterAnimInstance::SetLookAtTarget(FVector Target)
+{
+	lookatTarget = Target;
+}
+
 float UMainCharacterAnimInstance::GetTiltAmount()
 {
 	return tiltAmount;

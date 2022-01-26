@@ -33,6 +33,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//Update animation variables
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
+	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedAI->GetActorLocation());
 
 	mainCharacter->Animator->SetControlDirection(FVector(moveFwd, moveRht, 0));
 
@@ -130,9 +131,10 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 void StateMC_LockedOnMove::LockOn()
 {
 	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());
-
+	mainCharacter->lockedAI->PlayerUnLock();
 	//*cameraTurnVector = mainCharacter->cameraBoom->GetComponentRotation();
 	mainCharacter->lockedAI = nullptr;
+	
 	RequestStateChange(StateName::NonCombatMove);
 	
 }
