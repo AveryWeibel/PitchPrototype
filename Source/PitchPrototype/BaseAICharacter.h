@@ -37,4 +37,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))
+	void PlayerLock();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLock"))
+	void PlayerUnLock();
+
+	
 };

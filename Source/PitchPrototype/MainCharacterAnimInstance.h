@@ -45,6 +45,9 @@ public:
 		void SetTiltAmount(float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
+		void SetLookAtTarget(FVector Target);
+
+	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
 		float GetTiltAmount();
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
@@ -62,6 +65,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		FVector controlDirection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		FVector lookatTarget;
 
 public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }

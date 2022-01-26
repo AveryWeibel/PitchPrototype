@@ -29,6 +29,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Apply skeletal forces
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
+	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->);
 
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
@@ -145,6 +146,7 @@ void StateMC_NonCombatMove::LockOn()
 		if(IsInCameraView(AI->GetActorLocation()))
 		{
 			mainCharacter->lockedAI = AI;
+			mainCharacter->lockedAI->PlayerLock();
 			RequestStateChange(StateName::LockedOnMove);
 			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
 		}
