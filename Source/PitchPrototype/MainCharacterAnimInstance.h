@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "State.h"
 #include "Animation/AnimInstance.h"
 #include "MainCharacterAnimInstance.generated.h"
 
@@ -38,10 +39,16 @@ public:
 	void SetTurnAmount(float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
+		void SetControlDirection(FVector value);
+	
+	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
 		void SetTiltAmount(float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
 		float GetTiltAmount();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
+		void RecieveStateUpdate(StateName name);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
@@ -52,6 +59,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
 		float tiltAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		FVector controlDirection;
 
 public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }

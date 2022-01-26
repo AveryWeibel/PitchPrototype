@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+UENUM(BlueprintType)
 enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove };
 enum StateAction 
 { 
@@ -37,7 +38,7 @@ public:
 protected:
 
 	//Attempts to change the state to given StateName
-	void RequestStateChange(StateName);
+	virtual void RequestStateChange(StateName);
 
 	//Fundamental state Overrides
 	virtual void Start() = 0;

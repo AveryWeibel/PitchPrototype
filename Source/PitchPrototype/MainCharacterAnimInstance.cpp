@@ -20,6 +20,11 @@ void UMainCharacterAnimInstance::SetTurnAmount(float Value)
 	turnAmount = Value;
 }
 
+void UMainCharacterAnimInstance::SetControlDirection(FVector value)
+{
+	controlDirection = value;
+}
+
 void UMainCharacterAnimInstance::SetTiltAmount(float Value)
 {
 	tiltAmount = Value;

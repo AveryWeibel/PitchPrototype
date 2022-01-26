@@ -133,3 +133,8 @@ State_MainCharacter::~State_MainCharacter()
 {
 }
 
+void State_MainCharacter::RequestStateChange(StateName StateName)
+{
+	State::RequestStateChange(StateName);
+	mainCharacter->Animator->RecieveStateUpdate(StateName);
+}
