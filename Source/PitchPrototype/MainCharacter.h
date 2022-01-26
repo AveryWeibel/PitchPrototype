@@ -131,6 +131,8 @@ protected:
 
 	void LockOn();
 
+	void Attack();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

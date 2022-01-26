@@ -128,13 +128,6 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 
-void StateMC_LockedOnMove::Jump()
-{
-	State_MainCharacter::Jump();
-
-	RequestStateChange(StateName::SwordAttack);
-}
-
 void StateMC_LockedOnMove::LockOn()
 {
 	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());
@@ -156,4 +149,10 @@ void StateMC_LockedOnMove::LookUpRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
 	//cameraInputY += Value;
+}
+
+void StateMC_LockedOnMove::DoAttack()
+{
+	State_MainCharacter::DoAttack();
+	RequestStateChange(StateName::SwordAttack);
 }

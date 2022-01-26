@@ -136,6 +136,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpRate);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -166,6 +167,11 @@ void AMainCharacter::Jump()
 void AMainCharacter::LockOn()
 {
 	characterStateMachine->SendInput(StateAction::LockOn);
+}
+
+void AMainCharacter::Attack()
+{
+	characterStateMachine->SendInput(StateAction::DoAttack);
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

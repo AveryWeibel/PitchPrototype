@@ -70,6 +70,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::LockOn:
 		LockOn();
 		break;
+	case StateAction::DoAttack:
+		DoAttack();
+		break;
 	default:
 		break;
 	}
@@ -118,6 +121,10 @@ void State_MainCharacter::Jump()
 }
 
 void State_MainCharacter::LockOn()
+{
+}
+
+void State_MainCharacter::DoAttack()
 {
 }
 
