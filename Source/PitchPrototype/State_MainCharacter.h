@@ -67,6 +67,7 @@ protected:
 	virtual void LookUpRate(float);
 	virtual void Jump();
 	virtual void LockOn();
+	virtual void DoAttack();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
 };

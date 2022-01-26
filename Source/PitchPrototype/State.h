@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
-enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove };
+enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove, SwordAttack };
 enum StateAction 
 { 
 	MoveForward,
 	MoveRight,
-	Jump, 
+	Jump,
+	DoAttack,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,

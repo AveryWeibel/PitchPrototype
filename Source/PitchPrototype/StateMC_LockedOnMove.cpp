@@ -150,3 +150,9 @@ void StateMC_LockedOnMove::LookUpRate(float Value)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
 	//cameraInputY += Value;
 }
+
+void StateMC_LockedOnMove::DoAttack()
+{
+	State_MainCharacter::DoAttack();
+	RequestStateChange(StateName::SwordAttack);
+}

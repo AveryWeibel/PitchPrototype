@@ -9,6 +9,7 @@
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
 #include "StateMC_LockedOnMove.h"
+#include "StateMC_LockedOnSwordSwing.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -96,11 +97,13 @@ void AMainCharacter::BeginPlay()
 	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
 	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
 	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
+	StateMC_LockedOnSwordSwing* LockedOnSwordSwing = new StateMC_LockedOnSwordSwing(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
 	characterStateInstances.Add(NonCombatJump);
 	characterStateInstances.Add(LockedOnMove);
+	characterStateInstances.Add(LockedOnSwordSwing);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
@@ -133,6 +136,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpRate);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -163,6 +167,11 @@ void AMainCharacter::Jump()
 void AMainCharacter::LockOn()
 {
 	characterStateMachine->SendInput(StateAction::LockOn);
+}
+
+void AMainCharacter::Attack()
+{
+	characterStateMachine->SendInput(StateAction::DoAttack);
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

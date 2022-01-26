@@ -39,3 +39,8 @@ float UMainCharacterAnimInstance::GetTiltAmount()
 {
 	return tiltAmount;
 }
+
+StateName UMainCharacterAnimInstance::CheckState()
+{
+	return currentAnimState;
+}

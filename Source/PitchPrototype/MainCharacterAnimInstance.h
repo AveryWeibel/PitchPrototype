@@ -53,6 +53,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
 		void RecieveStateUpdate(StateName name);
 
+	UFUNCTION(BlueprintCallable)
+		StateName CheckState();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
@@ -68,6 +71,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		FVector lookatTarget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+		TEnumAsByte<StateName> currentAnimState;
 
 public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
