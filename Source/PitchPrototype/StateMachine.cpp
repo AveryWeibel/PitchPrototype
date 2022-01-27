@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "StateMachine.h"
-
+//need to remove pragma for mac version
 DEFINE_LOG_CATEGORY(Log171StateMachine);
 
 StateMachine::StateMachine(TArray<State*> newStates, StateName startingState)
