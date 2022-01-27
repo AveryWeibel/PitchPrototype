@@ -48,6 +48,9 @@ SourceArt/**/*.tga
 Binaries/*
 Plugins/*/Binaries/*
 
+#Mono lib folder
+Plugins/UnrealInk/ThirdParty/Mono/lib/*
+
 # Builds
 Build/*
 
