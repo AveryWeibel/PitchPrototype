@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -41,10 +42,12 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetCollider;
 
+	/** The CapsuleComponent being used for ground collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetOverlap;
 
-	UPROPERTY(Category  = INVALID_NAME_CHARACTERS, EditAnywhere)
+	/** The SphereComponent being used for AI range detection (by CharacterMovement).*/
+	UPROPERTY(Category  = Chracter, EditAnywhere)
 		USphereComponent* AIOverlap;
 
 	UPROPERTY(Category = Character, EditAnywhere)
@@ -74,9 +77,37 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	//Value between 0 & 1
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLerpAlpha;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHorizontalOffset;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHorizontalOffset;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
+
+	UPROPERTY()
+		TSet<ABaseAICharacter*> AIList;
+
+	UPROPERTY()
+		ABaseAICharacter* lockedAI = nullptr;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
@@ -99,6 +130,8 @@ protected:
 	void Jump();
 
 	void LockOn();
+
+	void Attack();
 
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

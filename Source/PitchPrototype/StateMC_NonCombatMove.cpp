@@ -19,6 +19,8 @@ StateMC_NonCombatMove::~StateMC_NonCombatMove()
 void StateMC_NonCombatMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
+	cameraBoomTargetLength = mainCharacter->cameraUnLockedBoomLength;
+	*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
@@ -27,6 +29,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Apply skeletal forces
 	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
 	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
+	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->);
 
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
@@ -41,8 +44,37 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
 
-	//Move the camera
-	mainCharacter->cameraBoom->SetWorldRotation(*cameraTurnVector);
+	//Position the camera
+	//Rotate camera to face in same direction as cameraBoom
+	cameraRotationLerpTarget = mainCharacter->cameraBoom->GetComponentRotation();
+	if(mainCharacter->mainCamera->GetComponentRotation() != cameraRotationLerpTarget)
+	{
+		mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * 3));
+	}
+
+	//Lerp camera boom length to correct length
+	if(mainCharacter->cameraBoom->TargetArmLength != cameraBoomTargetLength)
+	{
+		mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha);
+	}
+
+	//Rotate cameraBoom to face turnvector
+	cameraBoomRotationLerpTarget = *cameraTurnVector;
+	if(mainCharacter->cameraBoom->GetRelativeRotation() != cameraBoomRotationLerpTarget)
+	{
+		mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget, mainCharacter->cameraLerpAlpha * 50));	
+	}
+
+	if(mainCharacter->cameraBoom->GetRelativeLocation().Z != mainCharacter->cameraUnLockedHeight)
+	{
+		mainCharacter->cameraBoom->SetRelativeLocation(
+			FVector (
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha),
+				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraUnLockedHeight, mainCharacter->cameraLerpAlpha)
+			)
+		);
+	}
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
@@ -109,8 +141,16 @@ void StateMC_NonCombatMove::Jump()
 
 void StateMC_NonCombatMove::LockOn()
 {
-	
-	UE_LOG(Log171NonCombatMove, Log, TEXT("LockOn"));
+	for (auto AI : mainCharacter->AIList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			mainCharacter->lockedAI = AI;
+			mainCharacter->lockedAI->PlayerLock();
+			RequestStateChange(StateName::LockedOnMove);
+			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
+		}
+	}
 }
 
 void StateMC_NonCombatMove::BeginOverlapFeet()

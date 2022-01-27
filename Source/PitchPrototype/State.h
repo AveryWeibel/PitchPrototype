@@ -4,17 +4,21 @@
 
 #include "CoreMinimal.h"
 
-enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump };
+UENUM(BlueprintType)
+enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove, SwordAttack };
 enum StateAction 
 { 
 	MoveForward,
 	MoveRight,
-	Jump, 
+	Jump,
+	DoAttack,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,
 	LookUpRate,
-	LockOn
+	LockOn,
+	StartOverlapAI,
+	EndOverlapAI
 };
 
 class StateMachine;
@@ -37,7 +41,7 @@ public:
 protected:
 
 	//Attempts to change the state to given StateName
-	void RequestStateChange(StateName);
+	virtual void RequestStateChange(StateName);
 
 	//Fundamental state Overrides
 	virtual void Start() = 0;

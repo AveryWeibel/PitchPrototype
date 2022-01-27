@@ -2,10 +2,14 @@
 
 
 #include "MainCharacter.h"
+
+#include "BaseAICharacter.h"
 #include "StateMC_NonCombatMove.h"
 #include "StateMC_NonCombatInAir.h"
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
+#include "StateMC_LockedOnMove.h"
+#include "StateMC_LockedOnSwordSwing.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -24,18 +28,6 @@ void AMainCharacter::BeginPlay()
 	Mesh = FindComponentByClass<USkeletalMeshComponent>();	
 
 	TArray<UCapsuleComponent*> capsuleCollisions;
-
-	//Create instances of state sub-classes
-	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
-	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
-	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
-	//Add all to array
-	characterStateInstances.Add(NonCombatMove);
-	characterStateInstances.Add(NonCombatInAir);
-	characterStateInstances.Add(NonCombatJump);
-	//Initialize state machine
-	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
-
 
 	//Bind input delegates to state machine
 	//MoveForwardDelegate.BindRaw(characterStateMachine, SendInput(StateAction));
@@ -81,15 +73,15 @@ void AMainCharacter::BeginPlay()
 	FeetEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
 	feetOverlap->OnComponentEndOverlap.Add(FeetEndOverlapDelegate);
 
-	//Bind Feet BeginOverlap
+	//Bind AI BeginOverlap
 	FScriptDelegate AIBeginOverlapDelegate;
-	AIBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
-	feetOverlap->OnComponentBeginOverlap.Add(AIBeginOverlapDelegate);
+	AIBeginOverlapDelegate.BindUFunction(this, "HandleAIBeginOverlap");
+	AIOverlap->OnComponentBeginOverlap.Add(AIBeginOverlapDelegate);
 
-	//Bind Feet EndOverlap
+	//Bind AI EndOverlap
 	FScriptDelegate AIEndOverlapDelegate;
-	AIEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
-	feetOverlap->OnComponentEndOverlap.Add(AIEndOverlapDelegate);
+	AIEndOverlapDelegate.BindUFunction(this, "HandleAIEndOverlap");
+	AIOverlap->OnComponentEndOverlap.Add(AIEndOverlapDelegate);
 
 	velocityArrow = FindComponentByClass<UArrowComponent>();
 
@@ -98,6 +90,22 @@ void AMainCharacter::BeginPlay()
 	cameraBoom = FindComponentByClass<USpringArmComponent>();
 
 	Animator = Cast<UMainCharacterAnimInstance>(Mesh->GetAnimInstance());
+
+    //Initialize states last so all the references they have in player are vaild
+	//Create instances of state sub-classes
+	StateMC_NonCombatMove* NonCombatMove = new StateMC_NonCombatMove(this);
+	StateMC_NonCombatInAir* NonCombatInAir = new StateMC_NonCombatInAir(this);
+	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
+	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
+	StateMC_LockedOnSwordSwing* LockedOnSwordSwing = new StateMC_LockedOnSwordSwing(this);
+	//Add all to array
+	characterStateInstances.Add(NonCombatMove);
+	characterStateInstances.Add(NonCombatInAir);
+	characterStateInstances.Add(NonCombatJump);
+	characterStateInstances.Add(LockedOnMove);
+	characterStateInstances.Add(LockedOnSwordSwing);
+	//Initialize state machine
+	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
@@ -128,6 +136,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpRate);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -160,6 +169,11 @@ void AMainCharacter::LockOn()
 	characterStateMachine->SendInput(StateAction::LockOn);
 }
 
+void AMainCharacter::Attack()
+{
+	characterStateMachine->SendInput(StateAction::DoAttack);
+}
+
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	print("Hit Body");
@@ -185,11 +199,19 @@ void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	if(const auto AIActor = Cast<ABaseAICharacter>(OtherActor))
+	{
+		AIList.Add(AIActor);
+		UE_LOG(Log171General, Log, TEXT("Began AI Overlap with %s"), *OtherActor->GetName());
+	}
 }
 
 void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	
+	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
+	{
+		AIList.Remove(AIActor);
+		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
+	}
 }
