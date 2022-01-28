@@ -27,6 +27,9 @@ protected:
 	UFUNCTION()
 	void OnSeePlayer(APawn *Pawn);
 
+	UFUNCTION(BlueprintCallable, Category="AIState")
+		void StartCombat();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,4 +40,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))
+	void PlayerLock();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLock"))
+	void PlayerUnLock();
+
+	
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -11,6 +12,8 @@
 #include "Camera/CameraComponent.h"
 #include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
+#include "Weapon.h"
+#include "Components/SphereComponent.h"
 #include "MainCharacter.generated.h"
 
 //Forward declare components
@@ -40,8 +43,13 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetCollider;
 
+	/** The CapsuleComponent being used for ground collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetOverlap;
+
+	/** The SphereComponent being used for AI range detection (by CharacterMovement).*/
+	UPROPERTY(Category  = Chracter, EditAnywhere)
+		USphereComponent* AIOverlap;
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* bodyCollider;
@@ -70,9 +78,40 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	//Value between 0 & 1
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLerpAlpha;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHorizontalOffset;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHorizontalOffset;
+		
+    UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+        AWeapon* weapon;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
+
+	UPROPERTY()
+		TSet<ABaseAICharacter*> AIList;
+
+	UPROPERTY()
+		ABaseAICharacter* lockedAI = nullptr;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
@@ -94,6 +133,10 @@ protected:
 	/** Called for Jump input */
 	void Jump();
 
+	void LockOn();
+
+	void Attack();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -105,6 +148,12 @@ protected:
 
 	UFUNCTION()
 	void HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	//Character locomotion state variables

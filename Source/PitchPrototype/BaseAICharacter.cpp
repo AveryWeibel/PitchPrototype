@@ -42,6 +42,15 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 	 
 }
 
+void ABaseAICharacter::StartCombat()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->SetAttackBool(true);
+	}
+}
+
 // Called every frame
 void ABaseAICharacter::Tick(float DeltaTime)
 {

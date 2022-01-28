@@ -36,6 +36,14 @@ void ABaseAIController::SetMoveTarget(FVector target)
 	}
 }
 
+void ABaseAIController::SetAttackBool(bool state)
+{
+	if(BlackboardComp)
+	{
+		BlackboardComp->SetValueAsBool("Attacking", state);
+	}
+}
+
 void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();

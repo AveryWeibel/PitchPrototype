@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "State.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BaseAIController.generated.h"
 
@@ -35,4 +36,7 @@ public:
 
 	UFUNCTION()
 	void SetMoveTarget(FVector target);
+
+	UFUNCTION()
+	void SetAttackBool(bool state);
 };
