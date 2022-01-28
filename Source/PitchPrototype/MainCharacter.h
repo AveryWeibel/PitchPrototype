@@ -12,6 +12,7 @@
 #include "Camera/CameraComponent.h"
 #include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
+#include "Weapon.h"
 #include "Components/SphereComponent.h"
 #include "MainCharacter.generated.h"
 
@@ -98,6 +99,9 @@ public:
 
 	UPROPERTY(Category = Camera, EditAnywhere)
 		float cameraUnLockedHorizontalOffset;
+		
+    UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+        AWeapon* weapon;
 
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
