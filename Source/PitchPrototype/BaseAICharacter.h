@@ -27,6 +27,9 @@ protected:
 	UFUNCTION()
 	void OnSeePlayer(APawn *Pawn);
 
+	UFUNCTION(BlueprintCallable, Category="AIState")
+		void StartCombat();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
