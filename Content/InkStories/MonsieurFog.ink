@@ -1,17 +1,19 @@
 # this is a global tags
 # another tag
+# wtf
 
 VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
 EXTERNAL test()
 
-- I looked at Monsieur Fogg 
+- I looked at Monsieur Fogg # function fuck_david_coulson
 *   ... and I could contain myself no longer.
     'What is the purpose of our journey, Monsieur?'
-    {say_yes_to_everything()}
     ~ fogs_string_mood = "excellent"
     ~ fogs_current_mood = 2
     'A wager,' he replied. 
+    # function why
+    # function pain
     * *     'A wager!'[] I returned.
             He nodded. 
             * * *   'But surely that is foolishness!'
