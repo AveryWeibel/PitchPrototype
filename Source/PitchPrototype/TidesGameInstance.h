@@ -5,10 +5,18 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "TidesGameInstance.generated.h"
-
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FNPCVariables {
+	GENERATED_BODY()
+
+		UPROPERTY(Category = NPCVariables, EditAnywhere, BlueprintReadWrite)
+		TMap<FString, FString> VariableState;
+};
+
 UCLASS(Blueprintable)
 class PITCHPROTOTYPE_API UTidesGameInstance : public UGameInstance
 {
@@ -23,12 +31,10 @@ public:
 		int loopCounter;
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
-		// NPC name -> json string
-		TMap<FString, FString> NPCDictionary;
+		// NPC name -> variable state
+		TMap<FString, FNPCVariables> NPCDictionary;
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		//if you finished the tutorial
 		bool tutorialFinished;
-
-
 };
