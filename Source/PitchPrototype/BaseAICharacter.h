@@ -37,7 +37,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))

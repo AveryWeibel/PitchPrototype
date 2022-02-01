@@ -5,7 +5,17 @@
 #include "CoreMinimal.h"
 
 UENUM(BlueprintType)
-enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump, LockedOnMove, SwordAttack };
+enum TidesStateName {
+	NonCombatMove,
+	NonCombatInAir,
+	NonCombatJump,
+	LockedOnMove,
+	SwordAttack,
+	AI_AttemptAttack,
+	AI_NonCombatIdle
+};
+
+
 enum StateAction 
 { 
 	MoveForward,
@@ -36,12 +46,12 @@ class PITCHPROTOTYPE_API State
 public:
 	State();
 	virtual  ~State();
-	StateName GetStateName();
+	TidesStateName GetStateName();
 
 protected:
 
 	//Attempts to change the state to given StateName
-	virtual void RequestStateChange(StateName);
+	virtual void RequestStateChange(TidesStateName);
 
 	//Fundamental state Overrides
 	virtual void Start() = 0;
@@ -53,7 +63,7 @@ protected:
 
 	TMap<StateAction, NewFunction> StateAxisDelegates;
 
-	StateName stateName;
+	TidesStateName stateName;
 
 private:
 	StateMachine* parentStateMachine;

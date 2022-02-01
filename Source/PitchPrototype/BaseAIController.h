@@ -39,4 +39,7 @@ public:
 
 	UFUNCTION()
 	void SetAttackBool(bool state);
+
+	UFUNCTION(BlueprintCallable, Category="AIState")
+	void UpdateState(enum TidesStateName state);
 };

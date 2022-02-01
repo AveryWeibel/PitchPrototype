@@ -4,7 +4,7 @@
 //need to remove pragma for mac version
 DEFINE_LOG_CATEGORY(Log171StateMachine);
 
-StateMachine::StateMachine(TArray<State*> newStates, StateName startingState)
+StateMachine::StateMachine(TArray<State*> newStates, TidesStateName startingState)
 {
 	check(newStates.Num() > 0);
 
@@ -22,12 +22,12 @@ StateMachine::~StateMachine()
 
 }
 
-StateName StateMachine::GetActiveStateName()
+TidesStateName StateMachine::GetActiveStateName()
 {
 	return activeState->GetStateName();
 }
 
-void StateMachine::ChangeState(StateName newStateName)
+void StateMachine::ChangeState(TidesStateName newStateName)
 {
 	try {
 		if (states.Contains(newStateName) != false) {
@@ -58,19 +58,19 @@ void StateMachine::SendInput(StateAction Action, float Value)
 	activeState->SendInput(Action, Value);
 }
 
-FString StateMachine::GetStateNameString(StateName stateName)
+FString StateMachine::GetStateNameString(TidesStateName stateName)
 {
 	//This shouldn't ever return because of type safety
 	FString name = FString("No State Exists");
 
 	switch (stateName) {
-	case StateName::NonCombatInAir:
+	case TidesStateName::NonCombatInAir:
 		name = FString("NonCombatAir");
 		break;
-	case StateName::NonCombatJump:
+	case TidesStateName::NonCombatJump:
 		name = FString("NonCombatJump");
 		break;
-	case StateName::NonCombatMove:
+	case TidesStateName::NonCombatMove:
 		name = FString("NonCombatMove");
 		break;
 	default:

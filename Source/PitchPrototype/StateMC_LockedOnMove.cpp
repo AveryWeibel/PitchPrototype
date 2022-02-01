@@ -12,7 +12,7 @@ DEFINE_LOG_CATEGORY(Log171LockedOnMove);
 StateMC_LockedOnMove::StateMC_LockedOnMove(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
-	stateName = StateName::LockedOnMove;
+	stateName = TidesStateName::LockedOnMove;
 }
 
 StateMC_LockedOnMove::~StateMC_LockedOnMove()
@@ -135,7 +135,7 @@ void StateMC_LockedOnMove::LockOn()
 	//*cameraTurnVector = mainCharacter->cameraBoom->GetComponentRotation();
 	mainCharacter->lockedAI = nullptr;
 	
-	RequestStateChange(StateName::NonCombatMove);
+	RequestStateChange(TidesStateName::NonCombatMove);
 	
 }
 
@@ -154,5 +154,5 @@ void StateMC_LockedOnMove::LookUpRate(float Value)
 void StateMC_LockedOnMove::DoAttack()
 {
 	State_MainCharacter::DoAttack();
-	RequestStateChange(StateName::SwordAttack);
+	RequestStateChange(TidesStateName::SwordAttack);
 }

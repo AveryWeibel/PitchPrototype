@@ -44,6 +44,14 @@ void ABaseAIController::SetAttackBool(bool state)
 	}
 }
 
+void ABaseAIController::UpdateState(::TidesStateName state)
+{
+	if(BlackboardComp)
+	{
+		BlackboardComp->SetValueAsEnum("ActiveState", state);
+	}
+}
+
 void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();

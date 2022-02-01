@@ -15,12 +15,12 @@ class PITCHPROTOTYPE_API StateMachine
 {
 public:
 	//Ctor/Dtor
-	StateMachine(TArray<State*>, StateName);
+	StateMachine(TArray<State*>, TidesStateName);
 	~StateMachine();
 
 	//Class functionality
-	StateName GetActiveStateName();
-	void ChangeState(StateName);
+	TidesStateName GetActiveStateName();
+	void ChangeState(TidesStateName);
 	void Execute(float);
 
 	//State action interface functions
@@ -30,10 +30,10 @@ public:
 
 
 	//Utility
-	FString GetStateNameString(StateName);
+	FString GetStateNameString(TidesStateName);
 
 private:
-	TMap<StateName, State*> states;
+	TMap<TidesStateName, State*> states;
 	State* activeState;
 
 };

@@ -51,10 +51,10 @@ public:
 		float GetTiltAmount();
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
-		void RecieveStateUpdate(StateName name);
+		void RecieveStateUpdate(TidesStateName name);
 
 	UFUNCTION(BlueprintCallable)
-		StateName CheckState();
+		TidesStateName CheckState();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
@@ -73,7 +73,7 @@ protected:
 		FVector lookatTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-		TEnumAsByte<StateName> currentAnimState;
+		TEnumAsByte<TidesStateName> currentAnimState;
 
 public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
