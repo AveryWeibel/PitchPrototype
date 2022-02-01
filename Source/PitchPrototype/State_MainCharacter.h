@@ -26,7 +26,7 @@ public:
 
 protected:
 	//State overrides
-	void RequestStateChange(StateName) override;
+	void RequestStateChange(TidesStateName) override;
 	
 	//Variables/Objects managed by this state
 	AMainCharacter* mainCharacter;

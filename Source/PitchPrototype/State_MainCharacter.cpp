@@ -140,7 +140,7 @@ State_MainCharacter::~State_MainCharacter()
 {
 }
 
-void State_MainCharacter::RequestStateChange(StateName StateName)
+void State_MainCharacter::RequestStateChange(TidesStateName StateName)
 {
 	State::RequestStateChange(StateName);
 	mainCharacter->Animator->RecieveStateUpdate(StateName);

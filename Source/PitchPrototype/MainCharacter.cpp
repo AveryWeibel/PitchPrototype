@@ -105,7 +105,7 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnMove);
 	characterStateInstances.Add(LockedOnSwordSwing);
 	//Initialize state machine
-	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
+	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());

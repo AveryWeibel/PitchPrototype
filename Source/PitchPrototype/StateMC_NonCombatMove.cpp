@@ -12,7 +12,7 @@ DEFINE_LOG_CATEGORY(Log171NonCombatMove);
 // Call parent Ctor
 StateMC_NonCombatMove::StateMC_NonCombatMove(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
-	stateName = StateName::NonCombatMove;
+	stateName = TidesStateName::NonCombatMove;
 }
 
 StateMC_NonCombatMove::~StateMC_NonCombatMove()
@@ -144,7 +144,7 @@ void StateMC_NonCombatMove::LookUpRate(float Value)
 
 void StateMC_NonCombatMove::Jump()
 {
-	RequestStateChange(StateName::NonCombatJump);
+	RequestStateChange(TidesStateName::NonCombatJump);
 }
 
 void StateMC_NonCombatMove::LockOn()
@@ -155,7 +155,7 @@ void StateMC_NonCombatMove::LockOn()
 		{
 			mainCharacter->lockedAI = AI;
 			mainCharacter->lockedAI->PlayerLock();
-			RequestStateChange(StateName::LockedOnMove);
+			RequestStateChange(TidesStateName::LockedOnMove);
 			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
 		}
 	}

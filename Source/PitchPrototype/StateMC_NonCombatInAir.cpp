@@ -7,7 +7,7 @@
 
 StateMC_NonCombatInAir::StateMC_NonCombatInAir(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
-	stateName = StateName::NonCombatInAir;
+	stateName = TidesStateName::NonCombatInAir;
 }
 
 StateMC_NonCombatInAir::~StateMC_NonCombatInAir()
@@ -40,7 +40,7 @@ void StateMC_NonCombatInAir::BeginOverlapFeet()
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0));
 	gravityAccumulation = 0;
 
-	RequestStateChange(StateName::NonCombatMove);
+	RequestStateChange(TidesStateName::NonCombatMove);
 }
 
 void StateMC_NonCombatInAir::ApplyGravity()

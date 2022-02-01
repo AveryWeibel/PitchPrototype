@@ -10,7 +10,7 @@
 StateMC_LockedOnSwordSwing::StateMC_LockedOnSwordSwing(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
-	stateName = StateName::SwordAttack;
+	stateName = TidesStateName::SwordAttack;
 }
 
 StateMC_LockedOnSwordSwing::~StateMC_LockedOnSwordSwing()
@@ -36,8 +36,8 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	//Check animation state to see if we should transition out of this state
 	switch(mainCharacter->Animator->CheckState())
 	{
-	case StateName::LockedOnMove:
-			RequestStateChange(StateName::LockedOnMove);
+	case TidesStateName::LockedOnMove:
+			RequestStateChange(TidesStateName::LockedOnMove);
 			break;
 		default:
 			break;
