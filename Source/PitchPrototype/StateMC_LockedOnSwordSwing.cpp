@@ -20,7 +20,6 @@ StateMC_LockedOnSwordSwing::~StateMC_LockedOnSwordSwing()
 void StateMC_LockedOnSwordSwing::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnSwordSwing"));
-	mainCharacter->weapon->SetActorScale3D(FVector(2, 2, 2));
 }
 
 void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
@@ -38,7 +37,6 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	switch(mainCharacter->Animator->CheckState())
 	{
 	case StateName::LockedOnMove:
-			mainCharacter->weapon->SetActorScale3D(FVector(1, 1, 1));
 			RequestStateChange(StateName::LockedOnMove);
 			break;
 		default:

@@ -3,6 +3,9 @@
 
 #include "StateMC_NonCombatMove.h"
 #include "MainCharacter.h"
+#include "GameFramework/GameState.h"
+#include "GameFramework/GameStateBase.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(Log171NonCombatMove);
 
@@ -33,12 +36,17 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
-
+	
 	ConsumeMoveInputs();
 	ConsumeCameraInput();
 
+	if(mainCharacter->currentPhysicsLinearVelocity.Z > .25)
+	{
+		UE_LOG(Log171NonCombatMove, Log, TEXT("Moving Up by %f [%f]"), mainCharacter->currentPhysicsLinearVelocity.Z, UGameplayStatics::GetRealTimeSeconds(mainCharacter->GetWorld()));
+	}
+
 	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity) {
+	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
 		mainCharacter->feetCollider->AddForce(*movementVector);
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
