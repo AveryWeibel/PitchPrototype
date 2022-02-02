@@ -24,8 +24,7 @@ protected:
 	//virtual void MoveRight(float) override;
 	//virtual void Jump() override;
 	//virtual void CollideFeet() override;
-
-	//Internal functions
-
+	virtual void AnimEnd() override;
+	
 	//Internal variables
 };

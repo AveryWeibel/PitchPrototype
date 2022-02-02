@@ -28,6 +28,8 @@ class PITCHPROTOTYPE_API AMainCharacter : public APawn
 {
 	GENERATED_BODY()
 
+	friend class UMainCharacterAnimInstance;
+	
 public:
 	// Sets default values for this pawn's properties
 	AMainCharacter();
@@ -136,6 +138,8 @@ protected:
 	void LockOn();
 
 	void Attack();
+	
+	void RecieveAnimEndNotif();
 
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

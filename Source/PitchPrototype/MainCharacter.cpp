@@ -174,6 +174,11 @@ void AMainCharacter::Attack()
 	characterStateMachine->SendInput(StateAction::DoAttack);
 }
 
+void AMainCharacter::RecieveAnimEndNotif()
+{
+	characterStateMachine->SendInput(StateAction::AnimEnd);
+}
+
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	print("Hit Body");

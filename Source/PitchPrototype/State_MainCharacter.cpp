@@ -73,6 +73,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::DoAttack:
 		DoAttack();
 		break;
+	case StateAction::AnimEnd:
+		AnimEnd();
+		break;
 	default:
 		break;
 	}
@@ -114,6 +117,11 @@ void State_MainCharacter::TurnRate(float)
 
 void State_MainCharacter::LookUpRate(float)
 {
+}
+
+void State_MainCharacter::AnimEnd()
+{
+	
 }
 
 void State_MainCharacter::Jump()

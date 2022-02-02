@@ -12,7 +12,8 @@ enum TidesStateName {
 	LockedOnMove,
 	SwordAttack,
 	AI_AttemptAttack,
-	AI_NonCombatIdle
+	AI_NonCombatIdle,
+	AI_RecieveHit
 };
 
 
@@ -27,6 +28,7 @@ enum StateAction
 	TurnRate,
 	LookUpRate,
 	LockOn,
+	AnimEnd,
 	StartOverlapAI,
 	EndOverlapAI
 };

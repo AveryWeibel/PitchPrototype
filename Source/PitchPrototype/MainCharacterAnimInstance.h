@@ -56,6 +56,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TidesStateName CheckState();
 
+	UFUNCTION(BlueprintCallable)
+		void NotifyAnimationEnd();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
