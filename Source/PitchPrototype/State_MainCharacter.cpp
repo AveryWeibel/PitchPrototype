@@ -73,6 +73,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::DoAttack:
 		DoAttack();
 		break;
+	case StateAction::AnimEnd:
+		AnimEnd();
+		break;
 	default:
 		break;
 	}
@@ -116,6 +119,11 @@ void State_MainCharacter::LookUpRate(float)
 {
 }
 
+void State_MainCharacter::AnimEnd()
+{
+	
+}
+
 void State_MainCharacter::Jump()
 {
 }
@@ -140,7 +148,7 @@ State_MainCharacter::~State_MainCharacter()
 {
 }
 
-void State_MainCharacter::RequestStateChange(StateName StateName)
+void State_MainCharacter::RequestStateChange(TidesStateName StateName)
 {
 	State::RequestStateChange(StateName);
 	mainCharacter->Animator->RecieveStateUpdate(StateName);

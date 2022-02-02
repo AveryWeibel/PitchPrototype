@@ -3,6 +3,8 @@
 
 #include "MainCharacterAnimInstance.h"
 
+#include "MainCharacter.h"
+
 void UMainCharacterAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
@@ -40,7 +42,12 @@ float UMainCharacterAnimInstance::GetTiltAmount()
 	return tiltAmount;
 }
 
-StateName UMainCharacterAnimInstance::CheckState()
+TidesStateName UMainCharacterAnimInstance::CheckState()
 {
 	return currentAnimState;
+}
+
+void UMainCharacterAnimInstance::NotifyAnimationEnd()
+{
+	Cast<AMainCharacter>(OwningPawn)->RecieveAnimEndNotif();
 }

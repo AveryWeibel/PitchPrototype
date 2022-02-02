@@ -105,7 +105,7 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnMove);
 	characterStateInstances.Add(LockedOnSwordSwing);
 	//Initialize state machine
-	characterStateMachine = new StateMachine(characterStateInstances, StateName::NonCombatMove);
+	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
@@ -172,6 +172,11 @@ void AMainCharacter::LockOn()
 void AMainCharacter::Attack()
 {
 	characterStateMachine->SendInput(StateAction::DoAttack);
+}
+
+void AMainCharacter::RecieveAnimEndNotif()
+{
+	characterStateMachine->SendInput(StateAction::AnimEnd);
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
