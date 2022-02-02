@@ -6,6 +6,9 @@ VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
 EXTERNAL test()
 
+->start
+
+=== start ===
 - I looked at Monsieur Fogg # function fuck_david_coulson
 *   ... and I could contain myself no longer.
     'What is the purpose of our journey, Monsieur?'
@@ -32,6 +35,10 @@ EXTERNAL test()
 *   ... but I said nothing[] and <> 
 - we passed the day in silence
 - -> END
+
+=== fuck ===
+pens hate this
+-> END
 
 === function say_yes_to_everything ===
     ~ return true
