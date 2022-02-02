@@ -44,11 +44,24 @@ void ABaseAIController::SetAttackBool(bool state)
 	}
 }
 
-void ABaseAIController::UpdateState(::TidesStateName state)
+void ABaseAIController::SetAnimEndBool(bool state)
 {
 	if(BlackboardComp)
 	{
+		BlackboardComp->SetValueAsBool("RecieveAnimEnd", state);
+	}
+}
+
+void ABaseAIController::UpdateState(::TidesStateName state, UTownGuardAnimInstance* Animator)
+{
+	if(BlackboardComp)
+	{
+		UE_LOG(Log171General, Log, TEXT("UpdateState()"));
 		BlackboardComp->SetValueAsEnum("ActiveState", state);
+	}
+	if(Animator)
+	{
+		Animator->RecieveStateUpdate(state);
 	}
 }
 
@@ -76,5 +89,13 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 		BehaviorComp->StartTree(*AICharacter->BehaviorTree);
 	}
 	
+}
+
+void ABaseAIController::InitializeAnimator(UObject* Animator)
+{
+	if(BlackboardComp)
+	{
+		BlackboardComp->SetValueAsObject("Animator", Animator);
+	}
 }
 

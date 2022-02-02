@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "State.h"
+#include "TownGuardAnimInstance.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BaseAIController.generated.h"
 
@@ -19,6 +20,8 @@ class PITCHPROTOTYPE_API ABaseAIController : public AAIController
 {
 	GENERATED_BODY()
 
+	friend class ABaseAICharacter;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,6 +33,9 @@ protected:
 
 	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorComp;
+
+	UFUNCTION()
+	void InitializeAnimator(UObject* Animator);
 	
 public:
 	ABaseAIController();
@@ -40,6 +46,9 @@ public:
 	UFUNCTION()
 	void SetAttackBool(bool state);
 
+	UFUNCTION()
+	void SetAnimEndBool(bool state);
+	
 	UFUNCTION(BlueprintCallable, Category="AIState")
-	void UpdateState(enum TidesStateName state);
+	void UpdateState(enum TidesStateName state, UTownGuardAnimInstance* Animator);
 };

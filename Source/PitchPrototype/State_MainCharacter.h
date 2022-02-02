@@ -65,6 +65,7 @@ protected:
 	virtual void MoveRight(float);
 	virtual void TurnRate(float);
 	virtual void LookUpRate(float);
+	virtual void AnimEnd();
 	virtual void Jump();
 	virtual void LockOn();
 	virtual void DoAttack();
