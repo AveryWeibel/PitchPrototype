@@ -179,6 +179,16 @@ void AMainCharacter::RecieveAnimEndNotif()
 	characterStateMachine->SendInput(StateAction::AnimEnd);
 }
 
+void AMainCharacter::RecieveAnimHitboxActive()
+{
+	characterStateMachine->SendInput(StateAction::AnimHitboxActive);
+}
+
+void AMainCharacter::RecieveAnimHitboxInactive()
+{
+	characterStateMachine->SendInput(StateAction::AnimHitboxInactive);
+}
+
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	print("Hit Body");

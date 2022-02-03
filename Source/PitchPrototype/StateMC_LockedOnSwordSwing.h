@@ -25,6 +25,10 @@ protected:
 	//virtual void Jump() override;
 	//virtual void CollideFeet() override;
 	virtual void AnimEnd() override;
+	virtual void AnimHitboxActive() override;
+	virtual void AnimHitboxInactive() override;
 	
 	//Internal variables
+	bool hitThisAttack = false;
+	bool hitboxActive = false;
 };

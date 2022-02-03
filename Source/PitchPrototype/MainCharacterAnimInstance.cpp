@@ -51,3 +51,13 @@ void UMainCharacterAnimInstance::NotifyAnimationEnd()
 {
 	Cast<AMainCharacter>(OwningPawn)->RecieveAnimEndNotif();
 }
+
+void UMainCharacterAnimInstance::NotifyAnimHitboxActive()
+{
+	Cast<AMainCharacter>(OwningPawn)->RecieveAnimHitboxActive();
+}
+
+void UMainCharacterAnimInstance::NotifyAnimHitboxInactive()
+{
+	Cast<AMainCharacter>(OwningPawn)->RecieveAnimHitboxInactive();
+}

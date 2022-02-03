@@ -76,6 +76,12 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::AnimEnd:
 		AnimEnd();
 		break;
+	case StateAction::AnimHitboxActive:
+		AnimHitboxActive();
+		break;
+	case StateAction::AnimHitboxInactive:
+		AnimHitboxInactive();
+		break;
 	default:
 		break;
 	}
@@ -122,6 +128,14 @@ void State_MainCharacter::LookUpRate(float)
 void State_MainCharacter::AnimEnd()
 {
 	
+}
+
+void State_MainCharacter::AnimHitboxActive()
+{
+}
+
+void State_MainCharacter::AnimHitboxInactive()
+{
 }
 
 void State_MainCharacter::Jump()
