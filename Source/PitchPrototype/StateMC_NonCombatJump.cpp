@@ -44,7 +44,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
 
-	mainCharacter->feetCollider->AddForce(*movementVector);
+	mainCharacter->feetCollider->AddForce(*movementVector * DeltaTime);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
