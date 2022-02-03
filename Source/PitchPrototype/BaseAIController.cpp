@@ -91,11 +91,3 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 	
 }
 
-void ABaseAIController::InitializeAnimator(UObject* Animator)
-{
-	if(BlackboardComp)
-	{
-		BlackboardComp->SetValueAsObject("Animator", Animator);
-	}
-}
-
