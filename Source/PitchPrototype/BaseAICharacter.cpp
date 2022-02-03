@@ -18,6 +18,8 @@ void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AIMesh = FindComponentByClass<USkeletalMeshComponent>();	
+
 	pawnSensingComp = FindComponentByClass<UPawnSensingComponent>();
 
 	UE_LOG(LogTemp, Log, TEXT("AI begin play"))
@@ -26,6 +28,13 @@ void ABaseAICharacter::BeginPlay()
 	{
 		UE_LOG(LogTemp, Log, TEXT("Bind on see player"))
 		pawnSensingComp->OnSeePawn.AddDynamic(this, &ABaseAICharacter::OnSeePlayer);
+	}
+
+	Animator = Cast<UTownGuardAnimInstance>(AIMesh->GetAnimInstance());
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->InitializeAnimator(Animator);
 	}
 }
 
@@ -47,7 +56,7 @@ void ABaseAICharacter::StartCombat()
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
 	if(AIController)
 	{
-		AIController->SetAttackBool(true);
+		AIController->UpdateState(TidesStateName::AI_AttemptAttack, Animator);
 	}
 }
 
@@ -62,5 +71,23 @@ void ABaseAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABaseAICharacter::RecieveHit()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_RecieveHit, Animator);
+	}
+}
+
+void ABaseAICharacter::RecieveAnimEnd()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->SetAnimEndBool(true);
+	}
 }
 

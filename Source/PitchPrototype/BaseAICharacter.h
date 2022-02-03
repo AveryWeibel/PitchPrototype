@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseAIController.h"
+#include "TownGuardAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BaseAICharacter.generated.h"
@@ -13,6 +14,8 @@ class PITCHPROTOTYPE_API ABaseAICharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+	friend class UTownGuardAnimInstance;
+	
 public:
 	// Sets default values for this character's properties
 	ABaseAICharacter();
@@ -23,12 +26,22 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* pawnSensingComp;
+
+	UPROPERTY()
+	UTownGuardAnimInstance* Animator;
+
+	UPROPERTY()
+	USkeletalMeshComponent* AIMesh;
 	
 	UFUNCTION()
 	void OnSeePlayer(APawn *Pawn);
 
+	//Blueprint callable, bound to ink function calls
 	UFUNCTION(BlueprintCallable, Category="AIState")
 		void StartCombat();
+
+	UFUNCTION()
+	void RecieveAnimEnd();
 
 public:	
 	// Called every frame
@@ -37,9 +50,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
+	void RecieveHit();
+	
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))
 	void PlayerLock();
 

@@ -8,7 +8,7 @@
 StateMC_NonCombatJump::StateMC_NonCombatJump(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
-	stateName = StateName::NonCombatJump;
+	stateName = TidesStateName::NonCombatJump;
 }
 
 StateMC_NonCombatJump::~StateMC_NonCombatJump()
@@ -41,10 +41,10 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	//Change to inair state once we start falling
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z < 0) {
 		gravityAccumulation = 0;
-		RequestStateChange(StateName::NonCombatInAir);
+		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
 
-	mainCharacter->feetCollider->AddForce(*movementVector);
+	mainCharacter->feetCollider->AddForce(*movementVector * DeltaTime);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
