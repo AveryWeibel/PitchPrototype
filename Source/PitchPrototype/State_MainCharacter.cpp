@@ -21,9 +21,9 @@ void State_MainCharacter::ConsumeMoveInputs()
 	moveFwd = moveRht = moveZ = 0;
 }
 
-void State_MainCharacter::ConsumeCameraInput()
+void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
 {
-	cameraTurnVector->Add(-cameraInputY, cameraInputX, 0);
+	cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
 	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
 	cameraInputX = cameraInputY = 0;
 }

@@ -38,7 +38,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 	
 	ConsumeMoveInputs();
-	ConsumeCameraInput();
+	ConsumeCameraInput(DeltaTime);
 
 	if(mainCharacter->currentPhysicsLinearVelocity.Z > .25)
 	{
@@ -133,13 +133,13 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 void StateMC_NonCombatMove::TurnRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
-	cameraInputX += Value;
+	cameraInputX += Value * mainCharacter->cameraAccelerationForce;
 }
 
 void StateMC_NonCombatMove::LookUpRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
-	cameraInputY += Value;
+	cameraInputY += Value * mainCharacter->cameraAccelerationForce;
 }
 
 void StateMC_NonCombatMove::Jump()

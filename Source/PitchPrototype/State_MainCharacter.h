@@ -52,7 +52,7 @@ protected:
 
 	//Functions for managed variables
 	void ConsumeMoveInputs();
-	void ConsumeCameraInput();
+	void ConsumeCameraInput(float DeltaTime);
 	bool IsInCameraView(FVector);
 
 	//Implement State SendInput

@@ -80,6 +80,9 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraAccelerationForce;
+	
 	//Value between 0 & 1
 	UPROPERTY(Category = Camera, EditAnywhere)
 		float cameraLerpAlpha;
