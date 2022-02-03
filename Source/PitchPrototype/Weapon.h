@@ -22,7 +22,7 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override; 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
 		ABaseAICharacter* overlappedAI;
