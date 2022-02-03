@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseAIController.h"
 #include "TownGuardAnimInstance.h"
+#include "Weapon.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BaseAICharacter.generated.h"
@@ -32,6 +33,9 @@ protected:
 
 	UPROPERTY()
 	USkeletalMeshComponent* AIMesh;
+
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+	AWeapon* Weapon;
 	
 	UFUNCTION()
 	void OnSeePlayer(APawn *Pawn);
