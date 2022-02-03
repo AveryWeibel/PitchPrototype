@@ -29,6 +29,8 @@ enum StateAction
 	LookUpRate,
 	LockOn,
 	AnimEnd,
+	AnimHitboxActive,
+	AnimHitboxInactive,
 	StartOverlapAI,
 	EndOverlapAI
 };

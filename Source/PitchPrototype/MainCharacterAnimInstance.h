@@ -59,6 +59,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void NotifyAnimationEnd();
 
+	UFUNCTION(BlueprintCallable)
+		void NotifyAnimHitboxActive();
+	
+	UFUNCTION(BlueprintCallable)
+		void NotifyAnimHitboxInactive();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;

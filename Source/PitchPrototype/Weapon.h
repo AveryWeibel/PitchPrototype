@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
@@ -21,6 +22,9 @@ protected:
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override; 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
+		ABaseAICharacter* overlappedAI;
 
 };

@@ -141,6 +141,10 @@ protected:
 	
 	void RecieveAnimEndNotif();
 
+	void RecieveAnimHitboxActive();
+
+	void RecieveAnimHitboxInactive();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

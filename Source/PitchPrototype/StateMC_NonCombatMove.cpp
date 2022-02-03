@@ -48,7 +48,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Move the character
 	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
-		mainCharacter->feetCollider->AddForce(*movementVector * DeltaTime);
+		mainCharacter->feetCollider->AddForce(*movementVector);
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
 

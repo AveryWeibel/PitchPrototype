@@ -21,13 +21,19 @@ StateMC_LockedOnSwordSwing::~StateMC_LockedOnSwordSwing()
 void StateMC_LockedOnSwordSwing::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnSwordSwing"));
-	mainCharacter->lockedAI->RecieveHit();
 }
 
 void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 {
 	//UE_LOG(LogTemp, Log, TEXT("Execute State StateMC_LockedOnSwordSwing"));
 	//Setup moveVector
+
+	//Check if we hit anything
+	if(!hitThisAttack && hitboxActive && mainCharacter->weapon->overlappedAI)
+	{
+		hitThisAttack = true;
+		mainCharacter->weapon->overlappedAI->RecieveHit();
+	}
 
 	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
@@ -39,6 +45,20 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 void StateMC_LockedOnSwordSwing::AnimEnd()
 {
 	State_MainCharacter::AnimEnd();
+	hitThisAttack = false;
 	RequestStateChange(TidesStateName::LockedOnMove);
+}
+
+void StateMC_LockedOnSwordSwing::AnimHitboxActive()
+{
+	State_MainCharacter::AnimHitboxActive();
+	hitboxActive = true;
+	
+}
+
+void StateMC_LockedOnSwordSwing::AnimHitboxInactive()
+{
+	State_MainCharacter::AnimHitboxInactive();
+	hitboxActive = false;
 }
 

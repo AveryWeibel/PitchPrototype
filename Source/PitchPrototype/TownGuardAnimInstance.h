@@ -20,7 +20,7 @@ public:
 	
 	virtual void NativeInitializeAnimation() override;
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, meta=(DisplayName = "UpdateState"))
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, meta=(DisplayName = "RecieveStateUpdate"))
 	void RecieveStateUpdate(TidesStateName name);
 
 	UFUNCTION(BlueprintCallable)
