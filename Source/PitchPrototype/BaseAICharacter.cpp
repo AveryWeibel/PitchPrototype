@@ -31,11 +31,6 @@ void ABaseAICharacter::BeginPlay()
 	}
 
 	Animator = Cast<UTownGuardAnimInstance>(AIMesh->GetAnimInstance());
-	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
-	if(AIController)
-	{
-		AIController->InitializeAnimator(Animator);
-	}
 }
 
 void ABaseAICharacter::OnSeePlayer(APawn* Pawn)

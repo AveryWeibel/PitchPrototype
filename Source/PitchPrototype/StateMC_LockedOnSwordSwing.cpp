@@ -29,10 +29,11 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	//Setup moveVector
 
 	//Check if we hit anything
-	if(!hitThisAttack && hitboxActive && mainCharacter->weapon->overlappedAI)
+	auto hitAI = Cast<ABaseAICharacter>(mainCharacter->weapon->overlappedPawn);
+	if(!hitThisAttack && hitboxActive && hitAI)
 	{
 		hitThisAttack = true;
-		mainCharacter->weapon->overlappedAI->RecieveHit();
+		hitAI->RecieveHit();
 	}
 
 	//Rotate model towards the movement vector

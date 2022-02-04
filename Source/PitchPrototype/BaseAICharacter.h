@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* pawnSensingComp;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UTownGuardAnimInstance* Animator;
 
 	UPROPERTY()

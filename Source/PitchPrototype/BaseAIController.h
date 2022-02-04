@@ -34,8 +34,6 @@ protected:
 	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorComp;
 
-	UFUNCTION()
-	void InitializeAnimator(UObject* Animator);
 	
 public:
 	ABaseAIController();
