@@ -38,7 +38,7 @@ public:
 		UArrowComponent* velocityArrow;
 
 	/** The main skeletal mesh associated with this Character (optional sub-object). */
-	UPROPERTY(Category = Character, EditAnywhere)
+	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadOnly)
 		USkeletalMeshComponent* Mesh;
 
 	/** The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
