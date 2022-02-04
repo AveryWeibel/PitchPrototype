@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{26a49aa3-df40-4d13-81bc-583d0131c704}">
+		<property name="assetPath">
+			<value>Footsteps/Footsteps Sand/Footsteps Sand 4.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.77141666666666664</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f01c5c14-19c8-4695-83d4-ee8380f635f6}</destination>
+		</relationship>
+	</object>
+</objects>
