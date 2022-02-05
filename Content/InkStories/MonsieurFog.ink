@@ -11,12 +11,12 @@ EXTERNAL test()
 === start ===
 - I looked at Monsieur Fogg # function fuck_david_coulson
 *   ... and I could contain myself no longer.
+    # function pain
     'What is the purpose of our journey, Monsieur?'
     ~ fogs_string_mood = "excellent"
     ~ fogs_current_mood = 2
     'A wager,' he replied. 
     # function why
-    # function pain
     * *     'A wager!'[] I returned.
             He nodded. 
             * * *   'But surely that is foolishness!'
