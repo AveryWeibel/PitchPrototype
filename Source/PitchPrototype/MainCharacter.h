@@ -121,6 +121,16 @@ public:
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
 
+	//Combat Properties
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float playerHealth;
+
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float playerMaxHealth;
+
+	UFUNCTION(Category = Combat, BlueprintCallable)
+		float takeDamage(float damageAmount);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -107,6 +107,10 @@ void AMainCharacter::BeginPlay()
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
+	//Combat Initialization
+	playerMaxHealth = 100.0f;
+	playerHealth = 100.0f;
+
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
 }
@@ -229,4 +233,16 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 		AIList.Remove(AIActor);
 		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
+}
+
+float AMainCharacter::takeDamage(float damageAmount) {
+	playerHealth -= damageAmount;
+
+	UE_LOG(Log171General, Log, TEXT("Player taking %f damage"), damageAmount);
+
+	if (playerHealth < 0.0f) {
+		playerHealth = 0.0f;
+	}
+
+	return damageAmount;
 }
