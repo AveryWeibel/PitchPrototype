@@ -31,7 +31,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UTownGuardAnimInstance* Animator;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	USkeletalMeshComponent* AIMesh;
 
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
