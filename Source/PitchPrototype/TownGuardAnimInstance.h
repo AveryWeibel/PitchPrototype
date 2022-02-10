@@ -28,6 +28,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void RecieveAnimEndNotif();
+
+	UFUNCTION(BlueprintCallable)
+		void RecieveHitBoxActiveNotif();
+
+	UFUNCTION(BlueprintCallable)
+		void RecieveHitBoxInactiveNotif();
 	
 protected:
 	

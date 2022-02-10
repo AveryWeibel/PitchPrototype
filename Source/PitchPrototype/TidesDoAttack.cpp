@@ -7,8 +7,12 @@
 
 EBTNodeResult::Type UTidesDoAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-
 	UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
+
+	AWeapon* Weapon = Cast<ABaseAICharacter>(OwnerComp.GetAIOwner()->GetPawn())->Weapon;
+
+	
+	
 
 	return EBTNodeResult::Succeeded;
 }
