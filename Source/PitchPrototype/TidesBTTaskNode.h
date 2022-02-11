@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAIController.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "TidesBTTaskNode.generated.h"
 

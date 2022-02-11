@@ -44,6 +44,14 @@ void ABaseAIController::SetAttackBool(bool state)
 	}
 }
 
+void ABaseAIController::SetHitboxActive(bool state)
+{
+	if(BlackboardComp)
+	{
+		BlackboardComp->SetValueAsBool("HitboxActive", state);
+	}
+}
+
 void ABaseAIController::SetAnimEndBool(bool state)
 {
 	if(BlackboardComp)

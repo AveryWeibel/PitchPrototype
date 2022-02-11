@@ -33,9 +33,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	USkeletalMeshComponent* AIMesh;
-
-	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
-	AWeapon* Weapon;
 	
 	UFUNCTION()
 	void OnSeePlayer(APawn *Pawn);
@@ -46,6 +43,12 @@ protected:
 
 	UFUNCTION()
 	void RecieveAnimEnd();
+	
+	UFUNCTION()
+		void RecieveHitboxActive();
+
+	UFUNCTION()
+		void RecieveHitboxInactive();
 
 public:	
 	// Called every frame
@@ -57,6 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+	AWeapon* Weapon;	
+	
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
 	void RecieveHit();
 	

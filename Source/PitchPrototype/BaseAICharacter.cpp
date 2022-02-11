@@ -42,6 +42,7 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
 		AIController->SetMoveTarget(Pawn->GetActorLocation());
+		AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
 	}
 	 
 }
@@ -83,6 +84,24 @@ void ABaseAICharacter::RecieveAnimEnd()
 	if(AIController)
 	{
 		AIController->SetAnimEndBool(true);
+	}
+}
+
+void ABaseAICharacter::RecieveHitboxActive()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->SetHitboxActive(true);
+	}
+}
+
+void ABaseAICharacter::RecieveHitboxInactive()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->SetHitboxActive(false);
 	}
 }
 
