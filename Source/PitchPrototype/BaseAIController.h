@@ -46,7 +46,13 @@ public:
 
 	UFUNCTION()
 	void SetAnimEndBool(bool state);
+
+	UFUNCTION()
+	void SetHitboxActive(bool state);
 	
 	UFUNCTION(BlueprintCallable, Category="AIState")
 	void UpdateState(enum TidesStateName state, UTownGuardAnimInstance* Animator);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AIState")
+		TEnumAsByte<TidesStateName> StartingState;
 };
