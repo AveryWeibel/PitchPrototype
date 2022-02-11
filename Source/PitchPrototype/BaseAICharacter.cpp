@@ -42,7 +42,7 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
 		AIController->SetMoveTarget(Pawn->GetActorLocation());
-		AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
+		//AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
 	}
 	 
 }
