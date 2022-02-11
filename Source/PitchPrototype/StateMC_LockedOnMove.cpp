@@ -50,33 +50,25 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 	//Position the camera
 	//Lerp to proper camera boom length
-	if(mainCharacter->cameraBoom->TargetArmLength != cameraBoomTargetLength)
-	{
-		mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
-	}
+	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
 
 	//Lerp cameraBoom to rotate between player and target
 	//2D so the camera doesn't tilt with distance
 	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
 	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
-	if(mainCharacter->cameraBoom->GetComponentRotation() != cameraBoomRotationLerpTarget)
-	{
-		mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, mainCharacter->cameraLerpAlpha * 50 * DeltaTime));	
-	}
+	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
+
 
 	//Lerp to camera height
 	//& Kick camera to the side for framing
-	if(mainCharacter->cameraBoom->GetRelativeLocation().Z != mainCharacter->cameraLockedHeight)
-	{
-		mainCharacter->cameraBoom->SetRelativeLocation(
-			FVector (
-				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
-				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
-				FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
-			)
-		);
-	}
+	mainCharacter->cameraBoom->SetRelativeLocation(
+		FVector (
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
+		)
+	);
 
 	//Lerp camera to face target
 	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
@@ -84,7 +76,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0) {
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), 4 * DeltaTime));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), FMath::Clamp( 4 * DeltaTime, DeltaTime, 4.0f)));
 
 		//float turnDelta = 
 		
