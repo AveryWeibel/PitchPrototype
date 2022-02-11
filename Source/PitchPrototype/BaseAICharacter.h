@@ -16,6 +16,7 @@ class PITCHPROTOTYPE_API ABaseAICharacter : public ACharacter
 	GENERATED_BODY()
 
 	friend class UTownGuardAnimInstance;
+	friend class UTidesBTTaskNode;
 	
 public:
 	// Sets default values for this character's properties
@@ -40,6 +41,9 @@ protected:
 	//Blueprint callable, bound to ink function calls
 	UFUNCTION(BlueprintCallable, Category="AIState")
 		void StartCombat();
+
+	UFUNCTION(BlueprintCallable, Category="AIAction")
+		void DoAttack();
 
 	UFUNCTION()
 	void RecieveAnimEnd();

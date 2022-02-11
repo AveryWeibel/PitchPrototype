@@ -56,6 +56,16 @@ void ABaseAICharacter::StartCombat()
 	}
 }
 
+void ABaseAICharacter::DoAttack()
+{
+	UE_LOG(Log171GuardAI, Log, TEXT("DoAttack()"));
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_DoAttack, Animator);
+	}
+}
+
 // Called every frame
 void ABaseAICharacter::Tick(float DeltaTime)
 {

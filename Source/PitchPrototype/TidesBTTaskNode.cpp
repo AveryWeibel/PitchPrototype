@@ -5,7 +5,16 @@
 
 EBTNodeResult::Type UTidesBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	return Super::ExecuteTask(OwnerComp, NodeMemory);
+	owningChar = Cast<ABaseAICharacter>(OwnerComp.GetAIOwner()->GetPawn());
 	
+	return Super::ExecuteTask(OwnerComp, NodeMemory);
+}
+
+void UTidesBTTaskNode::DoAttack()
+{
+	if(owningChar)
+	{
+		owningChar->DoAttack();
+	}
 }
 

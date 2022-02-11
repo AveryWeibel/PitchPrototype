@@ -64,7 +64,7 @@ void ABaseAIController::UpdateState(::TidesStateName state, UTownGuardAnimInstan
 {
 	if(BlackboardComp)
 	{
-		UE_LOG(Log171General, Log, TEXT("UpdateState()"));
+		//UE_LOG(Log171General, Log, TEXT("UpdateState()"));
 		BlackboardComp->SetValueAsEnum("ActiveState", state);
 	}
 	if(Animator)
