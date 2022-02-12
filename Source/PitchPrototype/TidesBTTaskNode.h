@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseAIController.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "MainCharacter.h"
 #include "TidesBTTaskNode.generated.h"
 
 /**
@@ -15,6 +16,12 @@ class PITCHPROTOTYPE_API UTidesBTTaskNode : public UBTTaskNode
 {
 	GENERATED_BODY()
 
+protected:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
+	UPROPERTY()
+		ABaseAICharacter* owningChar;
+
+	UFUNCTION()
+		void DoAttack();
 };

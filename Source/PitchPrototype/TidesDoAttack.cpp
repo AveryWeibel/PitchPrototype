@@ -3,16 +3,14 @@
 
 #include "TidesDoAttack.h"
 
-#include "MainCharacter.h"
-
 EBTNodeResult::Type UTidesDoAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
-
-	AWeapon* Weapon = Cast<ABaseAICharacter>(OwnerComp.GetAIOwner()->GetPawn())->Weapon;
-
+	//UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
+	UTidesBTTaskNode::ExecuteTask(OwnerComp, NodeMemory);
 	
-	
+	AWeapon* Weapon = owningChar->Weapon;
+
+	DoAttack();
 
 	return EBTNodeResult::Succeeded;
 }

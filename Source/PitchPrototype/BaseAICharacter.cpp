@@ -42,7 +42,7 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
 		AIController->SetMoveTarget(Pawn->GetActorLocation());
-		AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
+		//AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
 	}
 	 
 }
@@ -53,6 +53,16 @@ void ABaseAICharacter::StartCombat()
 	if(AIController)
 	{
 		AIController->UpdateState(TidesStateName::AI_AttemptAttack, Animator);
+	}
+}
+
+void ABaseAICharacter::DoAttack()
+{
+	UE_LOG(Log171GuardAI, Log, TEXT("DoAttack()"));
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_DoAttack, Animator);
 	}
 }
 
