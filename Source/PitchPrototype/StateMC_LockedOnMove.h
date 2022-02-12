@@ -32,6 +32,7 @@ protected:
 	virtual void TurnRate(float) override;
 	virtual void LookUpRate(float) override;
 	virtual void DoAttack() override;
+	virtual void TakeHit() override;
 
 	//Internal functions
 

@@ -73,6 +73,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::DoAttack:
 		DoAttack();
 		break;
+	case StateAction::TakeHit:
+		TakeHit();
+		break;
 	case StateAction::AnimEnd:
 		AnimEnd();
 		break;
@@ -147,6 +150,10 @@ void State_MainCharacter::LockOn()
 }
 
 void State_MainCharacter::DoAttack()
+{
+}
+
+void State_MainCharacter::TakeHit()
 {
 }
 

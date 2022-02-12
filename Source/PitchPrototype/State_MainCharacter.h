@@ -71,6 +71,7 @@ protected:
 	virtual void Jump();
 	virtual void LockOn();
 	virtual void DoAttack();
+	virtual void TakeHit();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
 };
