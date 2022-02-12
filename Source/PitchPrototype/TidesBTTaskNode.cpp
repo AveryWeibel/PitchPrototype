@@ -10,6 +10,11 @@ EBTNodeResult::Type UTidesBTTaskNode::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	return Super::ExecuteTask(OwnerComp, NodeMemory);
 }
 
+void UTidesBTTaskNode::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+}
+
 void UTidesBTTaskNode::DoAttack()
 {
 	if(owningChar)
