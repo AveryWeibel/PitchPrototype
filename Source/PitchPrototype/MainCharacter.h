@@ -191,7 +191,10 @@ private:
 	//Create collision delegates
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
-public:	
+public:
+	UFUNCTION()
+		void TakeWeaponHit();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
