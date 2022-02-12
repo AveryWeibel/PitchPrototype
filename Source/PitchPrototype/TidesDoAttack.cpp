@@ -7,8 +7,6 @@ EBTNodeResult::Type UTidesDoAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 {
 	//UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
 	UTidesBTTaskNode::ExecuteTask(OwnerComp, NodeMemory);
-	
-	AWeapon* Weapon = owningChar->Weapon;
 
 	DoAttack();
 
