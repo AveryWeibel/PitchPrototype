@@ -143,6 +143,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 }
 
+void AMainCharacter::TakeWeaponHit()
+{
+	UE_LOG(Log171MainCharState, Log, TEXT("Player takes weapon Hit"));
+}
+
 void AMainCharacter::MoveForward(float Value)
 {
 	characterStateMachine->SendInput(StateAction::MoveForward, Value);
@@ -231,7 +236,7 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
 	{
 		AIList.Remove(AIActor);
-		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
+		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
 }
 

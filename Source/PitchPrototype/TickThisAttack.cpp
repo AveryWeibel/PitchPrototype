@@ -9,11 +9,22 @@ EBTNodeResult::Type UTickThisAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 {
 	//UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
 	UTidesBTTaskNode::ExecuteTask(OwnerComp, NodeMemory);
+
+	bool weaponActive = OwnerComp.GetBlackboardComponent()->GetValueAsBool("WeaponActive");
 	
-	AWeapon* Weapon = owningChar->Weapon;
+	auto hitPlayer = Cast<AMainCharacter>(owningChar->Weapon->overlappedPawn);
 
-	//OwnerComp.GetBlackboardComponent()->GetValueAsBool("WeaponActive")
-
+	// if(hitPlayer)
+	// {
+	// 	UE_LOG(Log171GuardAI, Log, TEXT("AI Weapon overlaps player"));
+	// }
+	
+	if(weaponActive && hitPlayer)
+	{
+		hitPlayer->TakeWeaponHit();
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool("WeaponActive", false);
+	}
+	
 	return EBTNodeResult::Succeeded;
 }
 
