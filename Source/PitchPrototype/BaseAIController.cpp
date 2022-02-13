@@ -48,7 +48,7 @@ void ABaseAIController::SetHitboxActive(bool state)
 {
 	if(BlackboardComp)
 	{
-		BlackboardComp->SetValueAsBool("HitboxActive", state);
+		BlackboardComp->SetValueAsBool("WeaponActive", state);
 	}
 }
 

@@ -10,6 +10,7 @@
 #include "CustomDefines.h"
 #include "StateMC_LockedOnMove.h"
 #include "StateMC_LockedOnSwordSwing.h"
+#include "StateMC_LockedOnTakeHit.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -98,12 +99,14 @@ void AMainCharacter::BeginPlay()
 	StateMC_NonCombatJump* NonCombatJump = new StateMC_NonCombatJump(this);
 	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
 	StateMC_LockedOnSwordSwing* LockedOnSwordSwing = new StateMC_LockedOnSwordSwing(this);
+	StateMC_LockedOnTakeHit* LockedOnTakeHit = new StateMC_LockedOnTakeHit(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
 	characterStateInstances.Add(NonCombatJump);
 	characterStateInstances.Add(LockedOnMove);
 	characterStateInstances.Add(LockedOnSwordSwing);
+	characterStateInstances.Add(LockedOnTakeHit);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
@@ -141,6 +144,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
+}
+
+void AMainCharacter::TakeWeaponHit()
+{
+	characterStateMachine->SendInput(StateAction::TakeHit);
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -231,7 +239,7 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
 	{
 		AIList.Remove(AIActor);
-		UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
+		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
 }
 

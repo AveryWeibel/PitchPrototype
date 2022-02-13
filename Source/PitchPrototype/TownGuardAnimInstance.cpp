@@ -24,8 +24,10 @@ void UTownGuardAnimInstance::RecieveAnimEndNotif()
 
 void UTownGuardAnimInstance::RecieveHitBoxActiveNotif()
 {
+	Cast<ABaseAICharacter>(OwningPawn)->RecieveHitboxActive();
 }
 
 void UTownGuardAnimInstance::RecieveHitBoxInactiveNotif()
 {
+	Cast<ABaseAICharacter>(OwningPawn)->RecieveHitboxInactive();
 }

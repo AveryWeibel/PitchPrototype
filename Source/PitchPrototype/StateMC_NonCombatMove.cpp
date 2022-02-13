@@ -66,7 +66,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	//Rotate cameraBoom to face turnvector
 	cameraBoomRotationLerpTarget = *cameraTurnVector;
-	UE_LOG(Log171NonCombatMove, Log, TEXT("%f"), FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha));
+	//UE_LOG(Log171NonCombatMove, Log, TEXT("%f"), FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha));
 	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
 	
 	//	UE_LOG(Log171NonCombatMove, Log, TEXT("[MoveCameraBoomX] Moving to %f from %f by %f"), mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLerpAlpha * DeltaTime);
