@@ -3,6 +3,8 @@
 
 #include "BTT_MaintainDistanceStrafe.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 struct BTT_MaintainDistanceStrafeMemory
 {
 	float taskStartTime = 5;
@@ -39,11 +41,22 @@ void UBTT_MaintainDistanceStrafe::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	BTT_MaintainDistanceStrafeMemory* TaskMemory = reinterpret_cast<BTT_MaintainDistanceStrafeMemory*>(NodeMemory);
 	
 	const float executingTime = owningChar->GetWorld()->GetTimeSeconds() - TaskMemory->taskStartTime;
+
+	owningChar->GetCharacterMovement()->MoveSmooth(owningChar->GetActorRightVector() * 100, DeltaSeconds);
 	
 	UE_LOG(Log171GuardAI, Log, TEXT("Strafe Tick for %f"), executingTime);
 
 	if(executingTime >= timeBetweenAttacks)
 	{
+		ABaseAIController* AIController = Cast<ABaseAIController>(owningChar->GetController());
+	
+		UE_LOG(LogTemp, Log, TEXT("See Player"))
+		if(AIController)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
+			AIController->UpdateState(TidesStateName::AI_AttemptAttack, owningChar->Animator);
+			//AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
+		}
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
