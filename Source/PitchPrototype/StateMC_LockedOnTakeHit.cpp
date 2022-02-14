@@ -90,8 +90,6 @@ void StateMC_LockedOnTakeHit::MoveRight(float Value)
 
 	//if (Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-	mainCharacter->Animator->SetTurnAmount(moveRht);
 
 	//moveY = Value * mainCharacter->accelerationForce;
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
