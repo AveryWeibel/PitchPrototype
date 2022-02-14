@@ -30,9 +30,6 @@ protected:
 	UPawnSensingComponent* pawnSensingComp;
 
 	UPROPERTY(BlueprintReadOnly)
-	UTownGuardAnimInstance* Animator;
-
-	UPROPERTY(BlueprintReadOnly)
 	USkeletalMeshComponent* AIMesh;
 	
 	UFUNCTION()
@@ -63,6 +60,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTownGuardAnimInstance* Animator;
 
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
 	AWeapon* Weapon;	
