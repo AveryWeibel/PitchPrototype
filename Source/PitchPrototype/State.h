@@ -13,6 +13,7 @@ enum TidesStateName {
 	SwordAttack,
 	LockedOnTakeHit,
 	AI_AttemptAttack,
+	AI_CombatStrafe,
 	AI_DoAttack,
 	AI_NonCombatIdle,
 	AI_NonCombatPatrol,
