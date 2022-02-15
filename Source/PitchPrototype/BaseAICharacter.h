@@ -27,13 +27,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
-	UPawnSensingComponent* pawnSensingComp;
+		UPawnSensingComponent* pawnSensingComp;
 
 	UPROPERTY(BlueprintReadOnly)
-	USkeletalMeshComponent* AIMesh;
+		USkeletalMeshComponent* AIMesh;
 	
 	UFUNCTION()
-	void OnSeePlayer(APawn *Pawn);
+		void OnSeePlayer(APawn *Pawn);
 
 	//Blueprint callable, bound to ink function calls
 	UFUNCTION(BlueprintCallable, Category="AIState")
@@ -43,7 +43,7 @@ protected:
 		void DoAttack();
 
 	UFUNCTION()
-	void RecieveAnimEnd();
+		void RecieveAnimEnd();
 	
 	UFUNCTION()
 		void RecieveHitboxActive();

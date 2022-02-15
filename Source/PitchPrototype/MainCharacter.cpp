@@ -148,6 +148,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::TakeWeaponHit()
 {
+	takeDamage(10);
 	characterStateMachine->SendInput(StateAction::TakeHit);
 }
 

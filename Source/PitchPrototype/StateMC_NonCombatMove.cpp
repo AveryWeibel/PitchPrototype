@@ -30,8 +30,6 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
 	
 	//Apply skeletal forces
-	float tiltAmount = mainCharacter->Animator->GetTiltAmount();
-	mainCharacter->Animator->SetTiltAmount(FMath::Lerp(tiltAmount, FMath::Abs(moveFwd) + FMath::Abs(moveRht), .01f));
 	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->);
 
 
@@ -117,8 +115,6 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 
 	//if (Value != 0)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-	mainCharacter->Animator->SetTurnAmount(moveRht);
 
 	//moveY = Value * mainCharacter->accelerationForce;
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
