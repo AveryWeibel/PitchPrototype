@@ -33,8 +33,8 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//Update animation variables
 	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedAI->GetActorLocation());
 
-	mainCharacter->Animator->SetControlDirection(FVector(moveFwd, moveRht, 0));
-
+	mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), FVector(moveFwd, moveRht, 0), 0.2f) );
+	
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
 	ConsumeMoveInputs();
@@ -97,6 +97,7 @@ void StateMC_LockedOnMove::MoveForward(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
+	
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
@@ -105,6 +106,8 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 {
 	moveRht = Value;
 
+
+	
 	//if (Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 
@@ -113,6 +116,7 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
+	
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 

@@ -46,3 +46,8 @@ void UMainCharacterAnimInstance::NotifyAnimHitboxInactive()
 {
 	Cast<AMainCharacter>(OwningPawn)->RecieveAnimHitboxInactive();
 }
+
+FVector UMainCharacterAnimInstance::GetControlDirection()
+{
+	return controlDirection;
+}

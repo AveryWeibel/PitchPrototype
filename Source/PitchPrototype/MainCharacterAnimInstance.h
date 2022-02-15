@@ -70,6 +70,8 @@ protected:
 		TEnumAsByte<TidesStateName> currentAnimState;
 
 public:
+	FVector GetControlDirection();
+	
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
 
 	FORCEINLINE EAnimationType GetAnimation() { return CurrentAnimation; }
