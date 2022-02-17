@@ -20,10 +20,10 @@ protected:
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
-	//virtual void MoveForward(float);
-	//virtual void MoveRight(float);
-	//virtual void Jump();
-	//virtual void CollideFeet();
+	//virtual void MoveForward(float) override;
+	//virtual void MoveRight(float) override;
+	//virtual void Jump() override;
+	//virtual void CollideFeet() override;
 
 	//Internal functions
 

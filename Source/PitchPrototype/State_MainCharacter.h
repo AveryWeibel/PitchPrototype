@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "State.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
+
 class AMainCharacter;
 
 /**
@@ -23,6 +25,9 @@ public:
 	//Dictionary<MainCharacterActions, StateActionDelegate> StateActionDelegates;
 
 protected:
+	//State overrides
+	void RequestStateChange(TidesStateName) override;
+	
 	//Variables/Objects managed by this state
 	AMainCharacter* mainCharacter;
 
@@ -31,17 +36,24 @@ protected:
 	bool grounded = false;
 
 	//Move Inputs
-	float moveX = 0;
-	float moveY = 0;
+	float moveFwd = 0;
+	float moveRht = 0;
 	float moveZ = 0;
+
+	//Camera variables
+	FRotator cameraRotationLerpTarget;
+	FRotator cameraBoomRotationLerpTarget;
+	float cameraBoomTargetLength;
 
 	//Camera Inputs
 	float cameraInputX = 0;
 	float cameraInputY = 0;
+	float cameraFrontThreshold = 0.8f;
 
 	//Functions for managed variables
 	void ConsumeMoveInputs();
-	void ConsumeCameraInput();
+	void ConsumeCameraInput(float DeltaTime);
+	bool IsInCameraView(FVector);
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;
@@ -53,7 +65,13 @@ protected:
 	virtual void MoveRight(float);
 	virtual void TurnRate(float);
 	virtual void LookUpRate(float);
+	virtual void AnimEnd();
+	virtual void AnimHitboxActive();
+	virtual void AnimHitboxInactive();
 	virtual void Jump();
+	virtual void LockOn();
+	virtual void DoAttack();
+	virtual void TakeHit();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
 };

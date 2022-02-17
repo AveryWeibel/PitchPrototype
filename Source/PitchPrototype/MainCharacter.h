@@ -3,13 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
+#include "MainCharacterAnimInstance.h"
 #include "StateMachine.h"
+#include "Weapon.h"
+#include "Components/SphereComponent.h"
 #include "MainCharacter.generated.h"
 
 //Forward declare components
@@ -24,6 +28,8 @@ class PITCHPROTOTYPE_API AMainCharacter : public APawn
 {
 	GENERATED_BODY()
 
+	friend class UMainCharacterAnimInstance;
+	
 public:
 	// Sets default values for this pawn's properties
 	AMainCharacter();
@@ -32,15 +38,20 @@ public:
 		UArrowComponent* velocityArrow;
 
 	/** The main skeletal mesh associated with this Character (optional sub-object). */
-	UPROPERTY(Category = Character, EditAnywhere)
+	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadOnly)
 		USkeletalMeshComponent* Mesh;
 
 	/** The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetCollider;
 
+	/** The CapsuleComponent being used for ground collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* feetOverlap;
+
+	/** The SphereComponent being used for AI range detection (by CharacterMovement).*/
+	UPROPERTY(Category  = Chracter, EditAnywhere)
+		USphereComponent* AIOverlap;
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		UCapsuleComponent* bodyCollider;
@@ -69,9 +80,56 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraAccelerationForce;
+	
+	//Value between 0 & 1
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLerpAlpha;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedBoomLength;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHeight;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraLockedHorizontalOffset;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float cameraUnLockedHorizontalOffset;
+		
+    UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+        AWeapon* weapon;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
+
+	UPROPERTY()
+		TSet<ABaseAICharacter*> AIList;
+
+	UPROPERTY()
+		ABaseAICharacter* lockedAI = nullptr;
+
+	//Animation
+	UMainCharacterAnimInstance* Animator = nullptr;
+
+	//Combat Properties
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float playerHealth;
+
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float playerMaxHealth;
+
+	UFUNCTION(Category = Combat, BlueprintCallable)
+		float takeDamage(float damageAmount);
 
 protected:
 	// Called when the game starts or when spawned
@@ -90,6 +148,16 @@ protected:
 	/** Called for Jump input */
 	void Jump();
 
+	void LockOn();
+
+	void Attack();
+	
+	void RecieveAnimEndNotif();
+
+	void RecieveAnimHitboxActive();
+
+	void RecieveAnimHitboxInactive();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -101,6 +169,12 @@ protected:
 
 	UFUNCTION()
 	void HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+	void HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
 	//Character locomotion state variables
@@ -117,7 +191,10 @@ private:
 	//Create collision delegates
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
-public:	
+public:
+	UFUNCTION()
+		void TakeWeaponHit();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

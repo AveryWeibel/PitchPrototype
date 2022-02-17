@@ -13,7 +13,7 @@ State::~State()
 {
 }
 
-void State::RequestStateChange(StateName newState)
+void State::RequestStateChange(TidesStateName newState)
 {
 	parentStateMachine->ChangeState(newState);
 }
@@ -29,7 +29,7 @@ void State::Execute(float deltatime)
 
 }
 
-StateName State::GetStateName()
+TidesStateName State::GetStateName()
 {
 	return stateName;
 }

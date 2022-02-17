@@ -4,16 +4,40 @@
 
 #include "CoreMinimal.h"
 
-enum StateName { NonCombatMove, NonCombatInAir, NonCombatJump };
+UENUM(BlueprintType)
+enum TidesStateName {
+	NonCombatMove,
+	NonCombatInAir,
+	NonCombatJump,
+	LockedOnMove,
+	SwordAttack,
+	LockedOnTakeHit,
+	AI_AttemptAttack,
+	AI_CombatStrafe,
+	AI_DoAttack,
+	AI_NonCombatIdle,
+	AI_NonCombatPatrol,
+	AI_RecieveHit
+};
+
+
 enum StateAction 
 { 
 	MoveForward,
 	MoveRight,
-	Jump, 
+	Jump,
+	DoAttack,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,
-	LookUpRate
+	LookUpRate,
+	LockOn,
+	AnimEnd,
+	TakeHit,
+	AnimHitboxActive,
+	AnimHitboxInactive,
+	StartOverlapAI,
+	EndOverlapAI
 };
 
 class StateMachine;
@@ -31,12 +55,12 @@ class PITCHPROTOTYPE_API State
 public:
 	State();
 	virtual  ~State();
-	StateName GetStateName();
+	TidesStateName GetStateName();
 
 protected:
 
 	//Attempts to change the state to given StateName
-	void RequestStateChange(StateName);
+	virtual void RequestStateChange(TidesStateName);
 
 	//Fundamental state Overrides
 	virtual void Start() = 0;
@@ -48,7 +72,7 @@ protected:
 
 	TMap<StateAction, NewFunction> StateAxisDelegates;
 
-	StateName stateName;
+	TidesStateName stateName;
 
 private:
 	StateMachine* parentStateMachine;

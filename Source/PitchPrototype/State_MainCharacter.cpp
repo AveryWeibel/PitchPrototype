@@ -4,6 +4,8 @@
 #include "State_MainCharacter.h"
 #include "MainCharacter.h"
 
+DEFINE_LOG_CATEGORY(Log171MainCharState);
+
 State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 {
 	mainCharacter = mainCharacterPtr;
@@ -16,14 +18,41 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 //Apply inputs for this frame to movement vector and reset them to zero
 void State_MainCharacter::ConsumeMoveInputs()
 {
-	moveX = moveY = moveZ = 0;
+	moveFwd = moveRht = moveZ = 0;
 }
 
-void State_MainCharacter::ConsumeCameraInput()
+void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
 {
-	cameraTurnVector->Add(-cameraInputY, cameraInputX, 0);
+	cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
 	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
 	cameraInputX = cameraInputY = 0;
+}
+
+bool State_MainCharacter::IsInCameraView(FVector obj)
+{
+	//2Dify obj
+	obj.Z = 0;
+
+	//2Dify CameraPos
+	FVector cameraPos = mainCharacter->mainCamera->GetComponentLocation();
+	cameraPos = FVector(cameraPos.X, cameraPos.Y, 0);
+
+	//Get direction to obj from camera
+	FVector dirToObj = obj - cameraPos;
+	dirToObj.Normalize();
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
+
+	//2Dify camera forward vector
+	FVector cameraForward = mainCharacter->mainCamera->GetForwardVector();
+	cameraForward.Z = 0;
+	cameraForward.Normalize();
+
+	//Get 2D dot product for basic direction checks
+	float dot = FVector::DotProduct(dirToObj, cameraForward);
+	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
+	
+	if(dot > cameraFrontThreshold) { return true; }
+	return false;
 }
 
 void State_MainCharacter::SendInput(StateAction Action)
@@ -37,6 +66,24 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::EndOverlapFeet:
 		EndOverlapFeet();
+		break;
+	case StateAction::LockOn:
+		LockOn();
+		break;
+	case StateAction::DoAttack:
+		DoAttack();
+		break;
+	case StateAction::TakeHit:
+		TakeHit();
+		break;
+	case StateAction::AnimEnd:
+		AnimEnd();
+		break;
+	case StateAction::AnimHitboxActive:
+		AnimHitboxActive();
+		break;
+	case StateAction::AnimHitboxInactive:
+		AnimHitboxInactive();
 		break;
 	default:
 		break;
@@ -81,7 +128,32 @@ void State_MainCharacter::LookUpRate(float)
 {
 }
 
+void State_MainCharacter::AnimEnd()
+{
+	
+}
+
+void State_MainCharacter::AnimHitboxActive()
+{
+}
+
+void State_MainCharacter::AnimHitboxInactive()
+{
+}
+
 void State_MainCharacter::Jump()
+{
+}
+
+void State_MainCharacter::LockOn()
+{
+}
+
+void State_MainCharacter::DoAttack()
+{
+}
+
+void State_MainCharacter::TakeHit()
 {
 }
 
@@ -97,3 +169,8 @@ State_MainCharacter::~State_MainCharacter()
 {
 }
 
+void State_MainCharacter::RequestStateChange(TidesStateName StateName)
+{
+	State::RequestStateChange(StateName);
+	mainCharacter->Animator->RecieveStateUpdate(StateName);
+}
