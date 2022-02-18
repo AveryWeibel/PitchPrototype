@@ -69,6 +69,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		TEnumAsByte<TidesStateName> currentAnimState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float parryAlpha;
+
 public:
 	FVector GetControlDirection();
 	

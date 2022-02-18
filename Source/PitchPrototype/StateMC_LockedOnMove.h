@@ -33,6 +33,7 @@ protected:
 	virtual void LookUpRate(float) override;
 	virtual void DoAttack() override;
 	virtual void TakeHit() override;
+	virtual void Parry() override;
 
 	//Internal functions
 

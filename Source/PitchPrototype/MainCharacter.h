@@ -151,6 +151,8 @@ protected:
 	void LockOn();
 
 	void Attack();
+
+	void Parry();
 	
 	void RecieveAnimEndNotif();
 

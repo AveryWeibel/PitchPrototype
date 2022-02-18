@@ -155,3 +155,10 @@ void StateMC_LockedOnMove::TakeHit()
 	RequestStateChange(TidesStateName::LockedOnTakeHit);
 }
 
+void StateMC_LockedOnMove::Parry()
+{
+	State_MainCharacter::Parry();
+	//mainCharacter->lockedAI->Animator
+	UE_LOG(Log171General, Log, TEXT("Parry()"));
+}
+
