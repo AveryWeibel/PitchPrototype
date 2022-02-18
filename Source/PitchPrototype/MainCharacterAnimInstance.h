@@ -78,4 +78,13 @@ public:
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
 
 	FORCEINLINE EAnimationType GetAnimation() { return CurrentAnimation; }
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void PlayParry();
+
+	UFUNCTION()
+		void SetParryAlpha(float value);
+
+	UFUNCTION()
+		float GetParryAlpha();
 };

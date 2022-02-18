@@ -66,3 +66,13 @@ FVector UMainCharacterAnimInstance::GetControlDirection()
 {
 	return controlDirection;
 }
+
+void UMainCharacterAnimInstance::SetParryAlpha(float value)
+{
+	parryAlpha = value;
+}
+
+float UMainCharacterAnimInstance::GetParryAlpha()
+{
+	return parryAlpha;
+}

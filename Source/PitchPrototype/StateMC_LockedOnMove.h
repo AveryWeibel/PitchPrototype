@@ -38,4 +38,5 @@ protected:
 	//Internal functions
 
 	//Internal variables
+	float ParryLerpTarget;
 };

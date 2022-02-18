@@ -34,6 +34,14 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedAI->GetActorLocation());
 
 	mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), FVector(moveFwd, moveRht, 0), 0.2f) );
+
+	if(mainCharacter->Animator->GetParryAlpha() >= .95)
+	{
+		ParryLerpTarget = 0;
+	}
+	mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
+
+
 	
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 
@@ -146,19 +154,25 @@ void StateMC_LockedOnMove::LookUpRate(float Value)
 void StateMC_LockedOnMove::DoAttack()
 {
 	State_MainCharacter::DoAttack();
+	ParryLerpTarget = 0;
+	mainCharacter->Animator->SetParryAlpha(0);
 	RequestStateChange(TidesStateName::SwordAttack);
 }
 
 void StateMC_LockedOnMove::TakeHit()
 {
 	State_MainCharacter::TakeHit();
+	ParryLerpTarget = 0;
+	mainCharacter->Animator->SetParryAlpha(0);
 	RequestStateChange(TidesStateName::LockedOnTakeHit);
 }
 
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
+	//mainCharacter->lockedAI->Weapon->GetActorLocation();
 	//mainCharacter->lockedAI->Animator
+	ParryLerpTarget = 1;
 	UE_LOG(Log171General, Log, TEXT("Parry()"));
 }
 
