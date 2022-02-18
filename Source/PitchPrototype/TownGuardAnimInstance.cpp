@@ -31,3 +31,13 @@ void UTownGuardAnimInstance::RecieveHitBoxInactiveNotif()
 {
 	Cast<ABaseAICharacter>(OwningPawn)->RecieveHitboxInactive();
 }
+
+bool UTownGuardAnimInstance::GetParryable()
+{
+	return parryable;
+}
+
+void UTownGuardAnimInstance::SetParryable(bool value)
+{
+	parryable = value;
+}

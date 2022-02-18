@@ -19,7 +19,8 @@ enum TidesStateName {
 	AI_NonCombatIdle,
 	AI_NonCombatPatrol,
 	AI_Dialogue,
-	AI_RecieveHit
+	AI_RecieveHit,
+	AI_CombatDialogueWait
 };
 
 
@@ -29,6 +30,7 @@ enum StateAction
 	MoveRight,
 	Jump,
 	DoAttack,
+	Parry,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,

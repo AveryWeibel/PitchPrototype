@@ -73,6 +73,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::DoAttack:
 		DoAttack();
 		break;
+	case StateAction::Parry:
+		Parry();
+		break;
 	case StateAction::TakeHit:
 		TakeHit();
 		break;
@@ -150,6 +153,10 @@ void State_MainCharacter::LockOn()
 }
 
 void State_MainCharacter::DoAttack()
+{
+}
+
+void State_MainCharacter::Parry()
 {
 }
 
