@@ -25,7 +25,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 
 		FVector targetLocation = NavLoc.Location;
 
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(targetDest.SelectedKeyName, direction);
+		OwnerComp.GetBlackboardComponent()->SetValueAsVector(targetDest.SelectedKeyName, targetLocation);
 		return EBTNodeResult::Succeeded;
 	}
 	else {
