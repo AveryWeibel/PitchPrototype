@@ -26,4 +26,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
 		APawn* overlappedPawn;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
+		FVector parryTarget;
+
 };

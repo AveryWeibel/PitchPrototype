@@ -172,8 +172,16 @@ void StateMC_LockedOnMove::TakeHit()
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
-	mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
-	ParryLerpTarget = 1;
+	
+	if(mainCharacter->Animator->GetParryAlpha() <= .05f) {
+		mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->parryTarget);
+		ParryLerpTarget = 1;
+		if(mainCharacter->lockedAI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedAI) < mainCharacter->parryDistance)
+		{
+			mainCharacter->lockedAI->RecieveHit();
+		}
+	}
+	
 	UE_LOG(Log171General, Log, TEXT("Parry()"));
 }
 
