@@ -76,3 +76,13 @@ float UMainCharacterAnimInstance::GetParryAlpha()
 {
 	return parryAlpha;
 }
+
+void UMainCharacterAnimInstance::SetParryIKTarget(FVector value)
+{
+	parryIKTarget = value;
+}
+
+FVector UMainCharacterAnimInstance::GetParryIKTarget()
+{
+	return parryIKTarget;
+}

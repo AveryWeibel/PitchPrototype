@@ -39,6 +39,8 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	{
 		ParryLerpTarget = 0;
 	}
+
+	mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
 	mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 
@@ -170,8 +172,7 @@ void StateMC_LockedOnMove::TakeHit()
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
-	//mainCharacter->lockedAI->Weapon->GetActorLocation();
-	//mainCharacter->lockedAI->Animator
+	mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
 	ParryLerpTarget = 1;
 	UE_LOG(Log171General, Log, TEXT("Parry()"));
 }
