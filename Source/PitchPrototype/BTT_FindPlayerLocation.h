@@ -6,25 +6,20 @@
 #include "TidesBTTaskNode.h"
 #include "Kismet/GameplayStatics.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "BTT_SetFocus.generated.h"
+#include "BTT_FindPlayerLocation.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PITCHPROTOTYPE_API UBTT_SetFocus : public UTidesBTTaskNode
+class PITCHPROTOTYPE_API UBTT_FindPlayerLocation : public UTidesBTTaskNode
 {
 	GENERATED_BODY()
-
-		UBTT_SetFocus();
 
 public:
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool focus;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FBlackboardKeySelector focusPawn;
+		FBlackboardKeySelector targetDest;
 };
