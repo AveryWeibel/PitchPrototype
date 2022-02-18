@@ -69,10 +69,31 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		TEnumAsByte<TidesStateName> currentAnimState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float parryAlpha;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		FVector parryIKTarget;
+
 public:
 	FVector GetControlDirection();
 	
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
 
 	FORCEINLINE EAnimationType GetAnimation() { return CurrentAnimation; }
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void PlayParry();
+
+	UFUNCTION()
+		void SetParryAlpha(float value);
+
+	UFUNCTION()
+		float GetParryAlpha();
+
+	UFUNCTION()
+		void SetParryIKTarget(FVector value);
+
+	UFUNCTION()
+		FVector GetParryIKTarget();
 };
