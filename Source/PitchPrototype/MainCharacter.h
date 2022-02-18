@@ -108,6 +108,9 @@ public:
     UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
         AWeapon* weapon;
 
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float parryDistance;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
@@ -151,6 +154,8 @@ protected:
 	void LockOn();
 
 	void Attack();
+
+	void Parry();
 	
 	void RecieveAnimEndNotif();
 

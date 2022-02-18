@@ -30,6 +30,7 @@ enum StateAction
 	MoveRight,
 	Jump,
 	DoAttack,
+	Parry,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,

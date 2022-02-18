@@ -144,6 +144,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
+	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
 }
 
 void AMainCharacter::TakeWeaponHit()
@@ -185,6 +186,11 @@ void AMainCharacter::LockOn()
 void AMainCharacter::Attack()
 {
 	characterStateMachine->SendInput(StateAction::DoAttack);
+}
+
+void AMainCharacter::Parry()
+{
+	characterStateMachine->SendInput(StateAction::Parry);
 }
 
 void AMainCharacter::RecieveAnimEndNotif()

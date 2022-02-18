@@ -34,10 +34,19 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void RecieveHitBoxInactiveNotif();
+
+	UFUNCTION()
+		bool GetParryable();
+
+	UFUNCTION()
+		void SetParryable(bool value);
 	
 protected:
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		bool parryable;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	TEnumAsByte<TidesStateName> currentAnimState;
+		TEnumAsByte<TidesStateName> currentAnimState;
 	
 };

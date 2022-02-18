@@ -28,3 +28,14 @@ EBTNodeResult::Type UTickThisAttack::ExecuteTask(UBehaviorTreeComponent& OwnerCo
 	return EBTNodeResult::Succeeded;
 }
 
+EBTNodeResult::Type UTickThisAttack::AbortTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	OwnerComp.GetBlackboardComponent()->SetValueAsBool("WeaponActive", false);
+	return Super::AbortTask(OwnerComp, NodeMemory);
+}
+
+void UTickThisAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+}
+
