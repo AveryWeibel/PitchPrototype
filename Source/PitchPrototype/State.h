@@ -15,8 +15,10 @@ enum TidesStateName {
 	AI_AttemptAttack,
 	AI_CombatStrafe,
 	AI_DoAttack,
+	AI_CombatDialogue,
 	AI_NonCombatIdle,
 	AI_NonCombatPatrol,
+	AI_Dialogue,
 	AI_RecieveHit
 };
 
