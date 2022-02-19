@@ -39,6 +39,7 @@ protected:
 	float moveFwd = 0;
 	float moveRht = 0;
 	float moveZ = 0;
+	FVector storedMovement;
 
 	//Camera variables
 	FRotator cameraRotationLerpTarget;
@@ -54,6 +55,7 @@ protected:
 	void ConsumeMoveInputs();
 	void ConsumeCameraInput(float DeltaTime);
 	bool IsInCameraView(FVector);
+	void MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod = 1);
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;
@@ -72,6 +74,7 @@ protected:
 	virtual void LockOn();
 	virtual void DoAttack();
 	virtual void Parry();
+	virtual void Dodge();
 	virtual void TakeHit();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();

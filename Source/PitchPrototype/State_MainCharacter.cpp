@@ -55,6 +55,32 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 	return false;
 }
 
+void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod)
+{
+	//Position the camera
+	//Lerp to proper camera boom length
+	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime);
+
+	//Lerp cameraBoom to rotate between player and target
+	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
+	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * speedMod * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
+
+
+	//Lerp to camera height
+	//& Kick camera to the side for framing
+	mainCharacter->cameraBoom->SetRelativeLocation(
+		FVector (
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime)
+		)
+	);
+
+	//Lerp camera to face target
+	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
+}
+
 void State_MainCharacter::SendInput(StateAction Action)
 {
 	switch (Action) {
@@ -75,6 +101,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::Parry:
 		Parry();
+		break;
+	case StateAction::Dodge:
+		Dodge();
 		break;
 	case StateAction::TakeHit:
 		TakeHit();
@@ -157,6 +186,10 @@ void State_MainCharacter::DoAttack()
 }
 
 void State_MainCharacter::Parry()
+{
+}
+
+void State_MainCharacter::Dodge()
 {
 }
 
