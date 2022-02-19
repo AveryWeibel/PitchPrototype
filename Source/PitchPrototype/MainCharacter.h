@@ -126,6 +126,12 @@ public:
 
 	//Combat Properties
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeLength;
+
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeSpeed;
+	
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
 		float playerHealth;
 
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
@@ -156,6 +162,8 @@ protected:
 	void Attack();
 
 	void Parry();
+
+	void Dodge();
 	
 	void RecieveAnimEndNotif();
 

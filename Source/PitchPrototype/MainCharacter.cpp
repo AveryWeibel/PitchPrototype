@@ -8,9 +8,11 @@
 #include "StateMC_NonCombatInAir.h"
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
+#include "StateMC_LockedOnDodge.h"
 #include "StateMC_LockedOnMove.h"
 #include "StateMC_LockedOnSwordSwing.h"
 #include "StateMC_LockedOnTakeHit.h"
+#include "StateMC_LockedOnDodge.h"
 
 DEFINE_LOG_CATEGORY(Log171General);
 
@@ -100,6 +102,7 @@ void AMainCharacter::BeginPlay()
 	StateMC_LockedOnMove* LockedOnMove = new StateMC_LockedOnMove(this);
 	StateMC_LockedOnSwordSwing* LockedOnSwordSwing = new StateMC_LockedOnSwordSwing(this);
 	StateMC_LockedOnTakeHit* LockedOnTakeHit = new StateMC_LockedOnTakeHit(this);
+	StateMC_LockedOnDodge* LockedOnDodge = new StateMC_LockedOnDodge(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
@@ -107,6 +110,7 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnMove);
 	characterStateInstances.Add(LockedOnSwordSwing);
 	characterStateInstances.Add(LockedOnTakeHit);
+	characterStateInstances.Add(LockedOnDodge);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
@@ -145,6 +149,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("LockOn", IE_Pressed, this, &AMainCharacter::LockOn);
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
+	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
 }
 
 void AMainCharacter::TakeWeaponHit()
@@ -191,6 +196,11 @@ void AMainCharacter::Attack()
 void AMainCharacter::Parry()
 {
 	characterStateMachine->SendInput(StateAction::Parry);
+}
+
+void AMainCharacter::Dodge()
+{
+	characterStateMachine->SendInput(StateAction::Dodge);
 }
 
 void AMainCharacter::RecieveAnimEndNotif()
