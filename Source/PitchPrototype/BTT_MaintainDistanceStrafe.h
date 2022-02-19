@@ -23,6 +23,12 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float timeBetweenAttacks;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool attack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float speed;
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
