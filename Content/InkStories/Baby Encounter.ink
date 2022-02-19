@@ -81,7 +81,7 @@ It's alright I guess. Yes it can be quite dreary, but there is one saving grace.
     -> babyno
     
 === babybooks ===
-Books! The shrine holds an extensive library, mostly old stuffy religious texts, but also tomes of knowledge about the outside world, and wonderful tales of daring adventures or thrilling mysteries. I've learned pretty much all I know about the world through these books, they've made me who I am.
+Books! The shrine holds an extensive library, mostly old stuffy religious texts, but also tomes of knowledge about the outside world, and wonderful tales of daring adventures or thrilling mysteries. I've learned pretty much all I know about the world through these books.
 
 + [There aren't nearly enough books in here to fill the space of 3700 years]
     ->babynotenoughbooks
@@ -111,7 +111,7 @@ Yes, it took me a long time to figure out at first, but the shrine's library hol
 I could... What exactly would you do with that information?
 
 === babyislandhistory ===
-The history of the island is a bit fuzzy. Most of what I know has been gleaned from religeous texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited.
+The history of the island is a bit fuzzy. Most of what I know has been gleaned from religious texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited.
 
 -> DONE
 
