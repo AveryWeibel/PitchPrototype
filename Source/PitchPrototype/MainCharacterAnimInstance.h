@@ -34,21 +34,12 @@ public:
 	virtual void NativeInitializeAnimation() override;
 
 	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
-	void SetTurnAmount(float Value);
-
-	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
-		void SetControlDirection(FVector value);
 	
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
-		void SetTiltAmount(float Value);
+		void SetControlDirection(FVector value);
 
 	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
 		void SetLookAtTarget(FVector Target);
-
-	UFUNCTION(BlueprintCallable, Category = "Animation Dynamics")
-		float GetTiltAmount();
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
 		void RecieveStateUpdate(TidesStateName name);
@@ -69,12 +60,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
-		float turnAmount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
-		float tiltAmount;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		FVector controlDirection;
 
@@ -84,8 +69,31 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		TEnumAsByte<TidesStateName> currentAnimState;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		float parryAlpha;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+		FVector parryIKTarget;
+
 public:
+	FVector GetControlDirection();
+	
 	FORCEINLINE void SetAnimation(EAnimationType Value) { CurrentAnimation = Value; }
 
 	FORCEINLINE EAnimationType GetAnimation() { return CurrentAnimation; }
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void PlayParry();
+
+	UFUNCTION()
+		void SetParryAlpha(float value);
+
+	UFUNCTION()
+		float GetParryAlpha();
+
+	UFUNCTION()
+		void SetParryIKTarget(FVector value);
+
+	UFUNCTION()
+		FVector GetParryIKTarget();
 };

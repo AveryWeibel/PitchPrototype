@@ -1,6 +1,21 @@
 # this is a global tags
 # another tag
 # wtf
+VAR LISTEN_enemyHits = -1
+VAR COUNT_enemyHits = 0
+VAR LISTEN_playerHits = -1
+VAR COUNT_playerHits = 0
+VAR LISTEN_enemyParries = -1
+VAR COUNT_enemyParries = 0
+VAR LISTEN_playerParries = -1
+VAR COUNT_playerParries = 0
+VAR LISTEN_enemyDodges = -1
+VAR COUNT_enemyDodges = 0
+VAR LISTEN_playerDodges = -1
+VAR COUNT_playerDodges = 0
+VAR LISTEN_timer = -1
+VAR COUNT_timer = 0
+VAR destinationKnot = ""
 
 VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
@@ -9,15 +24,19 @@ EXTERNAL test()
 ->start
 
 === start ===
-- I looked at Monsieur Fogg # function fuck_david_coulson
+- I looked at Monsieur Fogg
+# function fuck_david_coulson
 *   ... and I could contain myself no longer.
-    # function pain
     'What is the purpose of our journey, Monsieur?'
     ~ fogs_string_mood = "excellent"
+    # function why
     ~ fogs_current_mood = 2
     'A wager,' he replied. 
-    # function why
+    # function penis
+    # timer 5
     * *     'A wager!'[] I returned.
+            # function hateful
+            # function yesdaddy
             He nodded. 
             * * *   'But surely that is foolishness!'
             * * *  'A most serious matter then!'
@@ -45,3 +64,20 @@ pens hate this
 
 === function lerp(a, b, k) ===
     ~ return ((b - a) * k) + a
+    
+=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot) === 
+    ~ COUNT_enemyHits = 0
+    ~ COUNT_playerHits = 0
+    ~ COUNT_enemyParries = 0
+    ~ COUNT_playerParries = 0
+    ~ COUNT_enemyDodges = 0
+    ~ COUNT_playerDodges = 0
+    ~ COUNT_timer = 0
+    ~ LISTEN_enemyHits = enemyHits
+    ~ LISTEN_playerHits = playerHits
+    ~ LISTEN_enemyParries = enemyParries
+    ~ LISTEN_playerParries = playerParries
+    ~ LISTEN_enemyDodges = enemyDodges
+    ~ LISTEN_playerDodges = playerDodges
+    ~ LISTEN_timer = Ltimer
+    ~ destinationKnot = Knot

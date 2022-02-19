@@ -17,29 +17,14 @@ void UMainCharacterAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 	Super::NativeUpdateAnimation(DeltaTimeX);
 }
 
-void UMainCharacterAnimInstance::SetTurnAmount(float Value)
-{
-	turnAmount = Value;
-}
-
 void UMainCharacterAnimInstance::SetControlDirection(FVector value)
 {
 	controlDirection = value;
 }
 
-void UMainCharacterAnimInstance::SetTiltAmount(float Value)
-{
-	tiltAmount = Value;
-}
-
 void UMainCharacterAnimInstance::SetLookAtTarget(FVector Target)
 {
 	lookatTarget = Target;
-}
-
-float UMainCharacterAnimInstance::GetTiltAmount()
-{
-	return tiltAmount;
 }
 
 TidesStateName UMainCharacterAnimInstance::CheckState()
@@ -49,15 +34,55 @@ TidesStateName UMainCharacterAnimInstance::CheckState()
 
 void UMainCharacterAnimInstance::NotifyAnimationEnd()
 {
-	Cast<AMainCharacter>(OwningPawn)->RecieveAnimEndNotif();
+	auto MainChar = Cast<AMainCharacter>(OwningPawn);
+
+	if(MainChar)
+	{
+		MainChar->RecieveAnimEndNotif();
+	}
 }
 
 void UMainCharacterAnimInstance::NotifyAnimHitboxActive()
 {
-	Cast<AMainCharacter>(OwningPawn)->RecieveAnimHitboxActive();
+	auto MainChar = Cast<AMainCharacter>(OwningPawn);
+
+	if(MainChar)
+	{
+		MainChar->RecieveAnimHitboxActive();
+	}
 }
 
 void UMainCharacterAnimInstance::NotifyAnimHitboxInactive()
 {
-	Cast<AMainCharacter>(OwningPawn)->RecieveAnimHitboxInactive();
+	auto MainChar = Cast<AMainCharacter>(OwningPawn);
+
+	if(MainChar)
+	{
+		MainChar->RecieveAnimHitboxInactive();
+	}
+}
+
+FVector UMainCharacterAnimInstance::GetControlDirection()
+{
+	return controlDirection;
+}
+
+void UMainCharacterAnimInstance::SetParryAlpha(float value)
+{
+	parryAlpha = value;
+}
+
+float UMainCharacterAnimInstance::GetParryAlpha()
+{
+	return parryAlpha;
+}
+
+void UMainCharacterAnimInstance::SetParryIKTarget(FVector value)
+{
+	parryIKTarget = value;
+}
+
+FVector UMainCharacterAnimInstance::GetParryIKTarget()
+{
+	return parryIKTarget;
 }
