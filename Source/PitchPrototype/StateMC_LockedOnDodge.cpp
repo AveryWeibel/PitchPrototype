@@ -44,8 +44,8 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	{
 		//UE_LOG(LogTemp, Log, TEXT("(X: %f, Y: %f), DLT: %f"), mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, DeltaTime);
 		DodgeDirection.Normalize();
-		DodgeMoveVelocity += DodgeDirection * (mainCharacter->dodgeSpeed / DodgeDamping);
-		mainCharacter->AddActorWorldOffset( DodgeMoveVelocity * DeltaTime);
+		DodgeMoveVelocity += DodgeDirection * (mainCharacter->dodgeSpeed / DodgeDamping) * DeltaTime;
+		mainCharacter->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
 	}
 
 	//Check if dodge time has elapsed
