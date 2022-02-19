@@ -34,6 +34,7 @@ protected:
 	virtual void DoAttack() override;
 	virtual void TakeHit() override;
 	virtual void Parry() override;
+	virtual void Dodge() override;
 
 	//Internal functions
 
