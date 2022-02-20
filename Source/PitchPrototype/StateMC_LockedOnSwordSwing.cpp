@@ -33,7 +33,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	if(!hitThisAttack && hitboxActive && hitAI)
 	{
 		hitThisAttack = true;
-		hitAI->RecieveHit();
+		hitAI->RecieveHit(10);
 	}
 
 	//Lerp to camera height
@@ -57,7 +57,14 @@ void StateMC_LockedOnSwordSwing::AnimEnd()
 {
 	State_MainCharacter::AnimEnd();
 	hitThisAttack = false;
-	RequestStateChange(TidesStateName::LockedOnMove);
+	if(mainCharacter->lockedAI->GetIsDead())
+	{
+		RequestStateChange(TidesStateName::NonCombatMove);	
+	}
+	else
+	{
+		RequestStateChange(TidesStateName::LockedOnMove);
+	}
 }
 
 void StateMC_LockedOnSwordSwing::AnimHitboxActive()

@@ -79,13 +79,25 @@ void ABaseAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-void ABaseAICharacter::RecieveHit()
+void ABaseAICharacter::RecieveHit(float damage)
 {
+	health -= damage;
+	if(health <= 0)
+	{
+		Die();
+		return;
+	}
+	
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
 	if(AIController)
 	{
 		AIController->UpdateState(TidesStateName::AI_RecieveHit, Animator);
 	}
+}
+
+bool ABaseAICharacter::GetIsDead()
+{
+	return IsDead;
 }
 
 void ABaseAICharacter::RecieveAnimEnd()
@@ -112,6 +124,18 @@ void ABaseAICharacter::RecieveHitboxInactive()
 	if(AIController)
 	{
 		AIController->SetHitboxActive(false);
+	}
+}
+
+void ABaseAICharacter::Die()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if(AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_Dead, Animator);
+		RagdollAI();
+		IsDead = true;
+		AIController->BehaviorComp->StopTree();
 	}
 }
 
