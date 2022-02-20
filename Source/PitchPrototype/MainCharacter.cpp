@@ -122,6 +122,12 @@ void AMainCharacter::BeginPlay()
 	print(feetCollider->GetName());
 }
 
+int AMainCharacter::NativeGetDialogueInt_Implementation(const FString& name)
+{
+	UE_LOG(Log171General, Error, TEXT("Called C++ implementation of NativeGetDialogueInt(), this should never happen"))
+	return INT_MAX;
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {

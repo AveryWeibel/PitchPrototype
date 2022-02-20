@@ -207,6 +207,16 @@ private:
 public:
 	UFUNCTION()
 		void TakeWeaponHit();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueInt(const FString& name, int value);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueStr(const FString& name, const FString& value);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Dialogue")
+		int NativeGetDialogueInt(const FString& name);
+	
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

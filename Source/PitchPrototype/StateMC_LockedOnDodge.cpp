@@ -98,3 +98,12 @@ void StateMC_LockedOnDodge::MoveRight(float Value)
 	DodgeDirection += dirVector;
 }
 
+void StateMC_LockedOnDodge::TakeHit()
+{
+	State_MainCharacter::TakeHit();
+	const FString varName{"COUNT_playerDodges"};
+	
+	mainCharacter->NativeSetDialogueInt(varName, mainCharacter->NativeGetDialogueInt(varName) + 1);
+	UE_LOG(Log171General, Log, TEXT("Updated %s to %d"), *varName, mainCharacter->NativeGetDialogueInt(varName));
+}
+
