@@ -111,6 +111,12 @@ public:
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float parryDistance;
 
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float attackTrackingIntensity;
+
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float takeHitMaxSpeed;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
