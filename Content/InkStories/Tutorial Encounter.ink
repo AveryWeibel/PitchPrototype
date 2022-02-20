@@ -169,6 +169,7 @@ VAR timer = -1
     Good! Next you need to know how to defend yourself. I'm going to attack you now. Don't panic, enemies will never attack you while text is being displayed, so feel free to read the dialogue and respond accordingly. However, you also need to keep your eye on the dialogue timer, represented by this ring that is closing in around the dialogue box. If the timer runs out, the dialogue box will disappear and the enemy will move in to attack. Now, press B to dodge my attack.
         + [Okay]
         {listen(-1, -1, -1, -1, -1, 1, -1, "guardcombattutorial.dodged")}
+        # function Start_Combat
         ->END
     
     = dodged
@@ -176,6 +177,7 @@ VAR timer = -1
     Nice! Dodging is a great evasive maneuver, as you can't be hit at the start of your dodge. But there is a much more effective, yet riskier way of repelling enemy attacks. Next time I attack you, try pressing LB to parry my attack. Make sure to time it just right!
         + [Okay]
         {listen(-1, -1, -1, 1, -1, -1, -1, "guardcombattutorial.parried")}
+        # function Start_Combat
         ->END
     
     = parried

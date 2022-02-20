@@ -52,7 +52,7 @@ void ABaseAICharacter::StartCombat()
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
 	if(AIController)
 	{
-		AIController->UpdateState(TidesStateName::AI_AttemptAttack, Animator);
+		AIController->UpdateState(TidesStateName::AI_CombatStrafe, Animator);
 	}
 }
 
