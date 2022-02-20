@@ -118,7 +118,7 @@ public:
 	UPROPERTY()
 		TSet<ABaseAICharacter*> AIList;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		ABaseAICharacter* lockedAI = nullptr;
 
 	//Animation
