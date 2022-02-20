@@ -328,12 +328,14 @@ VAR timer = -1
     It looks like this conversation is going nowhere. Very well, you will come to appreciate my way sooner or later, we have all the time in the world. Now let me give you a proper welcome to the loop.
     
     + [...]
+        # function Start_Combat
         -> END
         
     = fairenough
     I knew you would see it my way. Now then, let me give you a proper welcome to the loop.
     
     + [...]
+        # function Start_Combat
         -> END
         
 === function defaultListen(Knot) ===
