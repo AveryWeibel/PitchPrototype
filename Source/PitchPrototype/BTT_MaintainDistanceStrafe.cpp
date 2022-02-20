@@ -55,7 +55,7 @@ void UBTT_MaintainDistanceStrafe::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	//owningChar->GetCharacterMovement()->MoveSmooth(direction, DeltaSeconds);
 	owningChar->GetCharacterMovement()->Velocity += direction;
 	
-	UE_LOG(Log171GuardAI, Log, TEXT("Strafe Tick for %f"), executingTime);
+	//UE_LOG(Log171GuardAI, Log, TEXT("Strafe Tick for %f"), executingTime);
 	//UE_LOG(Log171GuardAI, Log, TEXT("vector %f %f %f"), direction.X, direction.Y, direction.Z);
 
 	if(executingTime >= timeBetweenAttacks)
