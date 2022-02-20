@@ -21,7 +21,8 @@ enum TidesStateName {
 	AI_NonCombatPatrol,
 	AI_Dialogue,
 	AI_RecieveHit,
-	AI_CombatDialogueWait
+	AI_CombatDialogueWait,
+	AI_Dead
 };
 
 

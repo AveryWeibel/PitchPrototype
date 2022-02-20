@@ -31,6 +31,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 		USkeletalMeshComponent* AIMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+		int health;
+
+	UPROPERTY()
+		bool IsDead;
 	
 	UFUNCTION()
 		void OnSeePlayer(APawn *Pawn);
@@ -51,6 +57,13 @@ protected:
 	UFUNCTION()
 		void RecieveHitboxInactive();
 
+	UFUNCTION()
+		void Die();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="AIState")
+		void RagdollAI();
+		
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -68,13 +81,16 @@ public:
 	AWeapon* Weapon;	
 	
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
-	void RecieveHit();
+	void RecieveHit(float damage = 0);
 	
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))
 	void PlayerLock();
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLock"))
 	void PlayerUnLock();
+
+	UFUNCTION()
+		bool GetIsDead();
 
 	
 };
