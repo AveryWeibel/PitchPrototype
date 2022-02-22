@@ -169,6 +169,7 @@ VAR timer = -1
     Good! Next you need to know how to defend yourself. I'm going to attack you now. Don't panic, enemies will never attack you while text is being displayed, so feel free to read the dialogue and respond accordingly. However, you also need to keep your eye on the dialogue timer, represented by this ring that is closing in around the dialogue box. If the timer runs out, the dialogue box will disappear and the enemy will move in to attack. Now, press B to dodge my attack.
         + [Okay]
         {listen(-1, -1, -1, -1, -1, 1, -1, "guardcombattutorial.dodged")}
+        # function Start_Combat
         ->END
     
     = dodged
@@ -176,6 +177,7 @@ VAR timer = -1
     Nice! Dodging is a great evasive maneuver, as you can't be hit at the start of your dodge. But there is a much more effective, yet riskier way of repelling enemy attacks. Next time I attack you, try pressing LB to parry my attack. Make sure to time it just right!
         + [Okay]
         {listen(-1, -1, -1, 1, -1, -1, -1, "guardcombattutorial.parried")}
+        # function Start_Combat
         ->END
     
     = parried
@@ -192,52 +194,52 @@ VAR timer = -1
     Now it's time for a real fight to the death! Come at me!
     
     + [What? I thought you said we were friends.]
-        {defaultListen(guardcombat.friends)}
+        {defaultListen("guardcombat.friends")}
         -> END
     + [Say your prayers.]
-        {defaultListen(guardcombat.thatsthespirit)}
+        {defaultListen("guardcombat.thatsthespirit")}
         -> END
     + [...]
-        {defaultListen(guardcombat.nothingtosay)}
+        {defaultListen("guardcombat.nothingtosay")}
         -> END
         
     = thatsthespirit
     HA! That's the spirit! The other guards and I started this little game some years back. We all compete to see who can kill the most people in a single loop. Looks like you'll do well in this game of ours.
     
     + [Why start a game like that?]
-        {defaultListen(guardcombat.whydo)}
+        {defaultListen("guardcombat.whydo")}
         -> END
     + [Sounds exciting!]
-        {defaultListen(guardcombat.exciting)}
+        {defaultListen("guardcombat.exciting")}
         -> END
     + [That's horrible.]
-        {defaultListen(guardcombat.horrible)}
+        {defaultListen("guardcombat.horrible")}
         -> END
         
     = nothingtosay
     Nothing to say to me? Well while I have your attention you should know the other guards and I started a little game some years back. We all compete to see who can kill the most people in a single loop.
     
     + [Why start a game like that?]
-        {defaultListen(guardcombat.whydo)}
+        {defaultListen("guardcombat.whydo")}
         -> END
     + [Sounds exciting!]
-        {defaultListen(guardcombat.exciting)}
+        {defaultListen("guardcombat.exciting")}
         -> END
     + [That's horrible.]
-        {defaultListen(guardcombat.horrible)}
+        {defaultListen("guardcombat.horrible")}
         -> END
     + [...]
-        {defaultListen(guardcombat.nowords)}
+        {defaultListen("guardcombat.nowords")}
         -> END
         
     = nowords
     Ah yes, it is best to let our swords do the talking...
     
     + [Then why don't you ever shut up?]
-        {defaultListen(guardcombat.shutup)}
+        {defaultListen("guardcombat.shutup")}
         -> END
     + [...]
-        {defaultListen(guardcombat.reminder)}
+        {defaultListen("guardcombat.reminder")}
         -> END
         
     = shutup
@@ -263,13 +265,13 @@ VAR timer = -1
     We are friends; this is your initiation into the loop. See, the other guards and I started this little game some years back. We all compete to see who can kill the most people in a single loop. Right now I think [GUARD CAPTAIN NAME] is in the lead.
     
     + [Why would you do that?]
-        {defaultListen(guardcombat.whydo)}
+        {defaultListen("guardcombat.whydo")}
         -> END
     + [Sounds exciting!]
-        {defaultListen(guardcombat.exciting)}
+        {defaultListen("guardcombat.exciting")}
         -> END
     + [That's horrible.]
-        {defaultListen(guardcombat.horrible)}
+        {defaultListen("guardcombat.horrible")}
         -> END
 
     = whydo
@@ -277,10 +279,10 @@ VAR timer = -1
     Because it feels good. We get to do whatever we want, whenever we want, to whoever we want. Isn't that amazing?
     
     + [Yeah!]
-        {defaultListen(guardcombat.exciting)}
+        {defaultListen("guardcombat.exciting")}
         -> END
     + [That's horrible.]
-        {defaultListen(guardcombat.horrible)}
+        {defaultListen("guardcombat.horrible")}
         -> END
     
     = exciting
@@ -296,42 +298,44 @@ VAR timer = -1
     What? What do you mean horrible? It's not like we're really killing anyone, everything resets at the end of the day. The Unawoken don't even remember a thing.
     
     + [What about the Awoken?]
-        {defaultListen(guardcombat.awoken)}
+        {defaultListen("guardcombat.awoken")}
         -> END
     + [It makes no difference, you are causing suffering]
-        {defaultListen(guardcombat.suffering)}
+        {defaultListen("guardcombat.suffering")}
         -> END
         
     = awoken
     The Awoken may remember, but they will still be fine in the morning. Pain is temporary, glory is forever.
     
     + [You're disgusting]
-        {defaultListen(guardcombat.disgusting)}
+        {defaultListen("guardcombat.disgusting")}
         -> END
     + [Fair enough]
-        {defaultListen(guardcombat.fairenough)}
+        {defaultListen("guardcombat.fairenough")}
         -> END
     
     = suffering
     But that suffering ceases to exist at the end of the day, so each morning I am reborn with my morality intact.
     
     + [And what about the Awoken?]
-        {defaultListen(guardcombat.awoken)}
+        {defaultListen("guardcombat.awoken")}
         -> END
     + [They may not remember, but your actions are still your own.]
-        {defaultListen(guardcombat.disgusting)}
+        {defaultListen("guardcombat.disgusting")}
         -> END
         
     = disgusting
     It looks like this conversation is going nowhere. Very well, you will come to appreciate my way sooner or later, we have all the time in the world. Now let me give you a proper welcome to the loop.
     
     + [...]
+        # function Start_Combat
         -> END
         
     = fairenough
     I knew you would see it my way. Now then, let me give you a proper welcome to the loop.
     
     + [...]
+        # function Start_Combat
         -> END
         
 === function defaultListen(Knot) ===

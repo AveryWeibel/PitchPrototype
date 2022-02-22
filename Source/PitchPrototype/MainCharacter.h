@@ -111,6 +111,12 @@ public:
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float parryDistance;
 
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float attackTrackingIntensity;
+
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float takeHitMaxSpeed;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
@@ -118,7 +124,7 @@ public:
 	UPROPERTY()
 		TSet<ABaseAICharacter*> AIList;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		ABaseAICharacter* lockedAI = nullptr;
 
 	//Animation
@@ -207,6 +213,16 @@ private:
 public:
 	UFUNCTION()
 		void TakeWeaponHit();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueInt(const FString& name, int value);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueStr(const FString& name, const FString& value);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Dialogue")
+		int NativeGetDialogueInt(const FString& name);
+	
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
