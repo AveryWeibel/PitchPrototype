@@ -15,20 +15,21 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 
 	FVector aiLocation = owningChar->GetActorLocation();
 
-	FVector direction = aiLocation + (UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(aiLocation, playerLocation)) * distance * -1.0f);
+	FVector target = aiLocation + (UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(aiLocation, playerLocation)) * distance * -1);
 
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
 
 	if (NavSys) {
 		FNavLocation NavLoc;
-		NavSys->GetRandomReachablePointInRadius(direction, radius, NavLoc);
+		NavSys->GetRandomReachablePointInRadius(target, radius, NavLoc);
 
-		FVector targetLocation = NavLoc.Location;
+		FVector targetLocation = FVector(NavLoc.Location.X, NavLoc.Location.Y, aiLocation.Z);
 
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(targetDest.SelectedKeyName, targetLocation);
 		return EBTNodeResult::Succeeded;
 	}
 	else {
+		UE_LOG(Log171General, Log, TEXT("could not find nav sys"));
 		return EBTNodeResult::Failed;
 	}
 }
