@@ -3,6 +3,8 @@
 
 #include "BTT_MaintainDistanceStrafe.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 struct BTT_MaintainDistanceStrafeMemory
@@ -26,13 +28,37 @@ EBTNodeResult::Type UBTT_MaintainDistanceStrafe::ExecuteTask(UBehaviorTreeCompon
 {
 	//Make sure to call super to initialize varibales
 	Super::ExecuteTask(OwnerComp, NodeMemory);
-
 	
 	BTT_MaintainDistanceStrafeMemory* TaskMemory = reinterpret_cast<BTT_MaintainDistanceStrafeMemory*>(NodeMemory);
-	
-	TaskMemory->rightDirection = UKismetMathLibrary::RandomBool();
+
+	TaskMemory->rightDirection = true;
 	TaskMemory->taskStartTime = owningChar->GetWorld()->GetTimeSeconds();
 	UE_LOG(Log171GuardAI, Log, TEXT("Strafe Execute at %f"), TaskMemory->taskStartTime);//owningChar == NULL ? TEXT("NULL") : TEXT("NOT NULL"));
+	
+	FCollisionQueryParams queryParams = FCollisionQueryParams::FCollisionQueryParams();
+	queryParams.bDebugQuery = true;
+	queryParams.AddIgnoredActor(owningChar);
+	queryParams.AddIgnoredActor(UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
+	bool hitSuccess;
+	FHitResult hitResult;
+	FColor traceColor = FColor::Red;
+
+	FVector right = owningChar->GetActorLocation() + (owningChar->GetActorRightVector() * TaskMemory->taskStartTime * speed/2.0f);
+	DrawDebugDirectionalArrow(owningChar->GetWorld(), owningChar->GetActorLocation(), right, 15.0f, FColor::Yellow, false, 3.0f, 0, 5.0f);
+
+	FVector down = right + (FVector::DownVector * 300.0f);
+	hitSuccess = owningChar->GetWorld()->LineTraceSingleByChannel(hitResult, right, down, ECollisionChannel::ECC_Visibility, queryParams);
+
+	if (hitSuccess) {
+		if(hitResult.GetActor()->GetName() == "Ocean2") {
+			TaskMemory->rightDirection = false;
+			DrawDebugDirectionalArrow(owningChar->GetWorld(), right, down, 15.0f, FColor::Green, false, 3.0f, 0, 5.0f);
+		}
+	}
+	else {
+		TaskMemory->rightDirection = UKismetMathLibrary::RandomBool();
+	}
+	
 	return EBTNodeResult::InProgress;
 }
 

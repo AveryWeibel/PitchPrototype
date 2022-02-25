@@ -89,7 +89,7 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 		{
 			if(BlackboardComp->InitializeBlackboard(*AICharacter->BehaviorTree->BlackboardAsset))
 			{
-				UE_LOG(LogTemp, Log, TEXT("Successfully init blackboard"))
+				UE_LOG(LogTemp, Log, TEXT("Successfully init blackboard"));
 			}
 			
 			//BlackboardComp->SetValueAsEnum()
