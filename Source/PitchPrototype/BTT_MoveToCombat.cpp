@@ -23,7 +23,6 @@ void UBTT_MoveToCombat::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	FVector aiLocation = owningChar->GetActorLocation();
 	FVector direction = targetLocation - aiLocation;
-	direction.Z = 0;
 	direction.Normalize();
 	direction *= speed;
 
@@ -32,9 +31,14 @@ void UBTT_MoveToCombat::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	//UE_LOG(Log171General, Log, TEXT("current location %f %f %f"), aiLocation.X, aiLocation.Y, aiLocation.Z);
 	//UE_LOG(Log171General, Log, TEXT("target location %f %f %f"), targetLocation.X, targetLocation.Y, targetLocation.Z);
 
-	if (FVector::PointsAreNear(aiLocation, targetLocation, radius)){
+	FVector aiTemp = aiLocation;
+	aiTemp.Z = 0;
+	FVector targetTemp = targetLocation;
+	targetTemp.Z = 0;
+
+	if (FVector::PointsAreNear(aiTemp, targetTemp, radius)){
 		owningChar->GetCharacterMovement()->StopActiveMovement();
-		//owningChar->GetCharacterMovement()->StopMovementImmediately();
+		owningChar->GetCharacterMovement()->StopMovementImmediately();
 
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
