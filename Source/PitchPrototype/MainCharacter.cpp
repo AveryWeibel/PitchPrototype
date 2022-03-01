@@ -277,3 +277,7 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 	return damageAmount;
 }
+
+void AMainCharacter::takeWaterDamage(float damage) {
+	playerHealth -= damage;
+}
