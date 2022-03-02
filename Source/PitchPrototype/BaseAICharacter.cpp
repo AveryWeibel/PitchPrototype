@@ -139,3 +139,13 @@ void ABaseAICharacter::Die()
 	}
 }
 
+void ABaseAICharacter::takeWaterDamage(float damage) {
+	health -= damage;
+
+	if (health <= 0)
+	{
+		Die();
+		return;
+	}
+}
+
