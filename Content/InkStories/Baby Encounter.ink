@@ -194,6 +194,7 @@ What do you want to ask about?
     = teach
     I could... What exactly would you do with that information?
     + [I'm hoping it could help me figure out what's causing the loop]
+    -> loopcause
     
     
 
