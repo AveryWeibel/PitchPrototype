@@ -146,6 +146,12 @@ public:
 	UFUNCTION(Category = Combat, BlueprintCallable)
 		float takeDamage(float damageAmount);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool inWater;
+
+	UFUNCTION(BlueprintCallable)
+		void takeWaterDamage(float damage);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
