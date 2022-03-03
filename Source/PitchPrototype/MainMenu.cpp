@@ -6,13 +6,18 @@
 void UMainMenu::NativeConstruct() {
 	Super::NativeConstruct();
 
-	StartButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnStartButtonClicked);
+	ContinueButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnContinueButtonClicked);
+	NewGameButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnNewGameButtonClicked);
 	OptionsButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnOptionsButtonClicked);
 	CreditsButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnCreditsButtonClicked);
 	QuitButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnQuitButtonClicked);
 }
 
-void UMainMenu::OnStartButtonClicked() {
+void UMainMenu::OnContinueButtonClicked() {
+
+}
+
+void UMainMenu::OnNewGameButtonClicked() {
 	UGameplayStatics::OpenLevel(this, FName::FName(TEXT("MainMap")));
 }
 

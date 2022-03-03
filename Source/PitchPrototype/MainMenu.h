@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MainMenu.generated.h"
@@ -19,20 +20,32 @@ class PITCHPROTOTYPE_API UMainMenu : public UUserWidget
 	
 protected:
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		UButton* StartButton;
+	UPROPERTY(meta = (BindWidget))
+		UButton* ContinueButton;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
+		UButton* NewGameButton;
+
+	UPROPERTY(meta = (BindWidget))
 		UButton* OptionsButton;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 		UButton* CreditsButton;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 		UButton* QuitButton;
 
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* Title;
+
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* TeamName;
+
 	UFUNCTION()
-		void OnStartButtonClicked();
+		void OnContinueButtonClicked();
+
+	UFUNCTION()
+		void OnNewGameButtonClicked();
 
 	UFUNCTION()
 		void OnOptionsButtonClicked();
