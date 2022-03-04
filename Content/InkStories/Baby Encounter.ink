@@ -335,9 +335,14 @@ What do you want to ask about?
     
 
 === babyislandhistory ===
-The history of the island is a bit fuzzy. Most of what I know has been gleaned from religious texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited.
 
--> END
+    = start
+    The history of the island is a bit fuzzy. Most of what I know has been gleaned from religious texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited.
+
+    + [Okay]
+    -> start
+    + [I have more questions]
+    -> babyhub
 
 === babywait ===
 W-wait... could you stay just a bit longer? It's been so long since I've had company, and believe it or not, you're the best company I've had so far.
