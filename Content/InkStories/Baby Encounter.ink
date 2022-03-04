@@ -161,16 +161,64 @@ What do you want to ask about?
     
 
     = notenoughbooks
-    True, I must have read each book hundreds of times over, memorizing each page, each phrase. I've dreamed of grand adventures of my own: vanquishing villains, saving the day, but most of all, seeing the world. Tell me, do you remember the beauty of a sunset? I've never seen one myself.
+    True, I must have read each book hundreds of times over, memorizing each page, each phrase. I've dreamed of grand adventures of my own: vanquishing villains, saving the day, but most of all, seeing the world. Tell me, do you remember the beauty of a sunset? I've never seen one myself. Is it as stunning as the stories say?
     
-    + [I can't remember.]
-    -> cantremember
     + [I've seen many sunsets, it's beautiful every time]
     -> beautiful
-    + [I've seen many sunsets, it gets old after a while]
+    + [I've seen many sunsets, it gets old eventually]
     -> getsold
     + [The world isn't as exciting as your stories make it out to be]
     -> excitingstories
+    + [I can't remember.]
+    -> cantremember
+    
+    = beautiful
+    If we ever escape this endless purgatory, you must take me outside and show me.
+    
+    + [It would be my pleasure]
+    -> thankyou
+    + [I don't know what will happen when the loop ends but I will try]
+    -> thankyou
+    + [I have more questions]
+    -> babyhub
+    
+    = getsold
+    Perhaps... It's hard for me to imagine something so splendid 'getting old' after spending an eternity in this room. I've spent the centuries entertaining myself with nothing but my imagination. After this, I don't think seeing the sun could ever get old.
+    
+    + [I have more questions]
+    -> babyhub
+    
+    = thankyou
+    Thank you friend. Now, was there anything else you wanted to talk about?
+    
+    + [What can you tell me about the time loop?]
+        -> babytimeloop
+    
+    + [What can you tell me about the runes?]
+        -> babyrunes
+    
+    + [What can you tell me about the history of the island]
+        -> babyislandhistory
+        
+    + [I should be going (Leave)]
+        -> babywait
+        
+        
+    = excitingstories
+    Perhaps... Or perhaps it is, and you've taken for granted the beauty of the world around you. Try spending a couple hundred years in this room and see how exciting the outside world sounds by the end.
+    
+    + [I have more questions]
+    -> babyhub   
+    
+    
+    = cantremember
+    I guess you and I are both in the dark. If you do happen to remember, please come tell me.
+    
+    + [I have more questions]
+    -> babyhub
+    + [I should be going (Leave)]
+    -> babywait
+    
     
 === babyrunes ===
 
@@ -188,14 +236,102 @@ What do you want to ask about?
     
     = read
     Yes, it took me a long time to figure out at first, but the shrine's library holds texts written in the runish script and I was able to cross reference them with similar scripts using our modern alphabet. They use essentially the same alphabet as us, our characters have simply evolved over time to become more simple and streamlined.
+    
     + [can you teach me?]
         -> teach
     
     = teach
     I could... What exactly would you do with that information?
-    + [I'm hoping it could help me figure out what's causing the loop]
-    -> loopcause
     
+    #+ [I'm not sure, I've just seen them around the island and wanted to see what they mean]
+    #-> runesmeaning
+    + [I'm hoping it could help me figure out what's causing the loop]
+    -> wanttoknow
+    + [The runes could be the key to ending the loop]
+    -> endingtheloop
+    
+    = endingtheloop
+    You... want to end the loop?
+    
+    + [Yes]
+    -> loopfeelings
+    + [Of course, don't you?]
+    -> ofcourse
+    + [I'm still undecided]
+    -> undecided
+    
+    = undecided
+    Please you must bring an end to this nightmare. <>
+    -> loopfeelings
+    
+    = ofcourse
+    Of course I do! <>
+    -> loopfeelings
+    
+    = loopfeelings
+    If we could break free of this cycle, I could finally see the sunset, feel its warmth on my skin for the first time. I could see the stars. I could... I could... I could travel the world. I could... I could do anything...
+    
+    + [Then you'll teach me how to read the runes?]
+    -> yes
+    
+    
+    = wanttoknow
+    ...Are you certain you want to know what's causing the loop?
+    
+    + [Do you know the answer?]
+    -> noidont
+    + [Why wouldn't I?]
+    -> because
+    
+    = because
+    Because <>
+    -> notthefirst
+    
+    = noidont
+    No I don't, but <>
+    -> notthefirst
+    
+    = notthefirst
+    you're not the first person to come asking such questions. The last time I taught someone about the runes, I never saw them again. I guess whatever they were trying to do didn't work. That or they didn't like the answers they uncovered.
+    
+    + [Who came before me?]
+    -> notsure
+    + [I still want to know how to read the runes]
+    -> fine
+    
+    = notsure
+    I'm not sure what their name was. They wore the same clothing as you, but they were different from the one that kept killing me. Their mask looked like [description of the guard captain's mask which is not implemented yet].
+    
+    + [I still want to know how to read the runes]
+    -> fine
+    
+    
+    = yes
+    Yes! But <>
+    -> returntome
+    
+    = fine
+    Fine, but <>
+    -> returntome
+    
+    = returntome
+    only on the condition that you return to me and tell me what you discover.
+    
+    + [Deal]
+    -> deal
+    + [Deal (lie)]
+    -> deal
+    #+ [I can't make any promises]
+    #-> nopromises
+    
+    = deal
+    Okay. [The baby proceeds to teach you to read the runes]
+    
+    + [I still have some questions for you]
+    -> babyhub
+    
+    + [I should be going (Leave)]
+    -> babywait
     
 
 === babyislandhistory ===
