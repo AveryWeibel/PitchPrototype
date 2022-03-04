@@ -37,4 +37,17 @@ public:
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		//if you finished the tutorial
 		bool tutorialFinished;
+
+	//SETTINGS*******************************************************************SETTINGS
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		float CameraSensitivity;
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		bool fullscreen;
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		float MasterVolume;
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		float SFXVolume;
 };

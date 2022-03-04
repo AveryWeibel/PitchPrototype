@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Settings.h"
+#include "UObject/UObjectGlobals.h"
 #include "Components/TextBlock.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,6 +30,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 		UButton* OptionsButton;
+
+	UPROPERTY(meta = (BindWidget))
+		USettings* SettingsWidget;
 
 	UPROPERTY(meta = (BindWidget))
 		UButton* CreditsButton;
