@@ -56,6 +56,7 @@ protected:
 	void ConsumeCameraInput(float DeltaTime);
 	bool IsInCameraView(FVector);
 	void MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod = 1);
+	void RagdollModel();
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;
@@ -76,6 +77,7 @@ protected:
 	virtual void Parry();
 	virtual void Dodge();
 	virtual void TakeHit();
+	virtual void Die();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
 };

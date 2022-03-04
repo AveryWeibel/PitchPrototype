@@ -81,6 +81,11 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
 }
 
+void State_MainCharacter::RagdollModel()
+{
+	mainCharacter->RagdollModel();
+}
+
 void State_MainCharacter::SendInput(StateAction Action)
 {
 	switch (Action) {
@@ -107,6 +112,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::TakeHit:
 		TakeHit();
+		break;
+	case StateAction::Die:
+		Die();
 		break;
 	case StateAction::AnimEnd:
 		AnimEnd();
@@ -194,6 +202,10 @@ void State_MainCharacter::Dodge()
 }
 
 void State_MainCharacter::TakeHit()
+{
+}
+
+void State_MainCharacter::Die()
 {
 }
 

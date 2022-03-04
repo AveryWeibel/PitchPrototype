@@ -100,6 +100,11 @@ bool ABaseAICharacter::GetIsDead()
 	return IsDead;
 }
 
+float ABaseAICharacter::GetWeaponDamage()
+{
+	return weaponDamage;
+}
+
 void ABaseAICharacter::RecieveAnimEnd()
 {
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());

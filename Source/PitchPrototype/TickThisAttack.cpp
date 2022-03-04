@@ -37,10 +37,10 @@ void UTickThisAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 
+	ABaseAIController* AIController = Cast<ABaseAIController>(owningChar->GetController());
 	if(OwnerComp.GetBlackboardComponent()->GetValueAsBool("RecieveAnimEnd"))
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsBool("RecieveAnimEnd", false);
-		ABaseAIController* AIController = Cast<ABaseAIController>(owningChar->GetController());
 		
 		if (AIController)
 		{
@@ -61,9 +61,12 @@ void UTickThisAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	// 	UE_LOG(Log171GuardAI, Log, TEXT("AI Weapon overlaps player"));
 	// }
 	
-	if(weaponActive && hitPlayer)
+	if(weaponActive && hitPlayer && AIController)
 	{
-		hitPlayer->TakeWeaponHit();
+		auto AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
+		if(AICharacter)
+			hitPlayer->TakeWeaponHit(AICharacter->GetWeaponDamage());
+
 		OwnerComp.GetBlackboardComponent()->SetValueAsBool("WeaponActive", false);
 		FinishLatentTask(OwnerComp ,EBTNodeResult::Succeeded);
 	}

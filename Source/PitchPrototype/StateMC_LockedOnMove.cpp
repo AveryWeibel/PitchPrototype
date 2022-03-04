@@ -150,6 +150,12 @@ void StateMC_LockedOnMove::TakeHit()
 	RequestStateChange(TidesStateName::LockedOnTakeHit);
 }
 
+void StateMC_LockedOnMove::Die()
+{
+	State_MainCharacter::Die();
+	RequestStateChange(TidesStateName::Dead);
+}
+
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
