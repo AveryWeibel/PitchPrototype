@@ -289,7 +289,7 @@ float AMainCharacter::takeDamage(float damageAmount) {
 }
 
 void AMainCharacter::takeWaterDamage(float damage) {
-	playerHealth -= damage;
+	playerHealth -= (damage * waterDamageMultiplier);
 	if(playerHealth <= 0)
 	{
 		characterStateMachine->SendInput(StateAction::Die);
