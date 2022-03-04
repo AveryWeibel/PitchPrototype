@@ -22,7 +22,14 @@ void UMainMenu::OnNewGameButtonClicked() {
 }
 
 void UMainMenu::OnOptionsButtonClicked() {
-
+	if (SettingsWidget->GetVisibility() == ESlateVisibility::Collapsed) {
+		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		SettingsWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	
 }
 
 void UMainMenu::OnCreditsButtonClicked() {

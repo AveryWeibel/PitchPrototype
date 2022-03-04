@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 		int health;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	int weaponDamage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool inWater;
 
@@ -94,6 +97,9 @@ public:
 
 	UFUNCTION()
 		bool GetIsDead();
+	UFUNCTION()
+		float GetWeaponDamage();
+	
 
 	UFUNCTION(BlueprintCallable)
 		void takeWaterDamage(float damage);

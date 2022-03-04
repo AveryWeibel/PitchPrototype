@@ -39,8 +39,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	{
 		ParryLerpTarget = 0;
 	}
-
-	mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
+	
 	mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 
@@ -151,12 +150,26 @@ void StateMC_LockedOnMove::TakeHit()
 	RequestStateChange(TidesStateName::LockedOnTakeHit);
 }
 
+void StateMC_LockedOnMove::Die()
+{
+	State_MainCharacter::Die();
+	RequestStateChange(TidesStateName::Dead);
+}
+
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
 	
 	if(mainCharacter->Animator->GetParryAlpha() <= .05f) {
-		mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->parryTarget);
+		if(mainCharacter->lockedAI->Weapon)
+		{
+			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
+		}
+		else
+		{
+			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->GetActorLocation());
+		}
+		
 		ParryLerpTarget = 1;
 		if(mainCharacter->lockedAI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedAI) < mainCharacter->parryDistance)
 		{

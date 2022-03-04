@@ -29,6 +29,7 @@ class PITCHPROTOTYPE_API AMainCharacter : public APawn
 	GENERATED_BODY()
 
 	friend class UMainCharacterAnimInstance;
+	friend class State_MainCharacter;
 	
 public:
 	// Sets default values for this pawn's properties
@@ -201,6 +202,9 @@ protected:
 	UFUNCTION()
 	void HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void RagdollModel();
+
 private:
 	//Character locomotion state variables
 
@@ -218,7 +222,7 @@ private:
 
 public:
 	UFUNCTION()
-		void TakeWeaponHit();
+		void TakeWeaponHit(float damage);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
 		void NativeSetDialogueInt(const FString& name, int value);

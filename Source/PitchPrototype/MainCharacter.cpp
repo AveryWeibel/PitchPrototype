@@ -8,6 +8,7 @@
 #include "StateMC_NonCombatInAir.h"
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
+#include "StateMC_Dead.h"
 #include "StateMC_LockedOnDodge.h"
 #include "StateMC_LockedOnMove.h"
 #include "StateMC_LockedOnSwordSwing.h"
@@ -103,6 +104,7 @@ void AMainCharacter::BeginPlay()
 	StateMC_LockedOnSwordSwing* LockedOnSwordSwing = new StateMC_LockedOnSwordSwing(this);
 	StateMC_LockedOnTakeHit* LockedOnTakeHit = new StateMC_LockedOnTakeHit(this);
 	StateMC_LockedOnDodge* LockedOnDodge = new StateMC_LockedOnDodge(this);
+	StateMC_Dead* Dead = new StateMC_Dead(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
@@ -111,6 +113,7 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnSwordSwing);
 	characterStateInstances.Add(LockedOnTakeHit);
 	characterStateInstances.Add(LockedOnDodge);
+	characterStateInstances.Add(Dead);
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
@@ -158,10 +161,17 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
 }
 
-void AMainCharacter::TakeWeaponHit()
+void AMainCharacter::TakeWeaponHit(float damage)
 {
-	takeDamage(10);
-	characterStateMachine->SendInput(StateAction::TakeHit);
+	takeDamage(damage);
+	if(playerHealth <= 0)
+	{
+		characterStateMachine->SendInput(StateAction::Die);
+	}
+	else
+	{
+		characterStateMachine->SendInput(StateAction::TakeHit);
+	}
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -280,4 +290,8 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 void AMainCharacter::takeWaterDamage(float damage) {
 	playerHealth -= damage;
+	if(playerHealth <= 0)
+	{
+		characterStateMachine->SendInput(StateAction::Die);
+	}
 }

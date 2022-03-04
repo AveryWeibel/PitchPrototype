@@ -53,23 +53,15 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Position the camera
 	//Rotate camera to face in same direction as cameraBoom
 	cameraRotationLerpTarget = mainCharacter->cameraBoom->GetComponentRotation();
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("[RotateCameraRoll] Moving to %f from %f by %f"), cameraRotationLerpTarget.Roll, mainCharacter->mainCamera->GetComponentRotation().Roll, mainCharacter->cameraLerpAlpha * 3 * DeltaTime);
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("[RotateCameraPitch] Moving to %f from %f by %f"), cameraRotationLerpTarget.Pitch, mainCharacter->mainCamera->GetComponentRotation().Pitch, mainCharacter->cameraLerpAlpha * 3 * DeltaTime);
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("[RotateCameraYaw] Moving to %f from %f by %f"), cameraRotationLerpTarget.Yaw, mainCharacter->mainCamera->GetComponentRotation().Yaw, mainCharacter->cameraLerpAlpha * 3 * DeltaTime);
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
 
 	//Lerp camera boom length to correct length
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("[CameraBoomLength] Moving to %f from %f by %f"), cameraBoomTargetLength, mainCharacter->cameraBoom->TargetArmLength, mainCharacter->cameraLerpAlpha * DeltaTime);
 	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
 
 	//Rotate cameraBoom to face turnvector
 	cameraBoomRotationLerpTarget = *cameraTurnVector;
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("%f"), FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha));
 	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
 	
-	//	UE_LOG(Log171NonCombatMove, Log, TEXT("[MoveCameraBoomX] Moving to %f from %f by %f"), mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLerpAlpha * DeltaTime);
-	//	UE_LOG(Log171NonCombatMove, Log, TEXT("[MoveCameraBoomY] Moving to %f from %f by %f"), mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLerpAlpha * DeltaTime);
-	//	UE_LOG(Log171NonCombatMove, Log, TEXT("[MoveCameraBoomZ] Moving to %f from %f by %f"), mainCharacter->cameraUnLockedHeight, mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLerpAlpha * DeltaTime);
 	mainCharacter->cameraBoom->SetRelativeLocation(
 		FVector (
 			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
@@ -153,6 +145,12 @@ void StateMC_NonCombatMove::LockOn()
 			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
 		}
 	}
+}
+
+void StateMC_NonCombatMove::Die()
+{
+	State_MainCharacter::Die();
+	RequestStateChange(TidesStateName::Dead);
 }
 
 void StateMC_NonCombatMove::BeginOverlapFeet()
