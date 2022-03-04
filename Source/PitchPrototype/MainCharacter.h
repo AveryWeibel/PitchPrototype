@@ -63,6 +63,9 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		USpringArmComponent* cameraBoom;
 
+	UPROPERTY(Category = Character, EditAnywhere)
+		float waterDamageMultiplier;
+	
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
 
