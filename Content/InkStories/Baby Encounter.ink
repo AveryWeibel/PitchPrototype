@@ -337,10 +337,8 @@ What do you want to ask about?
 === babyislandhistory ===
 
     = start
-    The history of the island is a bit fuzzy. Most of what I know has been gleaned from religious texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited.
+    The history of the island is a bit fuzzy. Most of what I know has been gleaned from religious texts and shrine records, so while I know some information, most of it relates to the shrine itself and the relgion practiced therin; information on the rest of the island is limited. [This conversation is still under development]
 
-    + [Okay]
-    -> start
     + [I have more questions]
     -> babyhub
 
