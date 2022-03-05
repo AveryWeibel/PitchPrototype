@@ -5,6 +5,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "CollisionQueryParams.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 struct BTT_MaintainDistanceStrafeMemory
@@ -36,7 +37,7 @@ EBTNodeResult::Type UBTT_MaintainDistanceStrafe::ExecuteTask(UBehaviorTreeCompon
 	UE_LOG(Log171GuardAI, Log, TEXT("Strafe Execute at %f"), TaskMemory->taskStartTime);//owningChar == NULL ? TEXT("NULL") : TEXT("NOT NULL"));
 	
 	FCollisionQueryParams queryParams = FCollisionQueryParams::FCollisionQueryParams();
-	queryParams.bDebugQuery = true;
+	//queryParams.bDebugQuery = true;
 	queryParams.AddIgnoredActor(owningChar);
 	queryParams.AddIgnoredActor(UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
 	bool hitSuccess;
