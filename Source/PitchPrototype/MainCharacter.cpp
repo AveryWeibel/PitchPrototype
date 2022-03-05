@@ -163,7 +163,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::TakeWeaponHit(float damage)
 {
-	takeDamage(damage);
+	if(!(characterStateMachine->GetActiveStateName() == TidesStateName::LockedOnDodging))
+		takeDamage(damage);
+	
 	if(playerHealth <= 0)
 	{
 		characterStateMachine->SendInput(StateAction::Die);
