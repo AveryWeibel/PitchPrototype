@@ -20,7 +20,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 	FVector target = playerLocation + directionAwayFromPlayer;
 	
 	FCollisionQueryParams queryParams = FCollisionQueryParams::FCollisionQueryParams();
-	queryParams.bDebugQuery = true;
+	//queryParams.bDebugQuery = true;
 	queryParams.AddIgnoredActor(owningChar);
 	queryParams.AddIgnoredActor(UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
 	bool hitSuccess;
