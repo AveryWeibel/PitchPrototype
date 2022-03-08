@@ -23,12 +23,13 @@ protected:
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
-	void MoveForward(float) override;
-	void MoveRight(float) override;
-	void TurnRate(float) override;
-	void LookUpRate(float) override;
-	void Jump() override;
-	void LockOn() override;
-	void BeginOverlapFeet() override;
-	void EndOverlapFeet() override;
+	virtual void MoveForward(float) override;
+	virtual void MoveRight(float) override;
+	virtual void TurnRate(float) override;
+	virtual void LookUpRate(float) override;
+	virtual void Jump() override;
+	virtual void LockOn() override;
+	virtual void Die() override;
+	virtual void BeginOverlapFeet() override;
+	virtual void EndOverlapFeet() override;
 };

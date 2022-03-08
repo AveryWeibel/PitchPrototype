@@ -33,7 +33,7 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 	ConsumeMoveInputs();
 
 	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity / 3) {
+	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->takeHitMaxSpeed) {
 		//FVector forceDirection(, , 0);
 		mainCharacter->feetCollider->AddForce(*movementVector);
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);

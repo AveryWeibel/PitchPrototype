@@ -39,8 +39,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	{
 		ParryLerpTarget = 0;
 	}
-
-	mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
+	
 	mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 
@@ -55,32 +54,12 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		mainCharacter->feetCollider->AddForce(*movementVector);
 		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
 	}
-
-	//Position the camera
-	//Lerp to proper camera boom length
-	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
-
-	//Lerp cameraBoom to rotate between player and target
-	//2D so the camera doesn't tilt with distance
+	
+	//Move the camera
 	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	//2D so the camera doesn't tilt with distance
 	dirToTarget.Z = 0;
-	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
-	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
-
-
-	//Lerp to camera height
-	//& Kick camera to the side for framing
-	mainCharacter->cameraBoom->SetRelativeLocation(
-		FVector (
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
-		)
-	);
-
-	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
-	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
+	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Rotate model towards the locked target
 	if (movementVector->Size() > 0) {
@@ -109,6 +88,7 @@ void StateMC_LockedOnMove::MoveForward(float Value)
 	direction *= (Value * mainCharacter->accelerationForce);
 	
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	storedMovement = *movementVector;
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
@@ -128,6 +108,7 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	direction *= (Value * mainCharacter->accelerationForce);
 	
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	storedMovement = *movementVector;
 }
 
 void StateMC_LockedOnMove::LockOn()
@@ -169,19 +150,41 @@ void StateMC_LockedOnMove::TakeHit()
 	RequestStateChange(TidesStateName::LockedOnTakeHit);
 }
 
+void StateMC_LockedOnMove::Die()
+{
+	State_MainCharacter::Die();
+	RequestStateChange(TidesStateName::Dead);
+}
+
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
 	
 	if(mainCharacter->Animator->GetParryAlpha() <= .05f) {
-		mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->parryTarget);
+		if(mainCharacter->lockedAI->Weapon)
+		{
+			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
+		}
+		else
+		{
+			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->GetActorLocation());
+		}
+		
 		ParryLerpTarget = 1;
 		if(mainCharacter->lockedAI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedAI) < mainCharacter->parryDistance)
 		{
+			const FString VarName{"COUNT_playerParries"};
+			mainCharacter->NativeSetDialogueInt(VarName, mainCharacter->NativeGetDialogueInt(VarName) + 1);
 			mainCharacter->lockedAI->RecieveHit();
 		}
 	}
 	
 	UE_LOG(Log171General, Log, TEXT("Parry()"));
+}
+
+void StateMC_LockedOnMove::Dodge()
+{
+	State_MainCharacter::Dodge();
+	RequestStateChange(TidesStateName::LockedOnDodging);
 }
 

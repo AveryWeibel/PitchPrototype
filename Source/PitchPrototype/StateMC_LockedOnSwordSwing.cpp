@@ -33,7 +33,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	if(!hitThisAttack && hitboxActive && hitAI)
 	{
 		hitThisAttack = true;
-		hitAI->RecieveHit();
+		hitAI->RecieveHit(10);
 	}
 
 	//Lerp to camera height
@@ -49,7 +49,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
-	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), 4 * DeltaTime));
+	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), mainCharacter->attackTrackingIntensity * DeltaTime));
 	
 }
 
@@ -57,7 +57,14 @@ void StateMC_LockedOnSwordSwing::AnimEnd()
 {
 	State_MainCharacter::AnimEnd();
 	hitThisAttack = false;
-	RequestStateChange(TidesStateName::LockedOnMove);
+	if(mainCharacter->lockedAI->GetIsDead())
+	{
+		RequestStateChange(TidesStateName::NonCombatMove);	
+	}
+	else
+	{
+		RequestStateChange(TidesStateName::LockedOnMove);
+	}
 }
 
 void StateMC_LockedOnSwordSwing::AnimHitboxActive()

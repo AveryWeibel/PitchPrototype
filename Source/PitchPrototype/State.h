@@ -11,7 +11,9 @@ enum TidesStateName {
 	NonCombatJump,
 	LockedOnMove,
 	SwordAttack,
+	LockedOnDodging,
 	LockedOnTakeHit,
+	Dead,
 	AI_AttemptAttack,
 	AI_CombatStrafe,
 	AI_DoAttack,
@@ -20,7 +22,8 @@ enum TidesStateName {
 	AI_NonCombatPatrol,
 	AI_Dialogue,
 	AI_RecieveHit,
-	AI_CombatDialogueWait
+	AI_CombatDialogueWait,
+	AI_Dead
 };
 
 
@@ -31,6 +34,7 @@ enum StateAction
 	Jump,
 	DoAttack,
 	Parry,
+	Dodge,
 	BeginOverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,
@@ -38,6 +42,7 @@ enum StateAction
 	LockOn,
 	AnimEnd,
 	TakeHit,
+	Die,
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	StartOverlapAI,

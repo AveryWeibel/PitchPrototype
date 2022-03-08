@@ -29,6 +29,7 @@ class PITCHPROTOTYPE_API AMainCharacter : public APawn
 	GENERATED_BODY()
 
 	friend class UMainCharacterAnimInstance;
+	friend class State_MainCharacter;
 	
 public:
 	// Sets default values for this pawn's properties
@@ -62,6 +63,9 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere)
 		USpringArmComponent* cameraBoom;
 
+	UPROPERTY(Category = Character, EditAnywhere)
+		float waterDamageMultiplier;
+	
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
 
@@ -111,6 +115,12 @@ public:
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float parryDistance;
 
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float attackTrackingIntensity;
+
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float takeHitMaxSpeed;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
@@ -118,13 +128,19 @@ public:
 	UPROPERTY()
 		TSet<ABaseAICharacter*> AIList;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 		ABaseAICharacter* lockedAI = nullptr;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
 
 	//Combat Properties
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeLength;
+
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeSpeed;
+	
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
 		float playerHealth;
 
@@ -133,6 +149,12 @@ public:
 
 	UFUNCTION(Category = Combat, BlueprintCallable)
 		float takeDamage(float damageAmount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool inWater;
+
+	UFUNCTION(BlueprintCallable)
+		void takeWaterDamage(float damage);
 
 protected:
 	// Called when the game starts or when spawned
@@ -156,6 +178,8 @@ protected:
 	void Attack();
 
 	void Parry();
+
+	void Dodge();
 	
 	void RecieveAnimEndNotif();
 
@@ -181,6 +205,9 @@ protected:
 	UFUNCTION()
 	void HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void RagdollModel();
+
 private:
 	//Character locomotion state variables
 
@@ -198,7 +225,17 @@ private:
 
 public:
 	UFUNCTION()
-		void TakeWeaponHit();
+		void TakeWeaponHit(float damage);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueInt(const FString& name, int value);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Dialogue")
+		void NativeSetDialogueStr(const FString& name, const FString& value);
+
+	UFUNCTION(BlueprintNativeEvent, Category="Dialogue")
+		int NativeGetDialogueInt(const FString& name);
+	
 	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

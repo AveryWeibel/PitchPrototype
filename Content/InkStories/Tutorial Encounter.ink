@@ -15,60 +15,145 @@ VAR COUNT_timer = 0
 VAR destinationKnot = ""
 
 VAR timer = -1
-VAR listen_enemy_hit = 0
-VAR curr_enemy_hit = 0
-->tutorialstart
-=== tutorialstart ===
-Oh you've finally Awoken. Took you long enough.
+->guardfirstdialogue.tutorialstart
 
-+ [What?]
-    -> guardwhat
-+ [Who are you?]
-    -> guardwhoareyou
+=== guardfirstdialogue ===
+
+    = tutorialstart
+    Oh you've finally Awoken. Took you long enough.
+
+    + [Whats going on?]
+        -> whoareyou
+    + [Who are you?]
+        -> whoareyou
+    + [Who am I?]
+        -> whoareyou
     
     
-=== guardwhoareyou ===
-Ah, your memory still must be hazy. Don't worry, everyone's forgetful when they first Awaken. You might not remember me but we are old buddies! I'm so glad we'll be together again, it'll be just like the old days!
-
-
-+ [What do you mean awaken?]
-    -> guardwhat
-+ [Old days?]
-    -> guardolddays
-
-
-=== guardwhat ===
-Oh right you don't know yet, silly me ha ha! Today is your first today, but I've experienced today hundreds, maybe thousands of times, understand?
-
-+ [No]
-    -> guardelaborate
-
-
-=== guardolddays ===
-We used to be town guards. This little village never had anything too crazy going on, so we spent most of our time sparring, drinking, or goofing off when we should have been keeping watch. Those days are gone now though; these days are much more exciting!
-
-+ [What's so exciting about these days?]
-    -> guardwhat
+    = whoareyou
+    Ah, your memory must be hazy. Don't worry, everyone's forgetful when they first Awaken. You might not remember me but we are old friends! I'm so glad we'll be together again, it'll be just like the old days!
     
-=== guardelaborate ===
-Every day is the same day, get it? We're in an infinite loop ha ha!
-
-+ [Is there a way to end the loop?]
-    -> guardendloop
     
-=== guardendloop ===
-What? Why would we want the loop to end? In the loop we are infinite; in the loop we are eternal. You'll come to understand soon enough. For now, why don't we have a little friendly sparring match to jog your memory on how to fight.
+    + [What do you mean by "Awaken"?]
+        -> what
+        
+    + [Old days?]
+        -> olddays
 
-+ [Okay]
-    ->guardcombattutorial.start
-+ [Sure]
-    ->guardcombattutorial.start
-+ [I can't really say no, can I?]
-    ->guardnope
+
+    = what
+    Oh right you don't know yet, silly me ha ha! Today is your first today, but I've experienced today hundreds, maybe thousands of times, understand?
     
-=== guardnope ===
-Nope! <>
--> guardcombattutorial.start
+    + [No]
+        -> elaborate
+    + [Not really]
+        -> elaborate
+    + [We're in a loop?]
+        -> yes
+
+
+    = olddays
+    We used to be town guards. This little village never had anything too crazy going on, so we spent most of our time sparring, drinking, or goofing off when we should have been keeping watch. Those days are gone now though; these days are much more exciting!
+    
+    + [What's so exciting about these days?]
+        -> what
+    + [What do you mean 'those days are gone'?]
+        -> what
+    
+    = yes
+    Yes! We're in an infinite loop ha ha!
+    
+    + [Is there a way to end the loop?]
+        -> endloop
+    + [What's causing the loop?]
+        -> loopcause
+    + [Sounds tedious.]
+        -> tedious
+    + [Sounds cool!]
+        -> cool
+    
+    = elaborate
+    Every day is the same day, get it? We're in an infinite loop ha ha!
+    
+    + [Is there a way to end the loop?]
+        -> endloop
+    + [What's causing the loop?]
+        -> loopcause
+    + [Sounds tedious]
+        -> tedious
+    + [Sounds cool!]
+        -> cool
+        
+    = tedious
+    What? The loop is the best thing to ever happen to us. In the loop we are infinite; we are eternal. In the loop we are free to do as we please. You'll come to understand soon enough.
+    
+    + [Well what exactly do we do with our infinite time?]
+        -> soon
+    = cool
+    Right? In the loop we are infinite; we are eternal. In the loop we are free to do as we please. I am glad you understand.
+    
+    + [So how did the loop start?]
+        -> loopcause
+    + [So what do we do with our infinite time?]
+        -> soon
+        
+    = soon
+    Oh I'll get to that in a minute. For now, why don't we have a little friendly sparring match to jog your memory on how to fight, the island is dangerous right now.
+    
+    + [Okay]
+        ->guardcombattutorial.start
+    + [Sure]
+        ->guardcombattutorial.start
+    + [I can't really say no, can I?]
+        ->nope
+    
+    = loopcause
+    Hmmm... I don't know, I never really thought about it too hard. It never seemed that important, you know? Why question such a blessing? I guess [GUARD CAPTAIN NAME] might have mentioned something about the cave at the east end of the island once or twice. You could try checking that out, or maybe ask [GUARD CAPTAIN NAME] yourself, though she doesn't speak much, and when she does, it doesn't make much sense to me.
+    
+    + [Where can I find (GUARD CAPTAIN NAME)?]
+        ->guardcaptaindirections
+    
+    + [Which end of the island is east?]
+        ->directions
+        
+    = directions
+    Oh right, you don't remember where anything is. This is the north side of the island, so east would be on the other side of the bay. The cave should be just past that cliff face. Also, [GUARD CAPTAIN NAME] should be in the town square right about now, up the hill just past the market, in case you were wondering.
+    + [Okay]
+        -> tutorialsegue
+    + [Thanks for the directions]
+        ->directionsthanks
+    
+    = guardcaptaindirections
+    Oh right, you don't remember where anything is. She should be in the town square right about now, up the hill just past the market. And if you're wondering where the cave might be, this is the north side of the island, so east would be on the other side of the bay. The cave should be just past that cliff face.
+    
+    + [Okay]
+        -> tutorialsegue
+    + [Thanks for the directions]
+        ->directionsthanks
+        
+    = directionsthanks
+    No problem. <>
+        ->tutorialsegue
+    
+    = tutorialsegue
+    Now before you go off on your own, why don't we have a little friendly sparring match to jog your memory on how to fight, the island is dangerous right now.
+    
+    + [Okay]
+        ->guardcombattutorial.start
+    + [Sure]
+        ->guardcombattutorial.start
+    + [I can't really say no, can I?]
+        ->nope
+    
+    = endloop
+    What? Why would we want the loop to end? In the loop we are infinite; in the loop we are eternal. You'll come to understand soon enough.
+    
+    + [What's causing the loop?]
+        -> loopcause
+    
+    = nope
+    Nope! <>
+    -> guardcombattutorial.start
 
 === guardcombattutorial ===
 
@@ -80,21 +165,23 @@ Nope! <>
         ->END
     
     = hit
-    ~ timer = 5
+    ~ timer = 15
     Good! Next you need to know how to defend yourself. I'm going to attack you now. Don't panic, enemies will never attack you while text is being displayed, so feel free to read the dialogue and respond accordingly. However, you also need to keep your eye on the dialogue timer, represented by this ring that is closing in around the dialogue box. If the timer runs out, the dialogue box will disappear and the enemy will move in to attack. Now, press B to dodge my attack.
         + [Okay]
         {listen(-1, -1, -1, -1, -1, 1, -1, "guardcombattutorial.dodged")}
+        # function Start_Combat
         ->END
     
     = dodged
-    ~ timer = 4
+    ~ timer = 10
     Nice! Dodging is a great evasive maneuver, as you can't be hit at the start of your dodge. But there is a much more effective, yet riskier way of repelling enemy attacks. Next time I attack you, try pressing LB to parry my attack. Make sure to time it just right!
         + [Okay]
         {listen(-1, -1, -1, 1, -1, -1, -1, "guardcombattutorial.parried")}
+        # function Start_Combat
         ->END
     
     = parried
-    ~ timer = 6
+    ~ timer = 15
     Great! Looks like you more or less remember how to fight now. One last piece of advice: if you want your opponent to talk or respond to you, different people require different approaches. For some, whenever I gloat or taunt them, I have to rough 'em up a bit before they start spilling their guts, pun intended. Others respond better to a more passive approach. Use your best judgement in each encounter.
     + [Okay]
         ->guardcombat.start
@@ -103,34 +190,157 @@ Nope! <>
 === guardcombat ===
 
     = start
+    ~timer = 15
     Now it's time for a real fight to the death! Come at me!
     
     + [What? I thought you said we were friends.]
-    -> guardfriends
+        {defaultListen("guardcombat.friends")}
+        -> END
+    + [Say your prayers.]
+        {defaultListen("guardcombat.thatsthespirit")}
+        -> END
+    + [...]
+        {defaultListen("guardcombat.nothingtosay")}
+        -> END
+        
+    = thatsthespirit
+    HA! That's the spirit! The other guards and I started this little game some years back. We all compete to see who can kill the most people in a single loop. Looks like you'll do well in this game of ours.
     
-=== guardfriends ===
-We are; this is your initiation into the loop. See, me and the other guards started this little game some years back.
-
-+ [What game?]
-    -> guardwhatgame
+    + [Why start a game like that?]
+        {defaultListen("guardcombat.whydo")}
+        -> END
+    + [Sounds exciting!]
+        {defaultListen("guardcombat.exciting")}
+        -> END
+    + [That's horrible.]
+        {defaultListen("guardcombat.horrible")}
+        -> END
+        
+    = nothingtosay
+    Nothing to say to me? Well while I have your attention you should know the other guards and I started a little game some years back. We all compete to see who can kill the most people in a single loop.
     
-=== guardwhatgame ===
-We all compete to see who can kill the most people in a single loop. Right now I think [GUARD CAPTAIN NAME] is in the lead.
+    + [Why start a game like that?]
+        {defaultListen("guardcombat.whydo")}
+        -> END
+    + [Sounds exciting!]
+        {defaultListen("guardcombat.exciting")}
+        -> END
+    + [That's horrible.]
+        {defaultListen("guardcombat.horrible")}
+        -> END
+    + [...]
+        {defaultListen("guardcombat.nowords")}
+        -> END
+        
+    = nowords
+    Ah yes, it is best to let our swords do the talking...
+    
+    + [Then why don't you ever shut up?]
+        {defaultListen("guardcombat.shutup")}
+        -> END
+    + [...]
+        {defaultListen("guardcombat.reminder")}
+        -> END
+        
+    = shutup
+    Ohhh I'm going to enjoy killing you. And you better get used to it, we have a lot of loops ahead of us.
 
-+ [Why would you do that?]
-->ending
+    + [Enough talk, are we fighting to the death or not?]
+        -> verywell
+    
+    = reminder
+    You remind me of [GUARD CAPTAIN NAME]. She's not a big fan of talking, prefers actions to words.
+    
+    + [Enough talk, are we fighting to the death or not?]
+        -> verywell
+        
+    = verywell
+    Very well...
+    
+    +[...]
+     ->END
+    
+    = friends
+    ~timer = 15
+    We are friends; this is your initiation into the loop. See, the other guards and I started this little game some years back. We all compete to see who can kill the most people in a single loop. Right now I think [GUARD CAPTAIN NAME] is in the lead.
+    
+    + [Why would you do that?]
+        {defaultListen("guardcombat.whydo")}
+        -> END
+    + [Sounds exciting!]
+        {defaultListen("guardcombat.exciting")}
+        -> END
+    + [That's horrible.]
+        {defaultListen("guardcombat.horrible")}
+        -> END
 
-=== guardwhydo ===
-Because it's fun! Ha ha! Don't worry, if you die you'll wake up just fine back at your house.
+    = whydo
+    ~timer = 15
+    Because it feels good. We get to do whatever we want, whenever we want, to whoever we want. Isn't that amazing?
+    
+    + [Yeah!]
+        {defaultListen("guardcombat.exciting")}
+        -> END
+    + [That's horrible.]
+        {defaultListen("guardcombat.horrible")}
+        -> END
+    
+    = exciting
+    I'm happy you understand. Not everyone can see the beauty of the killing game. Now, no more talking, it's time for me to give you a proper welcome to the loop...
+    + [Okay.]
+        -> END
+    + [Finally.]
+        -> END
+    + [...]
+        -> END
 
-->ending
-
-=== magicclue ===
-If you want to know more about the loop, there's a cave with suspicious runes in it on the north side of the island that you might want to check out. Those same runes can be found on the shrine just off the east of the island.
-
-->ending
-=== ending ===
--> END
+    = horrible
+    What? What do you mean horrible? It's not like we're really killing anyone, everything resets at the end of the day. The Unawoken don't even remember a thing.
+    
+    + [What about the Awoken?]
+        {defaultListen("guardcombat.awoken")}
+        -> END
+    + [It makes no difference, you are causing suffering]
+        {defaultListen("guardcombat.suffering")}
+        -> END
+        
+    = awoken
+    The Awoken may remember, but they will still be fine in the morning. Pain is temporary, glory is forever.
+    
+    + [You're disgusting]
+        {defaultListen("guardcombat.disgusting")}
+        -> END
+    + [Fair enough]
+        {defaultListen("guardcombat.fairenough")}
+        -> END
+    
+    = suffering
+    But that suffering ceases to exist at the end of the day, so each morning I am reborn with my morality intact.
+    
+    + [And what about the Awoken?]
+        {defaultListen("guardcombat.awoken")}
+        -> END
+    + [They may not remember, but your actions are still your own.]
+        {defaultListen("guardcombat.disgusting")}
+        -> END
+        
+    = disgusting
+    It looks like this conversation is going nowhere. Very well, you will come to appreciate my way sooner or later, we have all the time in the world. Now let me give you a proper welcome to the loop.
+    
+    + [...]
+        # function Start_Combat
+        -> END
+        
+    = fairenough
+    I knew you would see it my way. Now then, let me give you a proper welcome to the loop.
+    
+    + [...]
+        # function Start_Combat
+        -> END
+        
+=== function defaultListen(Knot) ===
+{listen(1, 1, 2, 2, 4, 5, 20, Knot)}
+# function Start_Combat
 
 === function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot) === 
     ~ COUNT_enemyHits = 0
