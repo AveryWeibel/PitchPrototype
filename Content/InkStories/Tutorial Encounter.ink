@@ -158,14 +158,14 @@ VAR timer = -1
 === guardcombattutorial ===
 
     = start
-    ~ timer = -1
+    # timer -1
     Okay so first things first, you need to know how to attack. Walk up to me and press RB to try hitting me with your sword.
     + [Okay]
         {listen(1, -1, -1, -1, -1, -1, -1, "guardcombattutorial.hit")}
         ->END
     
     = hit
-    ~ timer = 15
+    # timer 15
     Good! Next you need to know how to defend yourself. I'm going to attack you now. Don't panic, enemies will never attack you while text is being displayed, so feel free to read the dialogue and respond accordingly. However, you also need to keep your eye on the dialogue timer, represented by this ring that is closing in around the dialogue box. If the timer runs out, the dialogue box will disappear and the enemy will move in to attack. Now, press B to dodge my attack.
         + [Okay]
         {listen(-1, -1, -1, -1, -1, 1, -1, "guardcombattutorial.dodged")}
@@ -173,7 +173,7 @@ VAR timer = -1
         ->END
     
     = dodged
-    ~ timer = 10
+    # timer 10
     Nice! Dodging is a great evasive maneuver, as you can't be hit at the start of your dodge. But there is a much more effective, yet riskier way of repelling enemy attacks. Next time I attack you, try pressing LB to parry my attack. Make sure to time it just right!
         + [Okay]
         {listen(-1, -1, -1, 1, -1, -1, -1, "guardcombattutorial.parried")}
@@ -181,7 +181,7 @@ VAR timer = -1
         ->END
     
     = parried
-    ~ timer = 15
+    # timer 15
     Great! Looks like you more or less remember how to fight now. One last piece of advice: if you want your opponent to talk or respond to you, different people require different approaches. For some, whenever I gloat or taunt them, I have to rough 'em up a bit before they start spilling their guts, pun intended. Others respond better to a more passive approach. Use your best judgement in each encounter.
     + [Okay]
         ->guardcombat.start
@@ -190,7 +190,7 @@ VAR timer = -1
 === guardcombat ===
 
     = start
-    ~timer = 15
+    # timer 15
     Now it's time for a real fight to the death! Come at me!
     
     + [What? I thought you said we were friends.]
@@ -261,7 +261,7 @@ VAR timer = -1
      ->END
     
     = friends
-    ~timer = 15
+    # timer 15
     We are friends; this is your initiation into the loop. See, the other guards and I started this little game some years back. We all compete to see who can kill the most people in a single loop. Right now I think [GUARD CAPTAIN NAME] is in the lead.
     
     + [Why would you do that?]
@@ -275,7 +275,7 @@ VAR timer = -1
         -> END
 
     = whydo
-    ~timer = 15
+    # timer 15
     Because it feels good. We get to do whatever we want, whenever we want, to whoever we want. Isn't that amazing?
     
     + [Yeah!]
