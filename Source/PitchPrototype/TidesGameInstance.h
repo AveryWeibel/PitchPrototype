@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MainCharacter.h"
 #include "TidesGameInstance.generated.h"
 /**
  * 
@@ -41,9 +42,15 @@ public:
 	//SETTINGS*******************************************************************SETTINGS
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float CameraSensitivity;
+	
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setCameraSensitivity(float newSens);
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		bool fullscreen;
+
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setFullScreen(bool newFullScreen);
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float MasterVolume;
