@@ -10,7 +10,8 @@ ABaseAICharacter::ABaseAICharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
+	PromptWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PromptWidget"));
+	PromptWidgetComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
