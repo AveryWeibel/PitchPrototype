@@ -3,7 +3,10 @@
 
 #include "PrompWidget.h"
 
+#include "MainCharacter.h"
+
 void UPrompWidget::DisplayInteractPrompt() {
+	UE_LOG(Log171General, Log, TEXT("Display Interact"));
 	UUserWidget* prompt = CreateWidget(this, promptList[0]);
 	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
 	correctSizeAndFill(slot);
@@ -12,6 +15,7 @@ void UPrompWidget::DisplayInteractPrompt() {
 }
 
 void UPrompWidget::DisplayLockOnPrompt() {
+	UE_LOG(Log171General, Log, TEXT("Display LockOn"));
 	UUserWidget* prompt = CreateWidget(this, promptList[1]);
 	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
 	correctSizeAndFill(slot);
@@ -20,12 +24,14 @@ void UPrompWidget::DisplayLockOnPrompt() {
 }
 
 void UPrompWidget::RemoveInteractPrompt() {
+	UE_LOG(Log171General, Log, TEXT("Remove Interact"));
 	PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
 
 	activePrompts.Remove("InteractPrompt");
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
+	UE_LOG(Log171General, Log, TEXT("Remove LockOn"));
 	PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
 
 	activePrompts.Remove("LockOnPrompt");
