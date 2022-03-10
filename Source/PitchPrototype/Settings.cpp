@@ -13,6 +13,21 @@ void USettings::NativeConstruct() {
 	CameraSensBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnCameraSensBarChanged);
 	MasterVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnMasterVolumeBarChanged);
 	SFXVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnSFXVolumeBarChanged);
+
+	this->OnVisibilityChanged.AddUniqueDynamic(this, &USettings::syncSettings);
+}
+
+void USettings::syncSettings(ESlateVisibility type) {
+	if (type == ESlateVisibility::SelfHitTestInvisible) {
+		gameInstance->fullscreen ? FullScreenCheckBox->SetCheckedState(ECheckBoxState::Checked) : FullScreenCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+		CameraSensBar->SetValue(gameInstance->CameraSensitivity);
+		MasterVolumeBar->SetValue(gameInstance->MasterVolume);
+		SFXVolumeBar->SetValue(gameInstance->SFXVolume);
+	}
+	else
+	{
+
+	}
 }
 
 void USettings::OnFullScreenCheckBoxClicked(bool isChecked) {
@@ -26,11 +41,12 @@ void USettings::OnFullScreenCheckBoxClicked(bool isChecked) {
 		UE_LOG(LogTemp, Log, TEXT("Setting to Windowed"));
 	}
 
+	gameInstance->setFullScreen(isChecked);
 	settings->ApplySettings(false);
 }
 
 void USettings::OnCameraSensBarChanged(float Value) {
-
+	gameInstance->setCameraSensitivity(Value);
 }
 
 void USettings::OnMasterVolumeBarChanged(float Value) {
