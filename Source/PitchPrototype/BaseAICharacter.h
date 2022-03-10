@@ -6,6 +6,7 @@
 #include "BaseAIController.h"
 #include "TownGuardAnimInstance.h"
 #include "Weapon.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BaseAICharacter.generated.h"
@@ -31,6 +32,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 		USkeletalMeshComponent* AIMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UWidgetComponent* PromptWidgetComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 		int health;
