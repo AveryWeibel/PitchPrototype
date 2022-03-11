@@ -10,7 +10,8 @@ ABaseAICharacter::ABaseAICharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
+	PromptWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PromptWidget"));
+	PromptWidgetComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -100,6 +101,11 @@ bool ABaseAICharacter::GetIsDead()
 	return IsDead;
 }
 
+float ABaseAICharacter::GetWeaponDamage()
+{
+	return weaponDamage;
+}
+
 void ABaseAICharacter::RecieveAnimEnd()
 {
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
@@ -136,6 +142,16 @@ void ABaseAICharacter::Die()
 		RagdollAI();
 		IsDead = true;
 		AIController->BehaviorComp->StopTree();
+	}
+}
+
+void ABaseAICharacter::takeWaterDamage(float damage) {
+	health -= damage;
+
+	if (health <= 0)
+	{
+		Die();
+		return;
 	}
 }
 

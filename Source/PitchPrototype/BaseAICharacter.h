@@ -6,6 +6,7 @@
 #include "BaseAIController.h"
 #include "TownGuardAnimInstance.h"
 #include "Weapon.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
 #include "BaseAICharacter.generated.h"
@@ -32,8 +33,17 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 		USkeletalMeshComponent* AIMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		UWidgetComponent* PromptWidgetComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 		int health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	int weaponDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool inWater;
 
 	UPROPERTY()
 		bool IsDead;
@@ -91,6 +101,10 @@ public:
 
 	UFUNCTION()
 		bool GetIsDead();
-
+	UFUNCTION()
+		float GetWeaponDamage();
 	
+
+	UFUNCTION(BlueprintCallable)
+		void takeWaterDamage(float damage);
 };
