@@ -39,6 +39,12 @@ public:
 		//if you finished the tutorial
 		bool tutorialFinished;
 
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		bool canReadRunes;
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		bool killedSpellcaster;
+
 	//SETTINGS*******************************************************************SETTINGS
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float CameraSensitivity;
