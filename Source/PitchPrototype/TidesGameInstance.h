@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MainCharacter.h"
 #include "TidesGameInstance.generated.h"
 /**
  * 
@@ -38,12 +39,24 @@ public:
 		//if you finished the tutorial
 		bool tutorialFinished;
 
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		bool canReadRunes;
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		bool killedSpellcaster;
+
 	//SETTINGS*******************************************************************SETTINGS
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float CameraSensitivity;
+	
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setCameraSensitivity(float newSens);
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		bool fullscreen;
+
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setFullScreen(bool newFullScreen);
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float MasterVolume;

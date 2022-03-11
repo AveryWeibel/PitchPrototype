@@ -80,5 +80,8 @@ private:
 	UPROPERTY()
 		UTidesGameInstance* gameInstance;
 
+	UFUNCTION()
+		void syncSettings(ESlateVisibility type);
+
 	void NativeConstruct() override;
 };
