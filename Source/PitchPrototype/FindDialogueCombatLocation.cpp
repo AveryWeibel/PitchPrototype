@@ -35,7 +35,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 			traceCheckVector += target;
 			hitSuccess = owningChar->GetWorld()->LineTraceSingleByChannel(hitResult, target + (FVector::UpVector * distance / 2.0f), traceCheckVector, ECollisionChannel::ECC_Visibility, queryParams);
 			if (hitSuccess) {
-				if (hitResult.GetActor()->GetName() == "Ocean2") {
+				if (hitResult.GetActor()->GetName() == "Ocean2_1") {
 					traceColor = FColor::Green;
 					FVector oceanOffset = UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(hitResult.Location, target));
 					oceanOffset *= distance/2.0f;
@@ -43,6 +43,8 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 						
 					//DrawDebugDirectionalArrow(owningChar->GetWorld(), hitResult.Location, hitResult.Location+oceanOffset, 15.0f, FColor::Purple, false, 3.0f, 0, 5.0f);
 				}
+
+				//UE_LOG(Log171General, Log, TEXT("%s"), *hitResult.GetActor()->GetName());
 			}
 
 			DrawDebugLine(owningChar->GetWorld(), hitResult.TraceStart, hitResult.TraceEnd, traceColor, false, 3.0f, 0, 10.0f);
