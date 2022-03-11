@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseAICharacter.h"
 #include "State_MainCharacter.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171NonCombatMove, Log, All);
@@ -32,4 +33,15 @@ protected:
 	virtual void Die() override;
 	virtual void BeginOverlapFeet() override;
 	virtual void EndOverlapFeet() override;
+	virtual void StartOverlapAI() override;
+	virtual void EndOverlapAI() override;
+
+	//SubClass variables
+	ABaseAICharacter* focusedInteractable;
+	
+	//SubClass functions
+	
+	//Check for any interactables in range and determine which one to highlight
+	void SweepForInteractables();
+	
 };

@@ -217,6 +217,14 @@ void State_MainCharacter::EndOverlapFeet()
 {
 }
 
+void State_MainCharacter::StartOverlapAI()
+{
+}
+
+void State_MainCharacter::EndOverlapAI()
+{
+}
+
 State_MainCharacter::~State_MainCharacter()
 {
 }

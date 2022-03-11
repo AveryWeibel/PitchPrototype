@@ -61,7 +61,7 @@ protected:
 	//Implement State SendInput
 	void SendInput(StateAction) override;
 	void SendInput(StateAction, float) override;
-
+	
 	//Input delegate methods
 	//Empty definitions here so that subclasses don't all have to implement them
 	virtual void MoveForward(float);
@@ -80,4 +80,6 @@ protected:
 	virtual void Die();
 	virtual void BeginOverlapFeet();
 	virtual void EndOverlapFeet();
+	virtual void StartOverlapAI();
+	virtual void EndOverlapAI();
 };

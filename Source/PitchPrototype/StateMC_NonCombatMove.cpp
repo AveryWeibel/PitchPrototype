@@ -84,7 +84,9 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
-}
+
+	SweepForInteractables();
+} //End Execute()
 
 void StateMC_NonCombatMove::MoveForward(float Value)
 {
@@ -135,15 +137,12 @@ void StateMC_NonCombatMove::Jump()
 
 void StateMC_NonCombatMove::LockOn()
 {
-	for (auto AI : mainCharacter->AIList)
+	if(focusedInteractable)
 	{
-		if(IsInCameraView(AI->GetActorLocation()))
-		{
-			mainCharacter->lockedAI = AI;
-			mainCharacter->lockedAI->PlayerLock();
-			RequestStateChange(TidesStateName::LockedOnMove);
-			UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *AI->GetName());
-		}
+		mainCharacter->lockedAI = focusedInteractable;
+		mainCharacter->lockedAI->PlayerLock();
+		RequestStateChange(TidesStateName::LockedOnMove);
+		UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *focusedInteractable->GetName());
 	}
 }
 
@@ -162,5 +161,30 @@ void StateMC_NonCombatMove::EndOverlapFeet()
 {
 	//RequestStateChange(StateName::NonCombatInAir);
 }
+
+void StateMC_NonCombatMove::StartOverlapAI()
+{
+	State_MainCharacter::StartOverlapAI();
+}
+
+void StateMC_NonCombatMove::EndOverlapAI()
+{
+	State_MainCharacter::EndOverlapAI();
+}
+
+void StateMC_NonCombatMove::SweepForInteractables()
+{
+	for (auto AI : mainCharacter->AIList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			focusedInteractable = AI;
+			return;
+		}
+	}
+	focusedInteractable = nullptr;
+}
+
+
 
 
