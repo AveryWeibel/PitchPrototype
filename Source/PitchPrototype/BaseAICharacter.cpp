@@ -3,6 +3,7 @@
 
 #include "BaseAICharacter.h"
 #include "BaseAIController.h"
+#include "MainCharacter.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -153,5 +154,31 @@ void ABaseAICharacter::takeWaterDamage(float damage) {
 		Die();
 		return;
 	}
+}
+
+void ABaseAICharacter::ReactToFocus_Implementation()
+{
+	IInteractableInterface::ReactToFocus_Implementation();
+	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::ReactToUnFocus_Implementation()
+{
+	IInteractableInterface::ReactToUnFocus_Implementation();
+	UE_LOG(Log171General, Log, TEXT("UnFocused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::PlayerLock_Implementation()
+{
+	IInteractableInterface::PlayerLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("Locked %s"), *this->GetName());
+	PlayerLockBP();
+}
+
+void ABaseAICharacter::PlayerUnLock_Implementation()
+{
+	IInteractableInterface::PlayerUnLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("UnLocked %s"), *this->GetName());
+	PlayerUnLockBP();
 }
 

@@ -139,10 +139,10 @@ void StateMC_NonCombatMove::LockOn()
 {
 	if(focusedInteractable)
 	{
-		mainCharacter->lockedAI = focusedInteractable;
-		mainCharacter->lockedAI->PlayerLock();
+		mainCharacter->lockedObject = focusedInteractable;
+		Cast<IInteractableInterface>(focusedInteractable)->Execute_PlayerLock(mainCharacter->lockedObject);
 		RequestStateChange(TidesStateName::LockedOnMove);
-		UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *focusedInteractable->GetName());
+		UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *mainCharacter->lockedObject->GetName());
 	}
 }
 
@@ -174,15 +174,26 @@ void StateMC_NonCombatMove::EndOverlapAI()
 
 void StateMC_NonCombatMove::SweepForInteractables()
 {
-	for (auto AI : mainCharacter->AIList)
+	for (auto AI : mainCharacter->InteractableList)
 	{
+		if(AI == focusedInteractable)
+		{
+			return;
+		}
+		
 		if(IsInCameraView(AI->GetActorLocation()))
 		{
 			focusedInteractable = AI;
+			Cast<IInteractableInterface>(AI)->Execute_ReactToFocus(AI);
 			return;
 		}
 	}
-	focusedInteractable = nullptr;
+
+	if(focusedInteractable != nullptr)
+	{
+		Cast<IInteractableInterface>(focusedInteractable)->Execute_ReactToUnFocus(focusedInteractable);
+		focusedInteractable = nullptr;
+	}
 }
 
 

@@ -37,7 +37,7 @@ protected:
 	virtual void EndOverlapAI() override;
 
 	//SubClass variables
-	ABaseAICharacter* focusedInteractable;
+	AActor* focusedInteractable = nullptr;
 	
 	//SubClass functions
 	
