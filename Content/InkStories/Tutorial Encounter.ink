@@ -12,6 +12,15 @@ VAR LISTEN_playerDodges = -1
 VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
+
+VAR enemyHitsKnot = ""
+VAR playerHitsKnot = ""
+VAR enemyParriesKnot = ""
+VAR playerParriesKnot = ""
+VAR enemyDodgesKnot = ""
+VAR playerDodgesKnot = ""
+VAR timerKnot = ""
+
 VAR destinationKnot = ""
 
 VAR timer = -1
@@ -339,10 +348,10 @@ VAR timer = -1
         -> END
         
 === function defaultListen(Knot) ===
-{listen(1, 1, 2, 2, 4, 5, 20, Knot)}
+{listen(1, 1, 2, 2, 4, 5, 20, Knot, Knot, Knot, Knot, Knot, Knot, Knot)}
 # function Start_Combat
 
-=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot) === 
+=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, eHitKnot, pHitKnot, eParryKnot, pParryKnot, eDodgeKnot, pDodgeKnot, tKnot) === 
     ~ COUNT_enemyHits = 0
     ~ COUNT_playerHits = 0
     ~ COUNT_enemyParries = 0
@@ -357,4 +366,10 @@ VAR timer = -1
     ~ LISTEN_enemyDodges = enemyDodges
     ~ LISTEN_playerDodges = playerDodges
     ~ LISTEN_timer = Ltimer
-    ~ destinationKnot = Knot
+    ~ enemyHitsKnot = eHitKnot
+    ~ playerHitsKnot = pHitKnot
+    ~ enemyParriesKnot = eParryKnot
+    ~ playerParriesKnot = pParryKnot
+    ~ enemyDodgesKnot = eDodgeKnot
+    ~ playerDodgesKnot = pDodgeKnot
+    ~ timerKnot = tKnot
