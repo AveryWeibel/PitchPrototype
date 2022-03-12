@@ -47,7 +47,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	);
 	
 	//Rotate model towards the movement vector
-	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
 	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), mainCharacter->attackTrackingIntensity * DeltaTime));
 	
@@ -57,7 +57,9 @@ void StateMC_LockedOnSwordSwing::AnimEnd()
 {
 	State_MainCharacter::AnimEnd();
 	hitThisAttack = false;
-	if(mainCharacter->lockedAI->GetIsDead())
+
+	ABaseAICharacter* AI = Cast<ABaseAICharacter>(mainCharacter->lockedObject);
+	if(AI && AI->GetIsDead())
 	{
 		RequestStateChange(TidesStateName::NonCombatMove);	
 	}

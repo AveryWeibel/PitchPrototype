@@ -31,6 +31,11 @@ protected:
 	UPROPERTY(Category = Prompts, BlueprintReadWrite)
 		TMap<FString, UUserWidget*> activePrompts;
 
+	UFUNCTION()
+	void correctSizeAndFill(UHorizontalBoxSlot* boxSlot);
+
+public:
+
 	UFUNCTION(Category = Prompts, BlueprintCallable)
 		void DisplayInteractPrompt();
 
@@ -45,7 +50,5 @@ protected:
 
 	UFUNCTION(Category = Prompts, BlueprintCallable)
 		void RemoveLockOnPrompt();
-
-	UFUNCTION()
-		void correctSizeAndFill(UHorizontalBoxSlot* boxSlot);
+	
 };
