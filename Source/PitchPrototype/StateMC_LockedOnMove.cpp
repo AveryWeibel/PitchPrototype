@@ -73,6 +73,8 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
+
+	SweepForInteractables();
 }
 
 void StateMC_LockedOnMove::MoveForward(float Value)

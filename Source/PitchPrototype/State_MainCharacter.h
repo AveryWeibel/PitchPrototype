@@ -49,7 +49,7 @@ protected:
 	//Camera Inputs
 	float cameraInputX = 0;
 	float cameraInputY = 0;
-	float cameraFrontThreshold = 0.8f;
+	float cameraFrontThreshold = 0.95f;
 
 	//Functions for managed variables
 	void ConsumeMoveInputs();
@@ -61,6 +61,14 @@ protected:
 	//Implement State SendInput
 	void SendInput(StateAction) override;
 	void SendInput(StateAction, float) override;
+
+	//SubClass variables
+	AActor* focusedInteractable = nullptr;
+	
+	//SubClass functions
+	
+	//Check for any interactables in range and determine which one to highlight
+	void SweepForInteractables();
 	
 	//Input delegate methods
 	//Empty definitions here so that subclasses don't all have to implement them

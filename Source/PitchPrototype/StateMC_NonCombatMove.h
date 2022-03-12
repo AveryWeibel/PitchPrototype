@@ -35,13 +35,5 @@ protected:
 	virtual void EndOverlapFeet() override;
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
-
-	//SubClass variables
-	AActor* focusedInteractable = nullptr;
-	
-	//SubClass functions
-	
-	//Check for any interactables in range and determine which one to highlight
-	void SweepForInteractables();
 	
 };

@@ -25,6 +25,9 @@ public:
  void ReactToUnFocus();
 
  UFUNCTION(BlueprintNativeEvent, Category="Interactable")
+ void WhileFocused();
+
+ UFUNCTION(BlueprintNativeEvent, Category="Interactable")
  void PlayerLock();
 
  UFUNCTION(BlueprintNativeEvent, Category="Interactable")

@@ -234,3 +234,29 @@ void State_MainCharacter::RequestStateChange(TidesStateName StateName)
 	State::RequestStateChange(StateName);
 	mainCharacter->Animator->RecieveStateUpdate(StateName);
 }
+
+void State_MainCharacter::SweepForInteractables()
+{
+	for (auto AI : mainCharacter->InteractableList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			if(focusedInteractable == nullptr)
+			{
+				focusedInteractable = AI;
+				Cast<IInteractableInterface>(AI)->Execute_ReactToFocus(AI);
+			}
+			else if (AI == focusedInteractable)
+			{
+				Cast<IInteractableInterface>(focusedInteractable)->Execute_WhileFocused(focusedInteractable);
+			}
+			return;
+		}
+	}
+
+	if(focusedInteractable != nullptr)
+	{
+		Cast<IInteractableInterface>(focusedInteractable)->Execute_ReactToUnFocus(focusedInteractable);
+		focusedInteractable = nullptr;
+	}
+}

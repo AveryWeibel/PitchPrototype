@@ -4,6 +4,7 @@
 #include "BaseAICharacter.h"
 #include "BaseAIController.h"
 #include "MainCharacter.h"
+#include "PrompWidget.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -159,12 +160,15 @@ void ABaseAICharacter::takeWaterDamage(float damage) {
 void ABaseAICharacter::ReactToFocus_Implementation()
 {
 	IInteractableInterface::ReactToFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayLockOnPrompt();
+	//Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
 	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
 }
 
 void ABaseAICharacter::ReactToUnFocus_Implementation()
 {
 	IInteractableInterface::ReactToUnFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveLockOnPrompt();
 	UE_LOG(Log171General, Log, TEXT("UnFocused %s"), *this->GetName());
 }
 
@@ -180,5 +184,10 @@ void ABaseAICharacter::PlayerUnLock_Implementation()
 	IInteractableInterface::PlayerUnLock_Implementation();
 	UE_LOG(Log171General, Log, TEXT("UnLocked %s"), *this->GetName());
 	PlayerUnLockBP();
+}
+
+void ABaseAICharacter::WhileFocused_Implementation()
+{
+	IInteractableInterface::WhileFocused_Implementation();
 }
 

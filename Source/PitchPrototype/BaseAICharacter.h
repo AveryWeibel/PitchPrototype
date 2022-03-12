@@ -27,7 +27,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		UPawnSensingComponent* pawnSensingComp;
 
@@ -115,4 +115,6 @@ public:
 	void PlayerLock_Implementation() override;
 	
 	void PlayerUnLock_Implementation() override;
+
+	void WhileFocused_Implementation() override;
 };
