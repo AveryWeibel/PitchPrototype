@@ -16,6 +16,7 @@ VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
 VAR destinationKnot = ""
+VAR otherNPCVariable = 1
 
 VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
@@ -27,7 +28,7 @@ EXTERNAL test()
 - I looked at Monsieur Fogg
 # function fuck_david_coulson
 *   ... and I could contain myself no longer.
-    'What is the purpose of our journey, Monsieur?'
+    'What is the purpose of our journey, Monsieur?' {otherNPCVariable > 0: "penis" | "fuck" }
     ~ fogs_string_mood = "excellent"
     # function why
     ~ fogs_current_mood = 2
