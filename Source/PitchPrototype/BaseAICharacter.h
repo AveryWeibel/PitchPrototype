@@ -117,4 +117,6 @@ public:
 	void PlayerUnLock_Implementation() override;
 
 	void WhileFocused_Implementation() override;
+
+	bool InteractToLockOn_Implementation() override;
 };

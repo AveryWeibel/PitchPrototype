@@ -2,11 +2,12 @@
 
 
 #include "PrompWidget.h"
-
 #include "MainCharacter.h"
 
+DEFINE_LOG_CATEGORY(Log171Prompts);
+
 void UPrompWidget::DisplayInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display Interact"));
+	UE_LOG(Log171Prompts, Log, TEXT("Display Interact"));
 	
 	if(!activePrompts.Contains("InteractPrompt"))
 	{
@@ -20,7 +21,7 @@ void UPrompWidget::DisplayInteractPrompt() {
 }
 
 void UPrompWidget::DisplayLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display LockOn"));
+	UE_LOG(Log171Prompts, Log, TEXT("Display LockOn"));
 
 	if(!activePrompts.Contains("LockOnPrompt"))
 	{
@@ -34,7 +35,7 @@ void UPrompWidget::DisplayLockOnPrompt() {
 }
 
 void UPrompWidget::RemoveInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove Interact"));
+	UE_LOG(Log171Prompts, Log, TEXT("Remove Interact"));
 	
 	if(activePrompts.Contains("InteractPrompt"))
 	{
@@ -45,7 +46,7 @@ void UPrompWidget::RemoveInteractPrompt() {
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove LockOn"));
+	UE_LOG(Log171Prompts, Log, TEXT("Remove LockOn"));
 	
 	if(activePrompts.Contains("LockOnPrompt"))
 	{

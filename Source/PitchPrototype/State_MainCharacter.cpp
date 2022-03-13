@@ -86,6 +86,11 @@ void State_MainCharacter::RagdollModel()
 	mainCharacter->RagdollModel();
 }
 
+void State_MainCharacter::CallInteractBP()
+{
+	mainCharacter->InteractBP();
+}
+
 void State_MainCharacter::SendInput(StateAction Action)
 {
 	switch (Action) {
@@ -115,6 +120,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::Die:
 		Die();
+		break;
+	case StateAction::Interact:
+		Interact();
 		break;
 	case StateAction::AnimEnd:
 		AnimEnd();
@@ -206,6 +214,10 @@ void State_MainCharacter::TakeHit()
 }
 
 void State_MainCharacter::Die()
+{
+}
+
+void State_MainCharacter::Interact()
 {
 }
 

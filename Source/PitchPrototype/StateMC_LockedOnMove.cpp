@@ -196,3 +196,17 @@ void StateMC_LockedOnMove::Dodge()
 	RequestStateChange(TidesStateName::LockedOnDodging);
 }
 
+void StateMC_LockedOnMove::Interact()
+{
+	UE_LOG(Log171General, Log, TEXT("Call Interact()"))
+	if(focusedInteractable)
+	{
+		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
+	
+		interactable->Execute_PlayerInteract(focusedInteractable);
+
+		//Call BP implementation
+		CallInteractBP();
+	}
+}
+

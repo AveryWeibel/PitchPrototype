@@ -172,6 +172,24 @@ void StateMC_NonCombatMove::EndOverlapAI()
 	State_MainCharacter::EndOverlapAI();
 }
 
+void StateMC_NonCombatMove::Interact()
+{
+	UE_LOG(Log171General, Log, TEXT("Call Interact()"))
+	if(focusedInteractable)
+	{
+		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
+		
+		interactable->Execute_PlayerInteract(focusedInteractable);
+		if(interactable->Execute_InteractToLockOn(focusedInteractable))
+		{
+			StateMC_NonCombatMove::LockOn();	
+		}
+
+		//Call BP implementation
+		CallInteractBP();
+	}
+}
+
 
 
 

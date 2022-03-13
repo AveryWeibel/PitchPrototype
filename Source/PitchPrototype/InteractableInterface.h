@@ -32,4 +32,10 @@ public:
 
  UFUNCTION(BlueprintNativeEvent, Category="Interactable")
  void PlayerUnLock();
+
+ UFUNCTION(BlueprintNativeEvent, Category="Interactable")
+ void PlayerInteract();
+
+ UFUNCTION(BlueprintNativeEvent, Category="Interactable")
+ bool InteractToLockOn();
 };

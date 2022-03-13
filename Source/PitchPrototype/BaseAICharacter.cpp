@@ -170,6 +170,7 @@ void ABaseAICharacter::ReactToUnFocus_Implementation()
 {
 	IInteractableInterface::ReactToUnFocus_Implementation();
 	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveLockOnPrompt();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveInteractPrompt();
 	UE_LOG(Log171General, Log, TEXT("UnFocused %s"), *this->GetName());
 }
 
@@ -190,5 +191,10 @@ void ABaseAICharacter::PlayerUnLock_Implementation()
 void ABaseAICharacter::WhileFocused_Implementation()
 {
 	IInteractableInterface::WhileFocused_Implementation();
+}
+
+bool ABaseAICharacter::InteractToLockOn_Implementation()
+{
+	return true;
 }
 

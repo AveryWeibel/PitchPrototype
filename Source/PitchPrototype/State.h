@@ -43,6 +43,7 @@ enum StateAction
 	AnimEnd,
 	TakeHit,
 	Die,
+	Interact,
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	StartOverlapAI,

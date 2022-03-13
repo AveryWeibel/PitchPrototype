@@ -183,6 +183,11 @@ protected:
 	void Parry();
 
 	void Dodge();
+
+	void Interact();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void InteractBP();
 	
 	void RecieveAnimEndNotif();
 

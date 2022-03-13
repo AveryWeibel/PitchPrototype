@@ -35,5 +35,6 @@ protected:
 	virtual void EndOverlapFeet() override;
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
+	virtual void Interact() override;
 	
 };
