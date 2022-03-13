@@ -2,11 +2,12 @@
 
 
 #include "PrompWidget.h"
-
 #include "MainCharacter.h"
 
+DEFINE_LOG_CATEGORY(Log171Prompts);
+
 void UPrompWidget::DisplayInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display Interact"));
+	UE_LOG(Log171Prompts, Log, TEXT("Display Interact"));
 	
 	if(!activePrompts.Contains("InteractPrompt"))
 	{
@@ -15,11 +16,12 @@ void UPrompWidget::DisplayInteractPrompt() {
 		correctSizeAndFill(slot);
 
 		activePrompts.Add("InteractPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
 	}
 }
 
 void UPrompWidget::DisplayLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display LockOn"));
+	UE_LOG(Log171Prompts, Log, TEXT("Display LockOn"));
 
 	if(!activePrompts.Contains("LockOnPrompt"))
 	{
@@ -28,11 +30,12 @@ void UPrompWidget::DisplayLockOnPrompt() {
 		correctSizeAndFill(slot);
 
 		activePrompts.Add("LockOnPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
 	}
 }
 
 void UPrompWidget::RemoveInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove Interact"));
+	UE_LOG(Log171Prompts, Log, TEXT("Remove Interact"));
 	
 	if(activePrompts.Contains("InteractPrompt"))
 	{
@@ -43,7 +46,7 @@ void UPrompWidget::RemoveInteractPrompt() {
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove LockOn"));
+	UE_LOG(Log171Prompts, Log, TEXT("Remove LockOn"));
 	
 	if(activePrompts.Contains("LockOnPrompt"))
 	{

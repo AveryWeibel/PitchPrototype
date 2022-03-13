@@ -35,6 +35,9 @@ public:
 	// Sets default values for this pawn's properties
 	AMainCharacter();
 
+	UPROPERTY(BlueprintReadWrite, Category="Control")
+		bool usingGamepad;
+
 	UPROPERTY(Category = Character, EditAnywhere)
 		UArrowComponent* velocityArrow;
 
@@ -180,6 +183,11 @@ protected:
 	void Parry();
 
 	void Dodge();
+
+	void Interact();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void InteractBP();
 	
 	void RecieveAnimEndNotif();
 
