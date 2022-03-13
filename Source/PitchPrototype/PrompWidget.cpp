@@ -15,6 +15,7 @@ void UPrompWidget::DisplayInteractPrompt() {
 		correctSizeAndFill(slot);
 
 		activePrompts.Add("InteractPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
 	}
 }
 
@@ -28,6 +29,7 @@ void UPrompWidget::DisplayLockOnPrompt() {
 		correctSizeAndFill(slot);
 
 		activePrompts.Add("LockOnPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
 	}
 }
 
