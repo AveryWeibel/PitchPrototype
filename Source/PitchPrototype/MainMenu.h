@@ -38,6 +38,9 @@ protected:
 		UButton* CreditsButton;
 
 	UPROPERTY(meta = (BindWidget))
+		UCanvasPanel* CreditsPanel;
+
+	UPROPERTY(meta = (BindWidget))
 		UButton* QuitButton;
 
 	UPROPERTY(meta = (BindWidget))
