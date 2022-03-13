@@ -15,10 +15,20 @@ VAR LISTEN_playerDodges = -1
 VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
-VAR destinationKnot = ""
+
+VAR enemyHitsKnot = ""
+VAR playerHitsKnot = ""
+VAR enemyParriesKnot = ""
+VAR playerParriesKnot = ""
+VAR enemyDodgesKnot = ""
+VAR playerDodgesKnot = ""
+VAR timerKnot = ""
+
+VAR otherNPCVariable = 1
 
 VAR fogs_string_mood = "good"
 VAR fogs_current_mood = 1
+
 EXTERNAL test()
 
 ->start
@@ -27,7 +37,7 @@ EXTERNAL test()
 - I looked at Monsieur Fogg
 # function fuck_david_coulson
 *   ... and I could contain myself no longer.
-    'What is the purpose of our journey, Monsieur?'
+    'What is the purpose of our journey, Monsieur?' {otherNPCVariable > 0: "penis" | "fuck" }
     ~ fogs_string_mood = "excellent"
     # function why
     ~ fogs_current_mood = 2
@@ -65,7 +75,7 @@ pens hate this
 === function lerp(a, b, k) ===
     ~ return ((b - a) * k) + a
     
-=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot) === 
+=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, eHitKnot, pHitKnot, eParryKnot, pParryKnot, eDodgeKnot, pDodgeKnot, tKnot) === 
     ~ COUNT_enemyHits = 0
     ~ COUNT_playerHits = 0
     ~ COUNT_enemyParries = 0
@@ -80,4 +90,10 @@ pens hate this
     ~ LISTEN_enemyDodges = enemyDodges
     ~ LISTEN_playerDodges = playerDodges
     ~ LISTEN_timer = Ltimer
-    ~ destinationKnot = Knot
+    ~ enemyHitsKnot = eHitKnot
+    ~ playerHitsKnot = pHitKnot
+    ~ enemyParriesKnot = eParryKnot
+    ~ playerParriesKnot = pParryKnot
+    ~ enemyDodgesKnot = eDodgeKnot
+    ~ playerDodgesKnot = pDodgeKnot
+    ~ timerKnot = tKnot
