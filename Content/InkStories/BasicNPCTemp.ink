@@ -22,12 +22,13 @@ VAR playerParriesKnot = ""
 VAR enemyDodgesKnot = ""
 VAR playerDodgesKnot = ""
 VAR timerKnot = ""
-
-#my Variables
-VAR endStory = false
+VAR destinationKnot = ""
 
 #otherNPC variables
 VAR otherNPCVariable = -1
+
+#my Variables
+VAR endStory = false
 
 Once upon a time...
 
