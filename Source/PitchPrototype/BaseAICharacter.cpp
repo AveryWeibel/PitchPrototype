@@ -5,6 +5,7 @@
 #include "BaseAIController.h"
 #include "MainCharacter.h"
 #include "PrompWidget.h"
+#include "State_MainCharacter.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
