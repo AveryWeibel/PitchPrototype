@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseAIController.h"
+#include "InteractableInterface.h"
 #include "TownGuardAnimInstance.h"
 #include "Weapon.h"
 #include "Components/WidgetComponent.h"
@@ -12,7 +13,7 @@
 #include "BaseAICharacter.generated.h"
 
 UCLASS()
-class PITCHPROTOTYPE_API ABaseAICharacter : public ACharacter
+class PITCHPROTOTYPE_API ABaseAICharacter : public ACharacter, public IInteractableInterface
 {
 	GENERATED_BODY()
 
@@ -26,7 +27,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 		UPawnSensingComponent* pawnSensingComp;
 
@@ -93,18 +94,27 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
 	void RecieveHit(float damage = 0);
 	
-	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLock"))
-	void PlayerLock();
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLockBP"))
+	void PlayerLockBP();
 
-	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLock"))
-	void PlayerUnLock();
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLockBP"))
+	void PlayerUnLockBP();
 
 	UFUNCTION()
 		bool GetIsDead();
 	UFUNCTION()
 		float GetWeaponDamage();
 	
-
 	UFUNCTION(BlueprintCallable)
 		void takeWaterDamage(float damage);
+
+	void ReactToFocus_Implementation() override;
+
+	void ReactToUnFocus_Implementation() override;
+
+	void PlayerLock_Implementation() override;
+	
+	void PlayerUnLock_Implementation() override;
+
+	void WhileFocused_Implementation() override;
 };

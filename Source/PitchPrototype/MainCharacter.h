@@ -126,10 +126,10 @@ public:
 		FVector currentPhysicsLinearVelocity;
 
 	UPROPERTY()
-		TSet<ABaseAICharacter*> AIList;
+		TSet<AActor*> InteractableList;
 
 	UPROPERTY(BlueprintReadOnly)
-		ABaseAICharacter* lockedAI = nullptr;
+		AActor* lockedObject = nullptr;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;

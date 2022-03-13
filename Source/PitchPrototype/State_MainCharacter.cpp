@@ -77,7 +77,7 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	);
 
 	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
 }
 
@@ -217,6 +217,14 @@ void State_MainCharacter::EndOverlapFeet()
 {
 }
 
+void State_MainCharacter::StartOverlapAI()
+{
+}
+
+void State_MainCharacter::EndOverlapAI()
+{
+}
+
 State_MainCharacter::~State_MainCharacter()
 {
 }
@@ -225,4 +233,30 @@ void State_MainCharacter::RequestStateChange(TidesStateName StateName)
 {
 	State::RequestStateChange(StateName);
 	mainCharacter->Animator->RecieveStateUpdate(StateName);
+}
+
+void State_MainCharacter::SweepForInteractables()
+{
+	for (auto AI : mainCharacter->InteractableList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			if(focusedInteractable == nullptr)
+			{
+				focusedInteractable = AI;
+				Cast<IInteractableInterface>(AI)->Execute_ReactToFocus(AI);
+			}
+			else if (AI == focusedInteractable)
+			{
+				Cast<IInteractableInterface>(focusedInteractable)->Execute_WhileFocused(focusedInteractable);
+			}
+			return;
+		}
+	}
+
+	if(focusedInteractable != nullptr)
+	{
+		Cast<IInteractableInterface>(focusedInteractable)->Execute_ReactToUnFocus(focusedInteractable);
+		focusedInteractable = nullptr;
+	}
 }
