@@ -159,6 +159,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 }
 
 void AMainCharacter::TakeWeaponHit(float damage)
@@ -219,6 +220,11 @@ void AMainCharacter::Parry()
 void AMainCharacter::Dodge()
 {
 	characterStateMachine->SendInput(StateAction::Dodge);
+}
+
+void AMainCharacter::Interact()
+{
+	characterStateMachine->SendInput(StateAction::Interact);
 }
 
 void AMainCharacter::RecieveAnimEndNotif()

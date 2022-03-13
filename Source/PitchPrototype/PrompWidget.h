@@ -9,6 +9,8 @@
 #include "PromptImageWidget.h"
 #include "PrompWidget.generated.h"
 
+
+DECLARE_LOG_CATEGORY_EXTERN(Log171Prompts, Log, All);
 /**
  * 
  */
