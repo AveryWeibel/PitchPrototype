@@ -92,6 +92,7 @@ void UPauseMenu::OnMeditateButtonUnhovered()
 
 void UPauseMenu::OnMeditateButtonClicked()
 {
+	CallMeditateEvent();
 }
 
 void UPauseMenu::OnSettingsButtonClicked()

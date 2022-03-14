@@ -105,4 +105,8 @@ protected:
 		void OnQuitGameButtonClicked();
 
 	virtual void NativeConstruct() override;
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void CallMeditateEvent();
 };
