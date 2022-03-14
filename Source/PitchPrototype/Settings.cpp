@@ -14,6 +14,10 @@ void USettings::NativeConstruct() {
 	MasterVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnMasterVolumeBarChanged);
 	SFXVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnSFXVolumeBarChanged);
 
+	ControllerButton->OnClicked.AddUniqueDynamic(this, &USettings::onControllerButtonClicked);
+	KeyboardButton->OnClicked.AddUniqueDynamic(this, &USettings::onKeyboardButtonClicked);
+	SettingsButton->OnClicked.AddUniqueDynamic(this, &USettings::onSettingsButtonClicked);
+
 	this->OnVisibilityChanged.AddUniqueDynamic(this, &USettings::syncSettings);
 }
 
@@ -28,6 +32,21 @@ void USettings::syncSettings(ESlateVisibility type) {
 	{
 
 	}
+}
+
+void USettings::onSettingsButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(0);
+}
+
+void USettings::onKeyboardButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(1);
+}
+
+void USettings::onControllerButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(2);
 }
 
 void USettings::OnFullScreenCheckBoxClicked(bool isChecked) {

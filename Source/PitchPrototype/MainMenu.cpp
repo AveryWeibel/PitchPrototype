@@ -33,7 +33,13 @@ void UMainMenu::OnOptionsButtonClicked() {
 }
 
 void UMainMenu::OnCreditsButtonClicked() {
-
+	if (CreditsPanel->GetVisibility() == ESlateVisibility::Collapsed) {
+		CreditsPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else 
+	{
+		CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UMainMenu::OnQuitButtonClicked() {
