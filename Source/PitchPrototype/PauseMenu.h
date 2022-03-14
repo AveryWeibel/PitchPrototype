@@ -13,6 +13,7 @@
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMeditateDelegate);
 UCLASS()
 class PITCHPROTOTYPE_API UPauseMenu : public UUserWidget
 {
@@ -104,9 +105,12 @@ protected:
 	UFUNCTION()
 		void OnQuitGameButtonClicked();
 
+	UFUNCTION()
+		void HandleMeditate();
+
 	virtual void NativeConstruct() override;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void CallMeditateEvent();
+	UPROPERTY(BlueprintAssignable)
+	FOnMeditateDelegate OnMeditate;
 };
