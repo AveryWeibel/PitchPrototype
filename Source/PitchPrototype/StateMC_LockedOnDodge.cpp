@@ -21,6 +21,7 @@ void StateMC_LockedOnDodge::Start()
 {
 	DodgeStartedTime = mainCharacter->GetWorld()->GetTimeSeconds();
 	DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
+	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 }
 
 void StateMC_LockedOnDodge::Execute(float DeltaTime)
