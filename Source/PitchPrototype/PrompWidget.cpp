@@ -2,33 +2,58 @@
 
 
 #include "PrompWidget.h"
+#include "MainCharacter.h"
+
+DEFINE_LOG_CATEGORY(Log171Prompts);
 
 void UPrompWidget::DisplayInteractPrompt() {
-	UUserWidget* prompt = CreateWidget(this, promptList[0]);
-	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
-	correctSizeAndFill(slot);
+	UE_LOG(Log171Prompts, Log, TEXT("Display Interact"));
+	
+	if(!activePrompts.Contains("InteractPrompt"))
+	{
+		UUserWidget* prompt = CreateWidget(this, promptList[0]);
+		UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
+		correctSizeAndFill(slot);
 
-	activePrompts.Add("InteractPrompt", prompt);
+		activePrompts.Add("InteractPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
+	}
 }
 
 void UPrompWidget::DisplayLockOnPrompt() {
-	UUserWidget* prompt = CreateWidget(this, promptList[1]);
-	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
-	correctSizeAndFill(slot);
+	UE_LOG(Log171Prompts, Log, TEXT("Display LockOn"));
 
-	activePrompts.Add("LockOnPrompt", prompt);
+	if(!activePrompts.Contains("LockOnPrompt"))
+	{
+		UUserWidget* prompt = CreateWidget(this, promptList[1]);
+		UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
+		correctSizeAndFill(slot);
+
+		activePrompts.Add("LockOnPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
+	}
 }
 
 void UPrompWidget::RemoveInteractPrompt() {
-	PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
+	UE_LOG(Log171Prompts, Log, TEXT("Remove Interact"));
+	
+	if(activePrompts.Contains("InteractPrompt"))
+	{
+		PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
 
-	activePrompts.Remove("InteractPrompt");
+		activePrompts.Remove("InteractPrompt");
+	}
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
-	PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
+	UE_LOG(Log171Prompts, Log, TEXT("Remove LockOn"));
+	
+	if(activePrompts.Contains("LockOnPrompt"))
+	{
+		PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
 
-	activePrompts.Remove("LockOnPrompt");
+		activePrompts.Remove("LockOnPrompt");
+	}
 }
 
 void UPrompWidget::ClearPrompts() {

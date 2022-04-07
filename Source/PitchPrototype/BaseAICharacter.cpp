@@ -3,6 +3,9 @@
 
 #include "BaseAICharacter.h"
 #include "BaseAIController.h"
+#include "MainCharacter.h"
+#include "PrompWidget.h"
+#include "State_MainCharacter.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -10,7 +13,8 @@ ABaseAICharacter::ABaseAICharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
+	PromptWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("PromptWidget"));
+	PromptWidgetComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -152,5 +156,45 @@ void ABaseAICharacter::takeWaterDamage(float damage) {
 		Die();
 		return;
 	}
+}
+
+void ABaseAICharacter::ReactToFocus_Implementation()
+{
+	IInteractableInterface::ReactToFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayLockOnPrompt();
+	//Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
+	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::ReactToUnFocus_Implementation()
+{
+	IInteractableInterface::ReactToUnFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveLockOnPrompt();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveInteractPrompt();
+	UE_LOG(Log171General, Log, TEXT("UnFocused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::PlayerLock_Implementation()
+{
+	IInteractableInterface::PlayerLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("Locked %s"), *this->GetName());
+	PlayerLockBP();
+}
+
+void ABaseAICharacter::PlayerUnLock_Implementation()
+{
+	IInteractableInterface::PlayerUnLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("UnLocked %s"), *this->GetName());
+	PlayerUnLockBP();
+}
+
+void ABaseAICharacter::WhileFocused_Implementation()
+{
+	IInteractableInterface::WhileFocused_Implementation();
+}
+
+bool ABaseAICharacter::InteractToLockOn_Implementation()
+{
+	return true;
 }
 

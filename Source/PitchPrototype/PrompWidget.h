@@ -9,6 +9,8 @@
 #include "PromptImageWidget.h"
 #include "PrompWidget.generated.h"
 
+
+DECLARE_LOG_CATEGORY_EXTERN(Log171Prompts, Log, All);
 /**
  * 
  */
@@ -19,6 +21,9 @@ class PITCHPROTOTYPE_API UPrompWidget : public UUserWidget
 	
 protected:
 
+	UPROPERTY(BlueprintReadWrite)
+		bool UsingGamepadLast;
+	
 	UPROPERTY(Category = Prompts, BlueprintReadWrite, meta = (BindWidget))
 		UHorizontalBox* PromptHorizontalBox;
 	/*
@@ -30,6 +35,14 @@ protected:
 
 	UPROPERTY(Category = Prompts, BlueprintReadWrite)
 		TMap<FString, UUserWidget*> activePrompts;
+
+	UFUNCTION()
+	void correctSizeAndFill(UHorizontalBoxSlot* boxSlot);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="ControlIcons")
+		void UpdateIconType(bool usingGamepad);
+
+public:
 
 	UFUNCTION(Category = Prompts, BlueprintCallable)
 		void DisplayInteractPrompt();
@@ -45,7 +58,5 @@ protected:
 
 	UFUNCTION(Category = Prompts, BlueprintCallable)
 		void RemoveLockOnPrompt();
-
-	UFUNCTION()
-		void correctSizeAndFill(UHorizontalBoxSlot* boxSlot);
+	
 };
