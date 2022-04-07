@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{fca3c732-cd97-44c1-911b-970b9c47359b}">
+		<property name="assetPath">
+			<value>sword swing.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.39664583333333331</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f01c5c14-19c8-4695-83d4-ee8380f635f6}</destination>
+		</relationship>
+	</object>
+</objects>
