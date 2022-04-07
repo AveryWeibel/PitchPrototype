@@ -25,7 +25,7 @@ void StateMC_LockedOnTakeHit::Start()
 void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 {
 	//Update animation variables
-	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedAI->GetActorLocation());
+	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
 	mainCharacter->Animator->SetControlDirection(FVector(moveFwd, moveRht, 0));
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
@@ -41,10 +41,10 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 	
 	//Lerp cameraBoom to rotate between player and target
 	//2D so the camera doesn't tilt with distance
-	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
 	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
 
 	//Lerp cameraBoom to rotate between player and target

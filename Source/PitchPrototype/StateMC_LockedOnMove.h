@@ -36,6 +36,7 @@ protected:
 	virtual void Die() override;
 	virtual void Parry() override;
 	virtual void Dodge() override;
+	virtual void Interact() override;
 
 	//Internal functions
 

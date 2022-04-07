@@ -35,6 +35,9 @@ public:
 	// Sets default values for this pawn's properties
 	AMainCharacter();
 
+	UPROPERTY(BlueprintReadWrite, Category="Control")
+		bool usingGamepad;
+
 	UPROPERTY(Category = Character, EditAnywhere)
 		UArrowComponent* velocityArrow;
 
@@ -126,10 +129,10 @@ public:
 		FVector currentPhysicsLinearVelocity;
 
 	UPROPERTY()
-		TSet<ABaseAICharacter*> AIList;
+		TSet<AActor*> InteractableList;
 
 	UPROPERTY(BlueprintReadOnly)
-		ABaseAICharacter* lockedAI = nullptr;
+		AActor* lockedObject = nullptr;
 
 	//Animation
 	UMainCharacterAnimInstance* Animator = nullptr;
@@ -180,6 +183,11 @@ protected:
 	void Parry();
 
 	void Dodge();
+
+	void Interact();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void InteractBP();
 	
 	void RecieveAnimEndNotif();
 

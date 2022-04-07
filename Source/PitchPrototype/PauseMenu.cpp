@@ -92,6 +92,7 @@ void UPauseMenu::OnMeditateButtonUnhovered()
 
 void UPauseMenu::OnMeditateButtonClicked()
 {
+	HandleMeditate();
 }
 
 void UPauseMenu::OnSettingsButtonClicked()
@@ -144,4 +145,10 @@ void UPauseMenu::OnQuitGameButtonUnhovered()
 void UPauseMenu::OnQuitGameButtonClicked()
 {
 	UKismetSystemLibrary::QuitGame(this, UGameplayStatics::GetPlayerController(this, 0), EQuitPreference::Quit, false);
+}
+
+void UPauseMenu::HandleMeditate()
+{
+	UnpauseGame();
+	OnMeditate.Broadcast();
 }
