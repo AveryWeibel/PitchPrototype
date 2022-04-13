@@ -289,8 +289,9 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 	UE_LOG(Log171General, Log, TEXT("Player taking %f damage"), damageAmount);
 
-	if (playerHealth < 0.0f) {
+	if (playerHealth <= 0.0f) {
 		playerHealth = 0.0f;
+		characterStateMachine->SendInput(StateAction::Die);
 	}
 
 	return damageAmount;
