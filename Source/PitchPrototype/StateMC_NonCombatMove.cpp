@@ -46,8 +46,9 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Move the character
 	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
-		mainCharacter->feetCollider->AddForce(*movementVector);
-		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
+		//mainCharacter->feetCollider->AddForce(*movementVector);
+		mainCharacter->AddActorWorldOffset(*movementVector);
+		mainCharacter->horizontalVelocity = *movementVector;
 	}
 
 	//Position the camera
@@ -98,7 +99,7 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 	FVector direction = mainCharacter->mainCamera->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce) / 200000;
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
@@ -114,7 +115,7 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce) / 200000;
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 

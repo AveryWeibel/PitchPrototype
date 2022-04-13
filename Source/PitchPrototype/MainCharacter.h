@@ -75,6 +75,12 @@ public:
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float maximumHorizontalVelocity;
 
+	UPROPERTY()
+		float targetHorizontalVelocity;
+
+	UPROPERTY(BlueprintReadOnly)
+		FVector horizontalVelocity;
+
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float jumpForce;
 
