@@ -52,12 +52,14 @@ void USettings::onControllerButtonClicked()
 void USettings::OnFullScreenCheckBoxClicked(bool isChecked) {
 	if (isChecked) {
 		settings->SetScreenResolution(FIntPoint::FIntPoint(1920, 1080));
-		UE_LOG(LogTemp, Log, TEXT("Setting to Fullscreen"));
+		settings->SetFullscreenMode(EWindowMode::Fullscreen);
+		//UE_LOG(LogTemp, Log, TEXT("Setting to Fullscreen"));
 	}
 	else 
 	{
 		settings->SetScreenResolution(FIntPoint::FIntPoint(1280, 720));
-		UE_LOG(LogTemp, Log, TEXT("Setting to Windowed"));
+		settings->SetFullscreenMode(EWindowMode::Windowed);
+		//UE_LOG(LogTemp, Log, TEXT("Setting to Windowed"));
 	}
 
 	gameInstance->setFullScreen(isChecked);
@@ -69,10 +71,10 @@ void USettings::OnCameraSensBarChanged(float Value) {
 }
 
 void USettings::OnMasterVolumeBarChanged(float Value) {
-
+	gameInstance->setMasterVolume(Value);
 }
 
 void USettings::OnSFXVolumeBarChanged(float Value) {
-
+	gameInstance->setSFXVolume(Value);
 }
 
