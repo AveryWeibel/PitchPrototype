@@ -1,5 +1,5 @@
 #combat variables
-VAR LISTEN_enemyHits = -1
+VAR LISTEN_enemyHits = 1
 VAR COUNT_enemyHits = 0
 VAR LISTEN_playerHits = -1
 VAR COUNT_playerHits = 0
@@ -13,6 +13,8 @@ VAR LISTEN_playerDodges = -1
 VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
+
+VAR happiness = 0
 
 #destinationKnots 
 VAR enemyHitsKnot = "guardcombattutorial.hit"
