@@ -61,6 +61,12 @@ public:
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float MasterVolume;
 
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setMasterVolume(float newVolume);
+
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float SFXVolume;
+
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setSFXVolume(float newVolume);
 };

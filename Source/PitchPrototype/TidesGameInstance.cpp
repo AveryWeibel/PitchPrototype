@@ -10,6 +10,8 @@ UTidesGameInstance::UTidesGameInstance() {
 	tutorialFinished = false;
 
 	CameraSensitivity = 100.0f;
+	MasterVolume = 1.0f;
+	SFXVolume = 1.0f;
 	fullscreen = false;
 }
 
@@ -18,11 +20,26 @@ void UTidesGameInstance::setCameraSensitivity(float newSens)
 	CameraSensitivity = newSens;
 
 	AMainCharacter* player = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (player) {
+		player->cameraAccelerationForce = CameraSensitivity;
+	}
 
-	player->cameraAccelerationForce = CameraSensitivity;
+	//UE_LOG(LogTemp, Log, TEXT("New Camera Sens: %d"), newSens);
 }
 
 void UTidesGameInstance::setFullScreen(bool newFullScreen)
 {
 	fullscreen = newFullScreen;
+}
+
+void UTidesGameInstance::setMasterVolume(float newVolume)
+{
+	MasterVolume = newVolume;
+	//UE_LOG(LogTemp, Log, TEXT("New Master Volume: %d"), newVolume);
+}
+
+void UTidesGameInstance::setSFXVolume(float newVolume)
+{
+	SFXVolume = newVolume;
+	//UE_LOG(LogTemp, Log, TEXT("New SFX Volume: %d"), newVolume);
 }
