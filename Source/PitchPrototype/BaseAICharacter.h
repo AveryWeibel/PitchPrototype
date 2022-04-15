@@ -93,6 +93,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
 	void RecieveHit(float damage = 0);
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "AIHealthChange"))
+		void AIHealthChange();
 	
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLockBP"))
 	void PlayerLockBP();
