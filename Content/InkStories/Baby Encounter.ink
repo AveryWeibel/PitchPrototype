@@ -29,6 +29,7 @@ VAR enemyDodgesKnot = ""
 VAR playerDodgesKnot = ""
 VAR timerKnot = ""
 VAR destinationKnot = ""
+VAR canReadRunes = 0
 
 -> babyintro
 
@@ -358,6 +359,8 @@ What do you want to ask about?
     
     = deal
     Okay. [The baby proceeds to teach you to read the runes]
+    ~ canReadRunes = 1
+    # function Teach_Runes
     
     + [I still have some questions for you]
     -> babyhub
