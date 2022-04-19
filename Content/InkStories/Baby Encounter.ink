@@ -14,6 +14,8 @@ VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
 
+VAR canReadRunes = 0
+
 -> babyintro
 
 === babyintro ===
@@ -342,6 +344,8 @@ What do you want to ask about?
     
     = deal
     Okay. [The baby proceeds to teach you to read the runes]
+    ~ canReadRunes = 1
+    # function Teach_Runes
     
     + [I still have some questions for you]
     -> babyhub
