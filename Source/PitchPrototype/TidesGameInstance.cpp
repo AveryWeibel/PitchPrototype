@@ -8,6 +8,7 @@ UTidesGameInstance::UTidesGameInstance() {
 	loopCounter = 0;
 
 	tutorialFinished = false;
+	canReadRunes = false;
 
 	CameraSensitivity = 100.0f;
 	MasterVolume = 1.0f;
