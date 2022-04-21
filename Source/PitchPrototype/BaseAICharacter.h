@@ -94,6 +94,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
 	void RecieveHit(float damage = 0);
 
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "AIParried"))
+		void RecieveParry();
+
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "AIHealthChange"))
 		void AIHealthChange();
 	
