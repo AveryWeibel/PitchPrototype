@@ -180,8 +180,6 @@ void StateMC_LockedOnMove::Parry()
 			ParryLerpTarget = 1;
 			if(AI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedObject) < mainCharacter->parryDistance)
 			{
-				const FString VarName{"COUNT_playerParries"};
-				mainCharacter->NativeSetDialogueInt(VarName, mainCharacter->NativeGetDialogueInt(VarName) + 1);
 				AI->RecieveParry();
 			}
 		}
