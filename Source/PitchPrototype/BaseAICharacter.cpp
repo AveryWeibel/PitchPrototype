@@ -86,6 +86,8 @@ void ABaseAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void ABaseAICharacter::RecieveHit(float damage)
 {
 	health -= damage;
+	AIHealthChange();
+
 	if(health <= 0)
 	{
 		Die();
@@ -150,6 +152,7 @@ void ABaseAICharacter::Die()
 
 void ABaseAICharacter::takeWaterDamage(float damage) {
 	health -= damage;
+	AIHealthChange();
 
 	if (health <= 0)
 	{

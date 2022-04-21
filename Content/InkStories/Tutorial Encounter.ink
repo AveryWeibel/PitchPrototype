@@ -14,7 +14,11 @@ VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
 
-VAR happiness = 0
+VAR health = 50
+
+VAR happiness = 50
+VAR fear = 50
+VAR anger = 50
 
 #destinationKnots 
 VAR enemyHitsKnot = "guardcombattutorial.hit"
