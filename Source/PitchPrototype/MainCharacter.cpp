@@ -282,6 +282,8 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 		InteractableList.Remove(OtherActor);
 		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
+
+	characterStateMachine->SendInput(StateAction::EndOverlapAI);
 }
 
 float AMainCharacter::takeDamage(float damageAmount) {

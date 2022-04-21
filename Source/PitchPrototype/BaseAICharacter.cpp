@@ -101,6 +101,15 @@ void ABaseAICharacter::RecieveHit(float damage)
 	}
 }
 
+void ABaseAICharacter::RecieveParry()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if (AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_ParryStun, Animator);
+	}
+}
+
 bool ABaseAICharacter::GetIsDead()
 {
 	return IsDead;

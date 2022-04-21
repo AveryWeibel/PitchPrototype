@@ -182,7 +182,7 @@ void StateMC_LockedOnMove::Parry()
 			{
 				const FString VarName{"COUNT_playerParries"};
 				mainCharacter->NativeSetDialogueInt(VarName, mainCharacter->NativeGetDialogueInt(VarName) + 1);
-				AI->RecieveHit();
+				AI->RecieveParry();
 			}
 		}
 	}
@@ -208,5 +208,20 @@ void StateMC_LockedOnMove::Interact()
 		//Call BP implementation
 		CallInteractBP();
 	}
+}
+
+void StateMC_LockedOnMove::EndOverlapAI()
+{
+	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
+		mainCharacter->lockedObject = nullptr;
+
+		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
+		interactable->Execute_PlayerUnLock(focusedInteractable);
+
+		SweepForInteractables();
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
+
+	UE_LOG(Log171General, Log, TEXT("Endoverlap AI"));
 }
 

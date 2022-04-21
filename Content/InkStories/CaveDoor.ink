@@ -25,15 +25,7 @@ VAR doorOpen = 0
         
     = inspectdoor
     These seems to be runes carved into the cave walls. You wonder if anyone knows how to read them.
-        -> END
-
-    The runes shine brightly back at you.
-    
-    + {doorOpen == 0}
-        [Read the runes] -> opendoor
-        
-    + {doorOpen == 1}
-        [Unread the runes] -> closedoor
+        -> DONE
     
     = opendoor
     The door begins to open.
