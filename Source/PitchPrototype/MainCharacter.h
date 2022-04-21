@@ -75,6 +75,9 @@ public:
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float maximumHorizontalVelocity;
 
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float modelTurningRate = 25;
+
 	UPROPERTY()
 		float targetHorizontalVelocity;
 

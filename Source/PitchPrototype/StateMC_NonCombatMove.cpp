@@ -74,7 +74,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0)
 	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), FMath::Clamp( 4 * DeltaTime, DeltaTime, 4.0f)));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
 	}
 
 		//float turnDelta = 
