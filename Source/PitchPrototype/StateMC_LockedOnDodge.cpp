@@ -21,6 +21,7 @@ void StateMC_LockedOnDodge::Start()
 {
 	DodgeStartedTime = mainCharacter->GetWorld()->GetTimeSeconds();
 	DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
+	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 }
 
 void StateMC_LockedOnDodge::Execute(float DeltaTime)
@@ -34,7 +35,7 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	ConsumeMoveInputs();
 
 	//Move the camera
-	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	//2D so the camera doesn't tilt with distance
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget, 0.35f);

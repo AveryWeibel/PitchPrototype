@@ -77,13 +77,18 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	);
 
 	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedAI->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
 }
 
 void State_MainCharacter::RagdollModel()
 {
 	mainCharacter->RagdollModel();
+}
+
+void State_MainCharacter::CallInteractBP()
+{
+	mainCharacter->InteractBP();
 }
 
 void State_MainCharacter::SendInput(StateAction Action)
@@ -116,6 +121,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::Die:
 		Die();
 		break;
+	case StateAction::Interact:
+		Interact();
+		break;
 	case StateAction::AnimEnd:
 		AnimEnd();
 		break;
@@ -124,6 +132,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::AnimHitboxInactive:
 		AnimHitboxInactive();
+		break;
+	case StateAction::EndOverlapAI:
+		EndOverlapAI();
 		break;
 	default:
 		break;
@@ -209,11 +220,23 @@ void State_MainCharacter::Die()
 {
 }
 
+void State_MainCharacter::Interact()
+{
+}
+
 void State_MainCharacter::BeginOverlapFeet()
 {
 }
 
 void State_MainCharacter::EndOverlapFeet()
+{
+}
+
+void State_MainCharacter::StartOverlapAI()
+{
+}
+
+void State_MainCharacter::EndOverlapAI()
 {
 }
 
@@ -225,4 +248,30 @@ void State_MainCharacter::RequestStateChange(TidesStateName StateName)
 {
 	State::RequestStateChange(StateName);
 	mainCharacter->Animator->RecieveStateUpdate(StateName);
+}
+
+void State_MainCharacter::SweepForInteractables()
+{
+	for (auto AI : mainCharacter->InteractableList)
+	{
+		if(IsInCameraView(AI->GetActorLocation()))
+		{
+			if(focusedInteractable == nullptr)
+			{
+				focusedInteractable = AI;
+				Cast<IInteractableInterface>(AI)->Execute_ReactToFocus(AI);
+			}
+			else if (AI == focusedInteractable)
+			{
+				Cast<IInteractableInterface>(focusedInteractable)->Execute_WhileFocused(focusedInteractable);
+			}
+			return;
+		}
+	}
+
+	if(focusedInteractable != nullptr)
+	{
+		Cast<IInteractableInterface>(focusedInteractable)->Execute_ReactToUnFocus(focusedInteractable);
+		focusedInteractable = nullptr;
+	}
 }

@@ -3,6 +3,9 @@
 
 #include "BaseAICharacter.h"
 #include "BaseAIController.h"
+#include "MainCharacter.h"
+#include "PrompWidget.h"
+#include "State_MainCharacter.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -83,6 +86,8 @@ void ABaseAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void ABaseAICharacter::RecieveHit(float damage)
 {
 	health -= damage;
+	AIHealthChange();
+
 	if(health <= 0)
 	{
 		Die();
@@ -93,6 +98,15 @@ void ABaseAICharacter::RecieveHit(float damage)
 	if(AIController)
 	{
 		AIController->UpdateState(TidesStateName::AI_RecieveHit, Animator);
+	}
+}
+
+void ABaseAICharacter::RecieveParry()
+{
+	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
+	if (AIController)
+	{
+		AIController->UpdateState(TidesStateName::AI_ParryStun, Animator);
 	}
 }
 
@@ -147,11 +161,52 @@ void ABaseAICharacter::Die()
 
 void ABaseAICharacter::takeWaterDamage(float damage) {
 	health -= damage;
+	AIHealthChange();
 
 	if (health <= 0)
 	{
 		Die();
 		return;
 	}
+}
+
+void ABaseAICharacter::ReactToFocus_Implementation()
+{
+	IInteractableInterface::ReactToFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayLockOnPrompt();
+	//Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
+	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::ReactToUnFocus_Implementation()
+{
+	IInteractableInterface::ReactToUnFocus_Implementation();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveLockOnPrompt();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->RemoveInteractPrompt();
+	UE_LOG(Log171General, Log, TEXT("UnFocused %s"), *this->GetName());
+}
+
+void ABaseAICharacter::PlayerLock_Implementation()
+{
+	IInteractableInterface::PlayerLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("Locked %s"), *this->GetName());
+	PlayerLockBP();
+}
+
+void ABaseAICharacter::PlayerUnLock_Implementation()
+{
+	IInteractableInterface::PlayerUnLock_Implementation();
+	UE_LOG(Log171General, Log, TEXT("UnLocked %s"), *this->GetName());
+	PlayerUnLockBP();
+}
+
+void ABaseAICharacter::WhileFocused_Implementation()
+{
+	IInteractableInterface::WhileFocused_Implementation();
+}
+
+bool ABaseAICharacter::InteractToLockOn_Implementation()
+{
+	return true;
 }
 

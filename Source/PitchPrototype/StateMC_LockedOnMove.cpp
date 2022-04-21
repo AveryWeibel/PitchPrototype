@@ -31,7 +31,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	
 	
 	//Update animation variables
-	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedAI->GetActorLocation());
+	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
 
 	mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), FVector(moveFwd, moveRht, 0), 0.2f) );
 
@@ -56,7 +56,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	}
 	
 	//Move the camera
-	FVector dirToTarget = mainCharacter->lockedAI->GetActorLocation() - mainCharacter->GetActorLocation();
+	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	//2D so the camera doesn't tilt with distance
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
@@ -73,6 +73,8 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
+
+	SweepForInteractables();
 }
 
 void StateMC_LockedOnMove::MoveForward(float Value)
@@ -113,10 +115,10 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 
 void StateMC_LockedOnMove::LockOn()
 {
-	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedAI->GetName());
-	mainCharacter->lockedAI->PlayerUnLock();
+	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedObject->GetName());
+	Cast<IInteractableInterface>(mainCharacter->lockedObject)->Execute_PlayerUnLock(mainCharacter->lockedObject);
 	//*cameraTurnVector = mainCharacter->cameraBoom->GetComponentRotation();
-	mainCharacter->lockedAI = nullptr;
+	mainCharacter->lockedObject = nullptr;
 	
 	RequestStateChange(TidesStateName::NonCombatMove);
 	
@@ -161,21 +163,25 @@ void StateMC_LockedOnMove::Parry()
 	State_MainCharacter::Parry();
 	
 	if(mainCharacter->Animator->GetParryAlpha() <= .05f) {
-		if(mainCharacter->lockedAI->Weapon)
-		{
-			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->Weapon->GetActorLocation());
-		}
-		else
-		{
-			mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedAI->GetActorLocation());
-		}
+
+		ABaseAICharacter* AI = Cast<ABaseAICharacter>(mainCharacter->lockedObject);
 		
-		ParryLerpTarget = 1;
-		if(mainCharacter->lockedAI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedAI) < mainCharacter->parryDistance)
+		if(AI)
 		{
-			const FString VarName{"COUNT_playerParries"};
-			mainCharacter->NativeSetDialogueInt(VarName, mainCharacter->NativeGetDialogueInt(VarName) + 1);
-			mainCharacter->lockedAI->RecieveHit();
+			if(AI->Weapon)
+			{
+				mainCharacter->Animator->SetParryIKTarget(AI->Weapon->GetActorLocation());
+			}
+			else
+			{
+				mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedObject->GetActorLocation());
+			}
+		
+			ParryLerpTarget = 1;
+			if(AI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedObject) < mainCharacter->parryDistance)
+			{
+				AI->RecieveParry();
+			}
 		}
 	}
 	
@@ -186,5 +192,34 @@ void StateMC_LockedOnMove::Dodge()
 {
 	State_MainCharacter::Dodge();
 	RequestStateChange(TidesStateName::LockedOnDodging);
+}
+
+void StateMC_LockedOnMove::Interact()
+{
+	UE_LOG(Log171General, Log, TEXT("Call Interact()"))
+	if(focusedInteractable)
+	{
+		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
+	
+		interactable->Execute_PlayerInteract(focusedInteractable);
+
+		//Call BP implementation
+		CallInteractBP();
+	}
+}
+
+void StateMC_LockedOnMove::EndOverlapAI()
+{
+	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
+		mainCharacter->lockedObject = nullptr;
+
+		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
+		interactable->Execute_PlayerUnLock(focusedInteractable);
+
+		SweepForInteractables();
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
+
+	UE_LOG(Log171General, Log, TEXT("Endoverlap AI"));
 }
 

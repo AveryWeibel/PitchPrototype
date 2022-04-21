@@ -24,6 +24,7 @@ void UMainMenu::OnNewGameButtonClicked() {
 void UMainMenu::OnOptionsButtonClicked() {
 	if (SettingsWidget->GetVisibility() == ESlateVisibility::Collapsed) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	else
 	{
@@ -33,7 +34,14 @@ void UMainMenu::OnOptionsButtonClicked() {
 }
 
 void UMainMenu::OnCreditsButtonClicked() {
-
+	if (CreditsPanel->GetVisibility() == ESlateVisibility::Collapsed) {
+		CreditsPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		SettingsWidget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else 
+	{
+		CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UMainMenu::OnQuitButtonClicked() {

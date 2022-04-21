@@ -1,4 +1,5 @@
-VAR LISTEN_enemyHits = -1
+#combat variables
+VAR LISTEN_enemyHits = 1
 VAR COUNT_enemyHits = 0
 VAR LISTEN_playerHits = -1
 VAR COUNT_playerHits = 0
@@ -12,15 +13,29 @@ VAR LISTEN_playerDodges = -1
 VAR COUNT_playerDodges = 0
 VAR LISTEN_timer = -1
 VAR COUNT_timer = 0
+
+VAR health = 50
+
+VAR happiness = 50
+VAR fear = 50
+VAR anger = 50
+
+#destinationKnots 
+VAR enemyHitsKnot = "guardcombattutorial.hit"
+VAR playerHitsKnot = ""
+VAR enemyParriesKnot = ""
+VAR playerParriesKnot = "guardcombattutorial.parried"
+VAR enemyDodgesKnot = ""
+VAR playerDodgesKnot = "guardcombattutorial.dodged"
+VAR timerKnot = ""
 VAR destinationKnot = ""
 
-VAR timer = -1
 ->guardfirstdialogue.tutorialstart
 
 === guardfirstdialogue ===
 
     = tutorialstart
-    Oh you've finally Awoken. Took you long enough.
+    Oh you've finally Awoken. Took you <red>long enough</>.
 
     + [Whats going on?]
         -> whoareyou
@@ -161,14 +176,14 @@ VAR timer = -1
     # timer -1
     Okay so first things first, you need to know how to attack. Walk up to me and press RB to try hitting me with your sword.
     + [Okay]
-        {listen(1, -1, -1, -1, -1, -1, -1, "guardcombattutorial.hit")}
+        {listenEnemyHits(1, "guardcombattutorial.hit")}
         ->END
     
     = hit
     # timer 15
     Good! Next you need to know how to defend yourself. I'm going to attack you now. Don't panic, enemies will never attack you while text is being displayed, so feel free to read the dialogue and respond accordingly. However, you also need to keep your eye on the dialogue timer, represented by this ring that is closing in around the dialogue box. If the timer runs out, the dialogue box will disappear and the enemy will move in to attack. Now, press B to dodge my attack.
         + [Okay]
-        {listen(-1, -1, -1, -1, -1, 1, -1, "guardcombattutorial.dodged")}
+        {listenPlayerDodges(1, "guardcombattutorial.dodged")}
         # function Start_Combat
         ->END
     
@@ -176,7 +191,7 @@ VAR timer = -1
     # timer 10
     Nice! Dodging is a great evasive maneuver, as you can't be hit at the start of your dodge. But there is a much more effective, yet riskier way of repelling enemy attacks. Next time I attack you, try pressing LB to parry my attack. Make sure to time it just right!
         + [Okay]
-        {listen(-1, -1, -1, 1, -1, -1, -1, "guardcombattutorial.parried")}
+        {listenPlayerParries(1, "guardcombattutorial.parried")}
         # function Start_Combat
         ->END
     
@@ -338,11 +353,31 @@ VAR timer = -1
         # function Start_Combat
         -> END
         
-=== function defaultListen(Knot) ===
-{listen(1, 1, 2, 2, 4, 5, 20, Knot)}
-# function Start_Combat
+=== function listenEnemyHits(enemyHits, Knot)
+    {listen(enemyHits, -1, -1, -1, -1, -1, -1, Knot, "", "", "", "", "", "")}
+    
+=== function listenPlayerHits(playerHits, Knot)
+    {listen(-1, playerHits, -1, -1, -1, -1, -1, "", Knot, "", "", "", "", "")}
+    
+=== function listenEnemyParries(enemyParries, Knot)
+    {listen(-1, -1, enemyParries, -1, -1, -1, -1, "", "", Knot, "", "", "", "")}
+    
+=== function listenPlayerParries(playerParries, Knot)
+    {listen(-1, -1, -1, playerParries, -1, -1, -1, "", "", "", Knot, "", "", "")}
+    
+=== function listenEnemyDodges(enemyDodges, Knot)
+    {listen(-1, -1, -1, -1, enemyDodges, -1, -1, "", "", "", "", Knot, "", "")}
+    
+=== function listenPlayerDodges(playerDodges, Knot)
+    {listen(-1, -1, -1, -1, -1, playerDodges, -1, "", "", "", "", "", Knot, "")}
+    
+=== function listenTimer(timer, Knot)
+    {listen(-1, -1, -1, -1, -1, -1, timer, "", "", "", "", "", "", Knot)}
 
-=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot) === 
+=== function listenSameKnot(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot)
+    {listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, Knot, Knot, Knot, Knot, Knot, Knot, Knot)}
+
+=== function listen(enemyHits, playerHits, enemyParries, playerParries, enemyDodges, playerDodges, Ltimer, eHitKnot, pHitKnot, eParryKnot, pParryKnot, eDodgeKnot, pDodgeKnot, tKnot) === 
     ~ COUNT_enemyHits = 0
     ~ COUNT_playerHits = 0
     ~ COUNT_enemyParries = 0
@@ -357,4 +392,14 @@ VAR timer = -1
     ~ LISTEN_enemyDodges = enemyDodges
     ~ LISTEN_playerDodges = playerDodges
     ~ LISTEN_timer = Ltimer
-    ~ destinationKnot = Knot
+    ~ enemyHitsKnot = eHitKnot
+    ~ playerHitsKnot = pHitKnot
+    ~ enemyParriesKnot = eParryKnot
+    ~ playerParriesKnot = pParryKnot
+    ~ enemyDodgesKnot = eDodgeKnot
+    ~ playerDodgesKnot = pDodgeKnot
+    ~ timerKnot = tKnot
+    
+=== function defaultListen(Knot) ===
+    {listenSameKnot(1, 1, 2, 2, 4, 5, 20, Knot)}
+    # function Start_Combat

@@ -22,6 +22,7 @@ enum TidesStateName {
 	AI_NonCombatPatrol,
 	AI_Dialogue,
 	AI_RecieveHit,
+	AI_ParryStun,
 	AI_CombatDialogueWait,
 	AI_Dead
 };
@@ -43,6 +44,7 @@ enum StateAction
 	AnimEnd,
 	TakeHit,
 	Die,
+	Interact,
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	StartOverlapAI,

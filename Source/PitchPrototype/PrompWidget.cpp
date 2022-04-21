@@ -2,39 +2,58 @@
 
 
 #include "PrompWidget.h"
-
 #include "MainCharacter.h"
 
-void UPrompWidget::DisplayInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display Interact"));
-	UUserWidget* prompt = CreateWidget(this, promptList[0]);
-	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
-	correctSizeAndFill(slot);
+DEFINE_LOG_CATEGORY(Log171Prompts);
 
-	activePrompts.Add("InteractPrompt", prompt);
+void UPrompWidget::DisplayInteractPrompt() {
+	UE_LOG(Log171Prompts, Log, TEXT("Display Interact"));
+	
+	if(!activePrompts.Contains("InteractPrompt"))
+	{
+		UUserWidget* prompt = CreateWidget(this, promptList[0]);
+		UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
+		correctSizeAndFill(slot);
+
+		activePrompts.Add("InteractPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
+	}
 }
 
 void UPrompWidget::DisplayLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Display LockOn"));
-	UUserWidget* prompt = CreateWidget(this, promptList[1]);
-	UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
-	correctSizeAndFill(slot);
+	UE_LOG(Log171Prompts, Log, TEXT("Display LockOn"));
 
-	activePrompts.Add("LockOnPrompt", prompt);
+	if(!activePrompts.Contains("LockOnPrompt"))
+	{
+		UUserWidget* prompt = CreateWidget(this, promptList[1]);
+		UHorizontalBoxSlot* slot = PromptHorizontalBox->AddChildToHorizontalBox(prompt);
+		correctSizeAndFill(slot);
+
+		activePrompts.Add("LockOnPrompt", prompt);
+		UpdateIconType(UsingGamepadLast);
+	}
 }
 
 void UPrompWidget::RemoveInteractPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove Interact"));
-	PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
+	UE_LOG(Log171Prompts, Log, TEXT("Remove Interact"));
+	
+	if(activePrompts.Contains("InteractPrompt"))
+	{
+		PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
 
-	activePrompts.Remove("InteractPrompt");
+		activePrompts.Remove("InteractPrompt");
+	}
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
-	UE_LOG(Log171General, Log, TEXT("Remove LockOn"));
-	PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
+	UE_LOG(Log171Prompts, Log, TEXT("Remove LockOn"));
+	
+	if(activePrompts.Contains("LockOnPrompt"))
+	{
+		PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
 
-	activePrompts.Remove("LockOnPrompt");
+		activePrompts.Remove("LockOnPrompt");
+	}
 }
 
 void UPrompWidget::ClearPrompts() {

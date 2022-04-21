@@ -12,6 +12,8 @@
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components\WidgetSwitcher.h"
+#include "Components\Button.h"
 #include "Settings.generated.h"
 
 /**
@@ -23,6 +25,18 @@ class PITCHPROTOTYPE_API USettings : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
+
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+		UButton* SettingsButton;
+
+	UPROPERTY(meta = (BindWidget))
+		UButton* KeyboardButton;
+
+	UPROPERTY(meta = (BindWidget))
+		UButton* ControllerButton;
+
+	UPROPERTY(meta = (BindWidget))
+		UWidgetSwitcher* SettingsWidgetSwitcher;
 
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* SettingsPanel;
@@ -71,6 +85,15 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 		void OnSFXVolumeBarChanged(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void onControllerButtonClicked();
+
+	UFUNCTION(BlueprintCallable)
+		void onKeyboardButtonClicked();
+
+	UFUNCTION(BlueprintCallable)
+		void onSettingsButtonClicked();
 
 private:
 

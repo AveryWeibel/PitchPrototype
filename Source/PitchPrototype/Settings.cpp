@@ -14,6 +14,10 @@ void USettings::NativeConstruct() {
 	MasterVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnMasterVolumeBarChanged);
 	SFXVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnSFXVolumeBarChanged);
 
+	ControllerButton->OnClicked.AddUniqueDynamic(this, &USettings::onControllerButtonClicked);
+	KeyboardButton->OnClicked.AddUniqueDynamic(this, &USettings::onKeyboardButtonClicked);
+	SettingsButton->OnClicked.AddUniqueDynamic(this, &USettings::onSettingsButtonClicked);
+
 	this->OnVisibilityChanged.AddUniqueDynamic(this, &USettings::syncSettings);
 }
 
@@ -30,15 +34,32 @@ void USettings::syncSettings(ESlateVisibility type) {
 	}
 }
 
+void USettings::onSettingsButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(0);
+}
+
+void USettings::onKeyboardButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(1);
+}
+
+void USettings::onControllerButtonClicked()
+{
+	SettingsWidgetSwitcher->SetActiveWidgetIndex(2);
+}
+
 void USettings::OnFullScreenCheckBoxClicked(bool isChecked) {
 	if (isChecked) {
 		settings->SetScreenResolution(FIntPoint::FIntPoint(1920, 1080));
-		UE_LOG(LogTemp, Log, TEXT("Setting to Fullscreen"));
+		settings->SetFullscreenMode(EWindowMode::Fullscreen);
+		//UE_LOG(LogTemp, Log, TEXT("Setting to Fullscreen"));
 	}
 	else 
 	{
 		settings->SetScreenResolution(FIntPoint::FIntPoint(1280, 720));
-		UE_LOG(LogTemp, Log, TEXT("Setting to Windowed"));
+		settings->SetFullscreenMode(EWindowMode::Windowed);
+		//UE_LOG(LogTemp, Log, TEXT("Setting to Windowed"));
 	}
 
 	gameInstance->setFullScreen(isChecked);
@@ -50,10 +71,10 @@ void USettings::OnCameraSensBarChanged(float Value) {
 }
 
 void USettings::OnMasterVolumeBarChanged(float Value) {
-
+	gameInstance->setMasterVolume(Value);
 }
 
 void USettings::OnSFXVolumeBarChanged(float Value) {
-
+	gameInstance->setSFXVolume(Value);
 }
 

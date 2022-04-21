@@ -159,6 +159,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AMainCharacter::Attack);
 	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
 }
 
 void AMainCharacter::TakeWeaponHit(float damage)
@@ -221,6 +222,11 @@ void AMainCharacter::Dodge()
 	characterStateMachine->SendInput(StateAction::Dodge);
 }
 
+void AMainCharacter::Interact()
+{
+	characterStateMachine->SendInput(StateAction::Interact);
+}
+
 void AMainCharacter::RecieveAnimEndNotif()
 {
 	characterStateMachine->SendInput(StateAction::AnimEnd);
@@ -261,9 +267,9 @@ void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(const auto AIActor = Cast<ABaseAICharacter>(OtherActor))
+	if(OtherActor->GetClass()->ImplementsInterface(UInteractableInterface::StaticClass()))
 	{
-		AIList.Add(AIActor);
+		InteractableList.Add(OtherActor);
 		UE_LOG(Log171General, Log, TEXT("Began AI Overlap with %s"), *OtherActor->GetName());
 	}
 }
@@ -271,11 +277,13 @@ void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedCompone
 void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if(const auto AIActor =  Cast<ABaseAICharacter>(OtherActor))
+	if(InteractableList.Find(OtherActor))
 	{
-		AIList.Remove(AIActor);
+		InteractableList.Remove(OtherActor);
 		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
+
+	characterStateMachine->SendInput(StateAction::EndOverlapAI);
 }
 
 float AMainCharacter::takeDamage(float damageAmount) {
@@ -283,8 +291,9 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 	UE_LOG(Log171General, Log, TEXT("Player taking %f damage"), damageAmount);
 
-	if (playerHealth < 0.0f) {
+	if (playerHealth <= 0.0f) {
 		playerHealth = 0.0f;
+		characterStateMachine->SendInput(StateAction::Die);
 	}
 
 	return damageAmount;
