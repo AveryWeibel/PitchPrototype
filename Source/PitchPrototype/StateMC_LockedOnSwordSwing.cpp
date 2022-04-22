@@ -53,7 +53,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
-	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), mainCharacter->attackTrackingIntensity * DeltaTime));
+	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), FMath::Clamp( mainCharacter->attackTrackingIntensity * DeltaTime, DeltaTime, mainCharacter->attackTrackingIntensity)));
 	
 }
 
