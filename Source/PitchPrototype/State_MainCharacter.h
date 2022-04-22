@@ -47,13 +47,13 @@ protected:
 	float cameraBoomTargetLength;
 
 	//Camera Inputs
-	float cameraInputX = 0;
-	float cameraInputY = 0;
 	float cameraFrontThreshold = 0.95f;
 
 	//Functions for managed variables
 	void ConsumeMoveInputs();
 	void ConsumeCameraInput(float DeltaTime);
+	void AddCameraOrbitYaw(float Value);
+	void AddCameraOrbitPitch(float Value);
 	bool IsInCameraView(FVector);
 	void MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod = 1);
 	void RagdollModel();

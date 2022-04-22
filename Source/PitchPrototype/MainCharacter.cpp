@@ -142,7 +142,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	//Debug
 	currentPhysicsLinearVelocity = feetCollider->GetPhysicsLinearVelocity();
 
-	velocityArrow->SetWorldRotation(currentPhysicsLinearVelocity.Rotation());
+	velocityArrow->SetRelativeRotation(horizontalVelocity.Rotation());
 }
 
 // Called to bind functionality to input

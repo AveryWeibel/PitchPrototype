@@ -59,12 +59,12 @@ void StateMC_Dead::Execute(float DeltaTime)
 void StateMC_Dead::TurnRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
-	cameraInputX += FMath::Clamp<float>(Value, -10.0, 10.0) * mainCharacter->cameraAccelerationForce;
+	AddCameraOrbitYaw(Value);
 }
 
 void StateMC_Dead::LookUpRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
-	cameraInputY += FMath::Clamp<float>(Value, -10.0, 10.0) * mainCharacter->cameraAccelerationForce;
+	AddCameraOrbitPitch(Value);
 }
 

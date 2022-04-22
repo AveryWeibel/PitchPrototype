@@ -23,7 +23,7 @@ void StateMC_NonCombatMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
 	cameraBoomTargetLength = mainCharacter->cameraUnLockedBoomLength;
-	*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
+	//*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
@@ -47,7 +47,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
 		//mainCharacter->feetCollider->AddForce(*movementVector);
-		mainCharacter->AddActorWorldOffset(*movementVector);
+		mainCharacter->AddActorWorldOffset(*movementVector *= DeltaTime);
 		mainCharacter->horizontalVelocity = *movementVector;
 	}
 
@@ -60,8 +60,12 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
 
 	//Rotate cameraBoom to face turnvector
-	cameraBoomRotationLerpTarget = *cameraTurnVector;
-	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
+	cameraBoomRotationLerpTarget = mainCharacter->cameraBoom->GetRelativeRotation() + *cameraTurnVector;
+	cameraRotationLerpTarget.Roll = 0;
+	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, -60.0f, 60.0f);
+	UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
+	
+	mainCharacter->cameraBoom->SetRelativeRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
 	
 	mainCharacter->cameraBoom->SetRelativeLocation(
 		FVector (
@@ -71,10 +75,12 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 		)
 	);
 
+	*cameraTurnVector = FRotator::ZeroRotator;
+
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0)
 	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  movementVector->Rotation(), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  movementVector->ToOrientationRotator(), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
 	}
 
 		//float turnDelta = 
@@ -86,6 +92,8 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
 
+	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
+
 	SweepForInteractables();
 } //End Execute()
 
@@ -96,39 +104,37 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
 
-	FVector direction = mainCharacter->mainCamera->GetForwardVector();
+	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce) / 200000;
+	direction *= (Value * mainCharacter->accelerationForce);
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
 void StateMC_NonCombatMove::MoveRight(float Value)
 {
-	moveRht = Value;
-
 	//if (Value != 0)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 
 	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->mainCamera->GetRightVector();
+	FVector direction = mainCharacter->cameraBoom->GetRightVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce) / 200000;
+	direction *= (Value * mainCharacter->accelerationForce);
 	*movementVector += FVector(direction.X, direction.Y, moveZ);
 }
 
 void StateMC_NonCombatMove::TurnRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnX [%f]"), Value);
-	cameraInputX += FMath::Clamp<float>(Value, -10.0, 10.0) * mainCharacter->cameraAccelerationForce;
+	AddCameraOrbitYaw(Value);
 }
 
 void StateMC_NonCombatMove::LookUpRate(float Value)
 {
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CameraTurnY [%f]"), Value);
-	cameraInputY += FMath::Clamp<float>(Value, -10.0, 10.0) * mainCharacter->cameraAccelerationForce;
+	AddCameraOrbitPitch(Value);
 }
 
 void StateMC_NonCombatMove::Jump()

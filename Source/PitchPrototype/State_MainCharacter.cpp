@@ -23,9 +23,24 @@ void State_MainCharacter::ConsumeMoveInputs()
 
 void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
 {
-	cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
-	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
-	cameraInputX = cameraInputY = 0;
+	//cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
+	
+}
+
+void State_MainCharacter::AddCameraOrbitYaw(float Value)
+{
+	*cameraTurnVector += FRotator(
+		0,
+		  FMath::Clamp(Value * mainCharacter->cameraAccelerationForce, -mainCharacter->maxCameraVelocity, mainCharacter->maxCameraVelocity),
+		0);
+}
+
+void State_MainCharacter::AddCameraOrbitPitch(float Value)
+{
+	*cameraTurnVector += FRotator(
+		FMath::Clamp(-Value * mainCharacter->cameraAccelerationForce, -mainCharacter->maxCameraVelocity, mainCharacter->maxCameraVelocity),
+		0,
+		0);
 }
 
 bool State_MainCharacter::IsInCameraView(FVector obj)

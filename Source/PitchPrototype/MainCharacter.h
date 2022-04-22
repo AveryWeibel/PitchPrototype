@@ -98,6 +98,9 @@ public:
 
 	UPROPERTY(Category = Camera, EditAnywhere)
 		float cameraAccelerationForce;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float maxCameraVelocity;
 	
 	//Value between 0 & 1
 	UPROPERTY(Category = Camera, EditAnywhere)
