@@ -19,6 +19,17 @@ ABaseAIController::ABaseAIController()
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
 }
 
+TidesStateName ABaseAIController::GetState()
+{
+
+	if (BlackboardComp)
+	{
+		return (TidesStateName) BlackboardComp->GetValueAsEnum("ActiveState");
+	}
+
+	return TidesStateName::AI_NonCombatIdle;
+}
+
 void ABaseAIController::SetMoveTarget(FVector target)
 {
 
