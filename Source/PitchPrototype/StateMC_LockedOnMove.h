@@ -38,6 +38,8 @@ protected:
 	virtual void Dodge() override;
 	virtual void Interact() override;
 
+	virtual void EndOverlapAI();
+
 	//Internal functions
 
 	//Internal variables
