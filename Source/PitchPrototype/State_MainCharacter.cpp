@@ -133,6 +133,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::AnimHitboxInactive:
 		AnimHitboxInactive();
 		break;
+	case StateAction::EndOverlapAI:
+		EndOverlapAI();
+		break;
 	default:
 		break;
 	}

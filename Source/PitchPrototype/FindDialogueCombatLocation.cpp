@@ -28,6 +28,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 	FColor traceColor = FColor::Red;
 	FVector traceCheckVector;
 	FVector totalOceanOffset = FVector::FVector(0.0f, 0.0f, 0.0f);
+	FVector totalAirOffset = FVector::FVector(0.0f, 0.0f, 0.0f);
 
 	for (float i = -1.0f; i <= 1.0f; ++i) {
 		for (float j = -1.0f; j <= 1.0f; ++j) {
@@ -45,6 +46,11 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 				}
 
 				//UE_LOG(Log171General, Log, TEXT("%s"), *hitResult.GetActor()->GetName());
+			} else {
+				traceColor = FColor::Purple;
+				FVector airOffset = UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(hitResult.Location, target));
+				airOffset *= distance / 2.0f;
+				totalAirOffset += airOffset;
 			}
 
 			DrawDebugLine(owningChar->GetWorld(), hitResult.TraceStart, hitResult.TraceEnd, traceColor, false, 3.0f, 0, 10.0f);
@@ -54,6 +60,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 
 	DrawDebugDirectionalArrow(owningChar->GetWorld(), target, target + totalOceanOffset, 15.0f, FColor::Purple, false, 3.0f, 0, 5.0f);
 	target += totalOceanOffset;
+	target += totalAirOffset;
 
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
 

@@ -26,7 +26,7 @@ class PITCHPROTOTYPE_API USettings : public UUserWidget
 	
 protected:
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* SettingsButton;
 
 	UPROPERTY(meta = (BindWidget))
