@@ -36,5 +36,10 @@ protected:
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
 	virtual void Interact() override;
+
+	//Movement variables
+	FHitResult groundTraceResult;
+	FCollisionQueryParams groundTraceParams;
+	
 	
 };

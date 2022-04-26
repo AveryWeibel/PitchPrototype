@@ -21,6 +21,13 @@ StateMC_NonCombatMove::~StateMC_NonCombatMove()
 
 void StateMC_NonCombatMove::Start()
 {
+	//Set Ground Trace Params
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
+	
 	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
 	cameraBoomTargetLength = mainCharacter->cameraUnLockedBoomLength;
 	//*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
@@ -47,6 +54,20 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
 		//FVector forceDirection(, , 0);
 		//mainCharacter->feetCollider->AddForce(*movementVector);
+		//movementVector->Z = -FMath::Abs(movementVector->X + movementVector->Y)/8;
+		if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
+			mainCharacter->feetCollider->GetComponentLocation(),
+			(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
+			mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+			ECollisionChannel::ECC_WorldStatic,
+			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+			groundTraceParams))
+		{
+			movementVector->Z = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 10; //*10 to account for deltatime
+			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
+			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
+		}
+		
 		mainCharacter->AddActorWorldOffset(*movementVector *= DeltaTime);
 		mainCharacter->horizontalVelocity = *movementVector;
 	}
@@ -63,7 +84,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	cameraBoomRotationLerpTarget = mainCharacter->cameraBoom->GetRelativeRotation() + *cameraTurnVector;
 	cameraRotationLerpTarget.Roll = 0;
 	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, -60.0f, 60.0f);
-	UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
+	//UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
 	
 	mainCharacter->cameraBoom->SetRelativeRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
 	
@@ -89,9 +110,8 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 
 	//Ensure collision does not rotate
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	*movementVector = FVector::ZeroVector;
-
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	SweepForInteractables();

@@ -123,7 +123,12 @@ void AMainCharacter::BeginPlay()
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
-}
+
+	if(feetCollider->GetComponentRotation().Yaw != 0)
+	{
+		feetCollider->SetWorldRotation(FRotator::ZeroRotator);
+	}
+} //End BeginPlay
 
 int AMainCharacter::NativeGetDialogueInt_Implementation(const FString& name)
 {
