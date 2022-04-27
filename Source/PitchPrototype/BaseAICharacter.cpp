@@ -74,6 +74,27 @@ void ABaseAICharacter::DoAttack()
 void ABaseAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!canDodge) {
+		DodgeCooldownElapsedTime = this->GetWorld()->GetTimeSeconds() - DodgeCooldownStartTime;
+
+		if (DodgeCooldownElapsedTime >= dodgeCooldown) {
+			canDodge = true;
+		}
+	}
+
+	if (DodgeStartedTime > 0) {
+		DodgeElapsedTime = this->GetWorld()->GetTimeSeconds() - DodgeStartedTime;
+
+		DodgeDirection.Normalize();
+		DodgeMoveVelocity += DodgeDirection * dodgeSpeed * DeltaTime;
+		this->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
+
+		if (DodgeElapsedTime >= dodgeTime) {
+			DodgeMoveVelocity = FVector::ZeroVector;
+			DodgeStartedTime = -1;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -107,6 +128,18 @@ void ABaseAICharacter::RecieveParry()
 	if (AIController)
 	{
 		AIController->UpdateState(TidesStateName::AI_ParryStun, Animator);
+	}
+}
+
+void ABaseAICharacter::Dodge()
+{
+	UE_LOG(Log171General, Log, TEXT("Dodged Player Attack"));
+	if (canDodge) {
+		DodgeStartedTime = this->GetWorld()->GetTimeSeconds();
+		DodgeDirection = this->GetActorRightVector() * (FMath::RandBool() ? 1 : -1);
+
+		DodgeCooldownStartTime = DodgeStartedTime;
+		canDodge = false;
 	}
 }
 
