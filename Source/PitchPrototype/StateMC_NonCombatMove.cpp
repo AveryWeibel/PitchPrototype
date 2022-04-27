@@ -52,9 +52,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	//Move the character
 	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
-		//FVector forceDirection(, , 0);
-		//mainCharacter->feetCollider->AddForce(*movementVector);
-		//movementVector->Z = -FMath::Abs(movementVector->X + movementVector->Y)/8;
+		
 		if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
 			mainCharacter->feetCollider->GetComponentLocation(),
 			(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
@@ -63,13 +61,39 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
 			groundTraceParams))
 		{
-			movementVector->Z = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 10; //*10 to account for deltatime
+			movementVector->Z = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
 			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
 			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
 		}
+
+		mainCharacter->AddActorWorldOffset(FVector(0, 0, movementVector->Z) * DeltaTime, false);
+
+		mainCharacter->GetWorld()->SweepSingleByChannel(
+			movementSweepResult,
+			mainCharacter->feetCollider->GetComponentLocation(),
+			(mainCharacter->feetCollider->GetComponentLocation() + (*movementVector * DeltaTime)),
+			mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+			ECollisionChannel::ECC_WorldStatic,
+			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+			groundTraceParams
+		);
 		
-		mainCharacter->AddActorWorldOffset(*movementVector *= DeltaTime);
-		mainCharacter->horizontalVelocity = *movementVector;
+		//mainCharacter->AddActorWorldOffset(*movementVector *= DeltaTime, true, &movementSweepResult);
+
+		float stepDistance = FMath::Abs(mainCharacter->feetCollider->GetComponentLocation().Z - movementSweepResult.TraceEnd.Z);
+		if(stepDistance <= mainCharacter->StepUpHeight && movementSweepResult.TraceEnd.Z > mainCharacter->feetCollider->GetComponentLocation().Z || movementVector->Z < 0 || FMath::IsNearlyEqual(movementSweepResult.TraceEnd.Z, mainCharacter->feetCollider->GetComponentLocation().Z))
+		{
+			mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, false);
+			
+			UE_LOG(Log171NonCombatMove, Log, TEXT("Sweep Dist:\nX: %f\nY: %f\nZ: %f"),
+				mainCharacter->feetCollider->GetComponentLocation().X - movementSweepResult.TraceEnd.X,
+				mainCharacter->feetCollider->GetComponentLocation().Y - movementSweepResult.TraceEnd.Y,
+				mainCharacter->feetCollider->GetComponentLocation().Z - movementSweepResult.TraceEnd.Z
+			);
+			
+		}
+		
+		mainCharacter->horizontalVelocity = *movementVector * DeltaTime;
 	}
 
 	//Position the camera
