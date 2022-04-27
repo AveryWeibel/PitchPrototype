@@ -13,6 +13,9 @@ EBTNodeResult::Type UBTT_MoveToCombat::ExecuteTask(UBehaviorTreeComponent& Owner
 
 	targetLocation = OwnerComp.GetBlackboardComponent()->GetValueAsVector(moveTo.SelectedKeyName);
 
+	owningChar->GetCharacterMovement()->StopActiveMovement();
+	owningChar->GetCharacterMovement()->StopMovementImmediately();
+
 	UE_LOG(Log171General, Log, TEXT("MoveCombatCalled"));
 	return EBTNodeResult::InProgress;
 }
@@ -24,6 +27,7 @@ void UBTT_MoveToCombat::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	FVector aiLocation = owningChar->GetActorLocation();
 	FVector direction = targetLocation - aiLocation;
 	direction.Normalize();
+	direction.Z = 0;
 	direction *= speed;
 
 	owningChar->GetCharacterMovement()->AddImpulse(direction, true);
@@ -31,12 +35,9 @@ void UBTT_MoveToCombat::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	//UE_LOG(Log171General, Log, TEXT("current location %f %f %f"), aiLocation.X, aiLocation.Y, aiLocation.Z);
 	//UE_LOG(Log171General, Log, TEXT("target location %f %f %f"), targetLocation.X, targetLocation.Y, targetLocation.Z);
 
-	FVector aiTemp = aiLocation;
-	aiTemp.Z = 0;
-	FVector targetTemp = targetLocation;
-	targetTemp.Z = 0;
+	//UE_LOG(Log171General, Log, TEXT("distance %f"), FVector::Distance(aiLocation, targetLocation));
 
-	if (FVector::PointsAreNear(aiTemp, targetTemp, radius)){
+	if (FVector::Distance(aiLocation, targetLocation) <= radius){
 		owningChar->GetCharacterMovement()->StopActiveMovement();
 		owningChar->GetCharacterMovement()->StopMovementImmediately();
 

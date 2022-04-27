@@ -32,8 +32,12 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	auto hitAI = Cast<ABaseAICharacter>(mainCharacter->weapon->overlappedPawn);
 	if(!hitThisAttack && hitboxActive && hitAI)
 	{
-		if (Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatDialogue) {
+		if (Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatDialogue || Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_RecieveHit) {
 			RequestStateChange(TidesStateName::LockedOnTakeHit);
+			hitThisAttack = true;
+		} else if (hitAI->canDodge) {
+			hitAI->Dodge();
+			hitThisAttack = true;
 		} else {
 			hitThisAttack = true;
 			hitAI->RecieveHit(10);

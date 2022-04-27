@@ -2,6 +2,7 @@
 
 
 #include "MainMenu.h"
+#include "Components/CanvasPanelSlot.h"
 
 void UMainMenu::NativeConstruct() {
 	Super::NativeConstruct();
@@ -14,7 +15,7 @@ void UMainMenu::NativeConstruct() {
 }
 
 void UMainMenu::OnContinueButtonClicked() {
-
+	Cast<UCanvasPanelSlot>(ContinueButton)->SetSize(FVector2D(376.0f, 98.0f));
 }
 
 void UMainMenu::OnNewGameButtonClicked() {

@@ -35,12 +35,30 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void RecieveHitBoxInactiveNotif();
 
+	UPROPERTY(BlueprintReadWrite)
+		FVector parryIKTarget;
+
+	UFUNCTION()
+		void SetParryIKTarget(FVector value);
+
+	UFUNCTION()
+		FVector GetParryIKTarget();
+
 	UFUNCTION()
 		bool GetParryable();
 
 	UFUNCTION()
 		void SetParryable(bool value);
-	
+
+	UPROPERTY(BlueprintReadWrite)
+		float parryAlpha;
+
+	UFUNCTION(BlueprintCallable)
+		float GetParryAlpha();
+
+	UFUNCTION(BlueprintCallable)
+		void SetParryAlpha(float value);
+
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
