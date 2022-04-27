@@ -93,12 +93,41 @@ public:
 	
 	UFUNCTION(BlueprintCallable, meta=(DisplayName = "RecieveHit"))
 	void RecieveHit(float damage = 0);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "AIParried"))
+		void RecieveParry();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "AIHealthChange"))
+		void AIHealthChange();
 	
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerLockBP"))
 	void PlayerLockBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLockBP"))
 	void PlayerUnLockBP();
+
+	float DodgeCooldownStartTime;
+	float DodgeCooldownElapsedTime;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeCooldown;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		bool canDodge;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeTime;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeSpeed;
+
+	float DodgeStartedTime;
+	float DodgeElapsedTime;
+	FVector DodgeMoveVelocity;
+	FVector DodgeDirection;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+		void Dodge();
 
 	UFUNCTION()
 		bool GetIsDead();

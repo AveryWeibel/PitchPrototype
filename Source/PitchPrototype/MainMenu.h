@@ -22,7 +22,7 @@ class PITCHPROTOTYPE_API UMainMenu : public UUserWidget
 	
 protected:
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), EditAnywhere)
 		UButton* ContinueButton;
 
 	UPROPERTY(meta = (BindWidget))

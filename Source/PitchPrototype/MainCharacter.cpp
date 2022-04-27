@@ -282,6 +282,8 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 		InteractableList.Remove(OtherActor);
 		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
+
+	characterStateMachine->SendInput(StateAction::EndOverlapAI);
 }
 
 float AMainCharacter::takeDamage(float damageAmount) {
@@ -289,8 +291,9 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 	UE_LOG(Log171General, Log, TEXT("Player taking %f damage"), damageAmount);
 
-	if (playerHealth < 0.0f) {
+	if (playerHealth <= 0.0f) {
 		playerHealth = 0.0f;
+		characterStateMachine->SendInput(StateAction::Die);
 	}
 
 	return damageAmount;

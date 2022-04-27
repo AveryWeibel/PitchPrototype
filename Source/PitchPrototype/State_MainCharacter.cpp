@@ -40,7 +40,7 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 	//Get direction to obj from camera
 	FVector dirToObj = obj - cameraPos;
 	dirToObj.Normalize();
-	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
+	//UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Direction [%f, %f]"), dirToObj.X, dirToObj.Y);
 
 	//2Dify camera forward vector
 	FVector cameraForward = mainCharacter->mainCamera->GetForwardVector();
@@ -49,7 +49,7 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 
 	//Get 2D dot product for basic direction checks
 	float dot = FVector::DotProduct(dirToObj, cameraForward);
-	UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
+	//UE_LOG(Log171MainCharState, Log, TEXT("Camera-Obj Dot Product [%f]"), dot);
 	
 	if(dot > cameraFrontThreshold) { return true; }
 	return false;
@@ -132,6 +132,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::AnimHitboxInactive:
 		AnimHitboxInactive();
+		break;
+	case StateAction::EndOverlapAI:
+		EndOverlapAI();
 		break;
 	default:
 		break;
