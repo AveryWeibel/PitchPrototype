@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{650b4d3e-0529-4eb7-b470-ec9d296b4f84}">
 		<property name="name">
-			<value>Combat SFX</value>
+			<value>Sword Swing</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{d7c61588-2c9d-4d11-8175-29d7bd1d635f}</destination>
+			<destination>{bed834bc-8b23-4dc5-875f-97bb23c879bc}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{abde1f06-abb4-451a-9c71-0ed673d4de30}</destination>
@@ -62,7 +62,7 @@
 			<destination>{479712d1-4be1-4521-aadb-5478333fbf91}</destination>
 		</relationship>
 		<relationship name="output">
-			<destination>{8fb3aaba-5183-4fc3-8f02-0524126233d2}</destination>
+			<destination>{79248807-f9a2-4b71-b5ff-85c091cb2f9d}</destination>
 		</relationship>
 	</object>
 	<object class="EventAutomatableProperties" id="{0c2efdc6-887c-47e8-8761-7d0a5397942d}" />
@@ -108,7 +108,7 @@
 			<value>0.39664583333333331</value>
 		</property>
 		<property name="pitch">
-			<value>13.5</value>
+			<value>13</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{75214612-f3d1-44d9-bd69-e18a1f7bfc0d}</destination>
@@ -141,9 +141,20 @@
 	<object class="MixerBusEffectChain" id="{55da4972-b99c-4d13-83a5-34916e68e3d2}">
 		<relationship name="effects">
 			<destination>{c9c8b6eb-0447-46c7-ac4d-8e2b8d486740}</destination>
+			<destination>{52fee433-c7c8-4244-a25e-7d36aa6689a7}</destination>
+			<destination>{5ebbeea7-7a8e-4bdc-970e-b06e718c7c2d}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{6e15457b-da11-44ee-9b94-709b3a3e16dc}" />
 	<object class="MixerBusFader" id="{a81807b6-2156-4e4e-ba0d-ae6dfdcf9add}" />
 	<object class="MixerBusFader" id="{c9c8b6eb-0447-46c7-ac4d-8e2b8d486740}" />
+	<object class="SFXReverbEffect" id="{52fee433-c7c8-4244-a25e-7d36aa6689a7}" />
+	<object class="ThreeEQEffect" id="{5ebbeea7-7a8e-4bdc-970e-b06e718c7c2d}">
+		<property name="midGain">
+			<value>-19.5</value>
+		</property>
+		<property name="highGain">
+			<value>-7.5</value>
+		</property>
+	</object>
 </objects>
