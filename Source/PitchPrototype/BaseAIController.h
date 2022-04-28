@@ -38,6 +38,9 @@ protected:
 public:
 	ABaseAIController();
 
+	UFUNCTION(BlueprintCallable)
+		enum TidesStateName GetState();
+
 	UFUNCTION()
 	void SetMoveTarget(FVector target);
 

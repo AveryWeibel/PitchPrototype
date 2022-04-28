@@ -23,6 +23,7 @@ enum TidesStateName {
 	AI_Dialogue,
 	AI_RecieveHit,
 	AI_ParryStun,
+	AI_Dodge,
 	AI_CombatDialogueWait,
 	AI_Dead
 };

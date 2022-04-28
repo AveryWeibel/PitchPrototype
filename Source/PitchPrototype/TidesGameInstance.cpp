@@ -36,11 +36,17 @@ void UTidesGameInstance::setFullScreen(bool newFullScreen)
 void UTidesGameInstance::setMasterVolume(float newVolume)
 {
 	MasterVolume = newVolume;
+	if (OnMasterVolumeDelegate.IsBound()) {
+		OnMasterVolumeDelegate.Broadcast(MasterVolume);
+	}
 	//UE_LOG(LogTemp, Log, TEXT("New Master Volume: %d"), newVolume);
 }
 
 void UTidesGameInstance::setSFXVolume(float newVolume)
 {
 	SFXVolume = newVolume;
+	if (OnSFXVolumeDelegate.IsBound()) {
+		OnSFXVolumeDelegate.Broadcast(SFXVolume);
+	}
 	//UE_LOG(LogTemp, Log, TEXT("New SFX Volume: %d"), newVolume);
 }

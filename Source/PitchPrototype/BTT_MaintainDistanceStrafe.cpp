@@ -44,7 +44,7 @@ EBTNodeResult::Type UBTT_MaintainDistanceStrafe::ExecuteTask(UBehaviorTreeCompon
 	FHitResult hitResult;
 	FColor traceColor = FColor::Red;
 
-	FVector right = owningChar->GetActorLocation() + (owningChar->GetActorRightVector() * TaskMemory->taskStartTime * speed/2.0f);
+	FVector right = owningChar->GetActorLocation() + (owningChar->GetActorRightVector() * speed);
 	DrawDebugDirectionalArrow(owningChar->GetWorld(), owningChar->GetActorLocation(), right, 15.0f, FColor::Yellow, false, 3.0f, 0, 5.0f);
 
 	FVector down = right + (FVector::DownVector * 300.0f);
@@ -72,8 +72,8 @@ void UBTT_MaintainDistanceStrafe::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	const float executingTime = owningChar->GetWorld()->GetTimeSeconds() - TaskMemory->taskStartTime;
 
 	FVector direction = owningChar->GetActorRightVector();
-	direction.Z = 0;
 	direction.Normalize();
+	direction.Z = 0;
 	direction *= speed;
 
 	if (!TaskMemory->rightDirection) {
