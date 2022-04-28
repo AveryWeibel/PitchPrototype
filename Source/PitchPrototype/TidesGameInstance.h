@@ -10,6 +10,9 @@
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FMasterVolumeDelegate, float, newVolume);
+DECLARE_MULTICAST_DELEGATE_OneParam(FSFXVolumeDelegate, float, newVolume);
+
 USTRUCT(BlueprintType)
 struct FNPCVariables {
 	GENERATED_BODY()
@@ -26,6 +29,11 @@ class PITCHPROTOTYPE_API UTidesGameInstance : public UGameInstance
 public:
 
 	UTidesGameInstance();
+
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnMasterVolumeChanged"))
+		FMasterVolumeDelegate OnMasterVolumeDelegate;
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnSFXVolumeChanged"))
+		FSFXVolumeDelegate OnSFXVolumeDelegate;
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		//keeps track of number of loops
