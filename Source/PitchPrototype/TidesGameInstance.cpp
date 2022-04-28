@@ -36,11 +36,13 @@ void UTidesGameInstance::setFullScreen(bool newFullScreen)
 void UTidesGameInstance::setMasterVolume(float newVolume)
 {
 	MasterVolume = newVolume;
+	MasterVolumeChanged(MasterVolume);
 	//UE_LOG(LogTemp, Log, TEXT("New Master Volume: %d"), newVolume);
 }
 
 void UTidesGameInstance::setSFXVolume(float newVolume)
 {
 	SFXVolume = newVolume;
+	SFXVolumeChanged(SFXVolume);
 	//UE_LOG(LogTemp, Log, TEXT("New SFX Volume: %d"), newVolume);
 }
