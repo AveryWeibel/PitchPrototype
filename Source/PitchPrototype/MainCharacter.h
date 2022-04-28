@@ -81,6 +81,9 @@ public:
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 	float StepUpHeight = .375;
 
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float StepDownHeight = .375;
+
 	UPROPERTY()
 		float targetHorizontalVelocity;
 

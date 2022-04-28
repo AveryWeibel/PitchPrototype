@@ -61,12 +61,21 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
 			groundTraceParams))
 		{
-			movementVector->Z = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
+			float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
+			if((movementVector->X != 0 || movementVector->Y != 0) && StepDown < -mainCharacter->StepDownHeight)
+			{
+				UE_LOG(Log171NonCombatMove, Log, TEXT("StepDown: %f"),
+					StepDown
+				);
+			}
+			
+			if (StepDown >= -mainCharacter->StepDownHeight)
+			{
+				movementVector->Z = StepDown;
+			}
 			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
 			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
 		}
-
-		mainCharacter->AddActorWorldOffset(FVector(0, 0, movementVector->Z) * DeltaTime, false);
 
 		mainCharacter->GetWorld()->SweepSingleByChannel(
 			movementSweepResult,
@@ -77,19 +86,31 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
 			groundTraceParams
 		);
-		
-		//mainCharacter->AddActorWorldOffset(*movementVector *= DeltaTime, true, &movementSweepResult);
 
-		float stepDistance = FMath::Abs(mainCharacter->feetCollider->GetComponentLocation().Z - movementSweepResult.TraceEnd.Z);
-		if(stepDistance <= mainCharacter->StepUpHeight && movementSweepResult.TraceEnd.Z > mainCharacter->feetCollider->GetComponentLocation().Z || movementVector->Z < 0 || FMath::IsNearlyEqual(movementSweepResult.TraceEnd.Z, mainCharacter->feetCollider->GetComponentLocation().Z))
+		float stepHeightThisFrame = (movementSweepResult.Location.Z - mainCharacter->feetCollider->GetComponentLocation().Z);
+		 //float stepHeightThisFrame = (movementSweepResult.Normal * movementSweepResult.PenetrationDepth).Z;
+
+		if(movementVector->X != 0 || movementVector->Y != 0)
 		{
-			mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, false);
-			
-			UE_LOG(Log171NonCombatMove, Log, TEXT("Sweep Dist:\nX: %f\nY: %f\nZ: %f"),
-				mainCharacter->feetCollider->GetComponentLocation().X - movementSweepResult.TraceEnd.X,
-				mainCharacter->feetCollider->GetComponentLocation().Y - movementSweepResult.TraceEnd.Y,
-				mainCharacter->feetCollider->GetComponentLocation().Z - movementSweepResult.TraceEnd.Z
+			// UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: Normal: (%f, %f, %f) * Pendepth: %f = StepUp: %f"),
+			// 	movementSweepResult.Normal.X,
+			// 	movementSweepResult.Normal.Y,
+			// 	movementSweepResult.Normal.Z,
+			// 	movementSweepResult.PenetrationDepth,
+			// 	stepHeightThisFrame
+			// );
+			UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: LocationHitZ: %f - LocationZ: %f = StepUp: %f"),
+				movementSweepResult.Location.Z,
+				mainCharacter->feetCollider->GetComponentLocation().Z,
+				stepHeightThisFrame
 			);
+		}
+		
+		if(stepHeightThisFrame <= mainCharacter->StepUpHeight)
+		{
+			mainCharacter->AddActorWorldOffset(*movementVector * DeltaTime, false);
+			
+
 			
 		}
 		
@@ -125,7 +146,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0)
 	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  movementVector->ToOrientationRotator(), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  movementVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
 	}
 
 		//float turnDelta = 
@@ -139,6 +160,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	SweepForInteractables();
+	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, mainCharacter->feetCollider->GetComponentRotation().Yaw, 0));
 } //End Execute()
 
 void StateMC_NonCombatMove::MoveForward(float Value)
