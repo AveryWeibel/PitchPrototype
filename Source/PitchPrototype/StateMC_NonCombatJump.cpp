@@ -34,8 +34,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	//Setup moveVector	
 
 	ApplyGravity();
-
-	ConsumeMoveInputs();
+	
 	//Apply moveVector
 
 	//Change to inair state once we start falling
@@ -53,5 +52,5 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 void StateMC_NonCombatJump::ApplyGravity()
 {
 	gravityAccumulation -= mainCharacter->risingGravityAmount;
-	moveZ = gravityAccumulation;
+	//moveZ = gravityAccumulation;
 }

@@ -25,8 +25,6 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	//apply movement inputs for this frame
 	ApplyGravity();
 
-	ConsumeMoveInputs();
-
 	mainCharacter->feetCollider->AddForce(*movementVector);
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
@@ -47,5 +45,5 @@ void StateMC_NonCombatInAir::ApplyGravity()
 {
 	//New comments
 	gravityAccumulation -= mainCharacter->fallingGravityAmount;
-	moveZ = gravityAccumulation;
+//	moveZ = gravityAccumulation;
 }

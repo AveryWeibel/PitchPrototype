@@ -29,17 +29,29 @@ protected:
 	void RequestStateChange(TidesStateName) override;
 	
 	//Variables/Objects managed by this state
+	UPROPERTY()
 	AMainCharacter* mainCharacter;
 
+	UPROPERTY()
 	FVector* movementVector = new FVector(FVector::ZeroVector);
+	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
 
+	//Move functions
+	UFUNCTION()
+	void MoveCharacter(float DeltaTime);
+	
 	//Move Inputs
-	float moveFwd = 0;
-	float moveRht = 0;
-	float moveZ = 0;
 	FVector storedMovement;
+	
+	//Movement variables
+	UPROPERTY()
+	FHitResult groundTraceResult;
+	UPROPERTY()
+	FHitResult movementSweepResult;
+	UPROPERTY()
+	FCollisionQueryParams groundTraceParams;
 
 	//Camera variables
 	FRotator cameraRotationLerpTarget;
@@ -50,7 +62,6 @@ protected:
 	float cameraFrontThreshold = 0.95f;
 
 	//Functions for managed variables
-	void ConsumeMoveInputs();
 	void ConsumeCameraInput(float DeltaTime);
 	void AddCameraOrbitYaw(float Value);
 	void AddCameraOrbitPitch(float Value);

@@ -42,7 +42,6 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
 	
-	ConsumeMoveInputs();
 	ConsumeCameraInput(DeltaTime);
 
 	if(mainCharacter->currentPhysicsLinearVelocity.Z > .25)
@@ -51,71 +50,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	}
 
 	//Move the character
-	if (mainCharacter->currentPhysicsLinearVelocity.Size() <= mainCharacter->maximumHorizontalVelocity) {
-		
-		if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
-			mainCharacter->feetCollider->GetComponentLocation(),
-			(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
-			mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
-			ECollisionChannel::ECC_WorldStatic,
-			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-			groundTraceParams))
-		{
-			float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
-			if((movementVector->X != 0 || movementVector->Y != 0) && StepDown < -mainCharacter->StepDownHeight)
-			{
-				UE_LOG(Log171NonCombatMove, Log, TEXT("StepDown: %f"),
-					StepDown
-				);
-			}
-			
-			if (StepDown >= -mainCharacter->StepDownHeight)
-			{
-				movementVector->Z = StepDown;
-			}
-			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
-			//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
-		}
-
-		mainCharacter->GetWorld()->SweepSingleByChannel(
-			movementSweepResult,
-			mainCharacter->feetCollider->GetComponentLocation(),
-			(mainCharacter->feetCollider->GetComponentLocation() + (*movementVector * DeltaTime)),
-			mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
-			ECollisionChannel::ECC_WorldStatic,
-			FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-			groundTraceParams
-		);
-
-		float stepHeightThisFrame = (movementSweepResult.Location.Z - mainCharacter->feetCollider->GetComponentLocation().Z);
-		 //float stepHeightThisFrame = (movementSweepResult.Normal * movementSweepResult.PenetrationDepth).Z;
-
-		if(movementVector->X != 0 || movementVector->Y != 0)
-		{
-			// UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: Normal: (%f, %f, %f) * Pendepth: %f = StepUp: %f"),
-			// 	movementSweepResult.Normal.X,
-			// 	movementSweepResult.Normal.Y,
-			// 	movementSweepResult.Normal.Z,
-			// 	movementSweepResult.PenetrationDepth,
-			// 	stepHeightThisFrame
-			// );
-			UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: LocationHitZ: %f - LocationZ: %f = StepUp: %f"),
-				movementSweepResult.Location.Z,
-				mainCharacter->feetCollider->GetComponentLocation().Z,
-				stepHeightThisFrame
-			);
-		}
-		
-		if(stepHeightThisFrame <= mainCharacter->StepUpHeight)
-		{
-			mainCharacter->AddActorWorldOffset(*movementVector * DeltaTime, false);
-			
-
-			
-		}
-		
-		mainCharacter->horizontalVelocity = *movementVector * DeltaTime;
-	}
+	MoveCharacter(DeltaTime);
 
 	//Position the camera
 	//Rotate camera to face in same direction as cameraBoom
@@ -165,7 +100,6 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 void StateMC_NonCombatMove::MoveForward(float Value)
 {
-	moveFwd = Value;
 	//if(Value != 0)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
@@ -174,7 +108,7 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	*movementVector += FVector(direction.X, direction.Y, 0);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
@@ -188,7 +122,7 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	*movementVector += FVector(direction.X, direction.Y, 0);
 }
 
 void StateMC_NonCombatMove::TurnRate(float Value)

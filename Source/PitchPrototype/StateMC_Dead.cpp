@@ -29,8 +29,7 @@ void StateMC_Dead::Execute(float DeltaTime)
 {
 	//UE_LOG(LogTemp, Log, TEXT("Execute State StateMC_Dead"));
 	//Setup moveVector	
-
-	ConsumeMoveInputs();
+	
 	ConsumeCameraInput(DeltaTime);
 
 	//Apply moveVector

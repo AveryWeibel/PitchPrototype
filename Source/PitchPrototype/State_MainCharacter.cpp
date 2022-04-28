@@ -15,10 +15,74 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-//Apply inputs for this frame to movement vector and reset them to zero
-void State_MainCharacter::ConsumeMoveInputs()
+void State_MainCharacter::MoveCharacter(float DeltaTime)
 {
-	moveFwd = moveRht = moveZ = 0;
+	//Spherecast down, check for drop height
+	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
+		mainCharacter->feetCollider->GetComponentLocation(),
+		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
+		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+		ECollisionChannel::ECC_WorldStatic,
+		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+		groundTraceParams))
+	{
+		//Calculate drop height this frame
+		float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
+		if(StepDown < 0 && (movementVector->X != 0 || movementVector->Y != 0) && StepDown < -mainCharacter->StepDownHeight)
+		{
+			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f"),
+				StepDown
+			);
+		}
+		
+		if (StepDown >= -mainCharacter->StepDownHeight)
+		{
+			movementVector->Z = StepDown;
+		}
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
+	}
+
+	//Spherecast forward check for slope
+	mainCharacter->GetWorld()->SweepSingleByChannel(
+		movementSweepResult,
+		mainCharacter->feetCollider->GetComponentLocation(),
+		(mainCharacter->feetCollider->GetComponentLocation() + (*movementVector * DeltaTime)),
+		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+		ECollisionChannel::ECC_WorldStatic,
+		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+		groundTraceParams
+	);
+
+	//Calculate step height this frame
+	float stepHeightThisFrame = (movementSweepResult.Location.Z - mainCharacter->feetCollider->GetComponentLocation().Z);
+	 //float stepHeightThisFrame = (movementSweepResult.Normal * movementSweepResult.PenetrationDepth).Z;
+
+	//Debugging
+	if(movementVector->X != 0 || movementVector->Y != 0)
+	{
+		// UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: Normal: (%f, %f, %f) * Pendepth: %f = StepUp: %f"),
+		// 	movementSweepResult.Normal.X,
+		// 	movementSweepResult.Normal.Y,
+		// 	movementSweepResult.Normal.Z,
+		// 	movementSweepResult.PenetrationDepth,
+		// 	stepHeightThisFrame
+		// );
+		UE_LOG(Log171MainCharState, Log, TEXT("StepUp Calc: LocationHitZ: %f - LocationZ: %f = StepUp: %f"),
+			movementSweepResult.Location.Z,
+			mainCharacter->feetCollider->GetComponentLocation().Z,
+			stepHeightThisFrame
+		);
+	}
+
+	//Translate character
+	if(stepHeightThisFrame <= mainCharacter->StepUpHeight)
+	{
+		mainCharacter->AddActorWorldOffset(*movementVector * DeltaTime, false);
+	}
+
+	//Update external velocity field
+	mainCharacter->horizontalVelocity = *movementVector * DeltaTime;
 }
 
 void State_MainCharacter::ConsumeCameraInput(float DeltaTime)

@@ -32,8 +32,6 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	
 	//Setup moveVector
 
-	ConsumeMoveInputs();
-
 	//Move the camera
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	//2D so the camera doesn't tilt with distance
@@ -73,7 +71,7 @@ void StateMC_LockedOnDodge::MoveForward(float Value)
 	direction.Normalize();
 	direction *= Value;
 
-	FVector dirVector = FVector(direction.X, direction.Y, moveZ);
+	FVector dirVector = FVector(direction.X, direction.Y, 0);
 
 	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
 	DodgeDirection += dirVector;
@@ -92,7 +90,7 @@ void StateMC_LockedOnDodge::MoveRight(float Value)
 	direction.Normalize();
 	direction *= Value;
 
-	FVector dirVector = FVector(direction.X, direction.Y, moveZ);
+	FVector dirVector = FVector(direction.X, direction.Y, 0);
 
 	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
 	
