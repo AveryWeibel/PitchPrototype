@@ -61,18 +61,11 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 	//Debugging
 	if(movementVector->X != 0 || movementVector->Y != 0)
 	{
-		// UE_LOG(Log171NonCombatMove, Log, TEXT("StepUp Calc: Normal: (%f, %f, %f) * Pendepth: %f = StepUp: %f"),
-		// 	movementSweepResult.Normal.X,
-		// 	movementSweepResult.Normal.Y,
-		// 	movementSweepResult.Normal.Z,
-		// 	movementSweepResult.PenetrationDepth,
+		// UE_LOG(Log171MainCharState, Log, TEXT("StepUp Calc: LocationHitZ: %f - LocationZ: %f = StepUp: %f"),
+		// 	movementSweepResult.Location.Z,
+		// 	mainCharacter->feetCollider->GetComponentLocation().Z,
 		// 	stepHeightThisFrame
 		// );
-		UE_LOG(Log171MainCharState, Log, TEXT("StepUp Calc: LocationHitZ: %f - LocationZ: %f = StepUp: %f"),
-			movementSweepResult.Location.Z,
-			mainCharacter->feetCollider->GetComponentLocation().Z,
-			stepHeightThisFrame
-		);
 	}
 
 	//Translate character
@@ -156,7 +149,7 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	);
 
 	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	cameraRotationLerpTarget = dirToTarget.Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
 }
 

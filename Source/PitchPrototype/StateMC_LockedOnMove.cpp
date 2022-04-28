@@ -29,7 +29,7 @@ void StateMC_LockedOnMove::Start()
 void StateMC_LockedOnMove::Execute(float DeltaTime)
 {
 	
-	if(mainCharacter->lockedObject != nullptr)
+	if(IsValid(mainCharacter->lockedObject))
 	{
 		UE_LOG(Log171LockedOnMove, Log, TEXT("Test"));
 		//Update animation variables
@@ -48,11 +48,18 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		MoveCharacter(DeltaTime);
 		
 		//Move the camera
-		dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
+		if (IsValid(mainCharacter->lockedObject))
+		{
+			dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
+		}
+		else
+		{
+			UE_LOG(Log171LockedOnMove, Warning, TEXT("locked object is invalid (This may be okay if the game didn't crash :D)"));
+		}
 	}
 	else
 	{
-		UE_LOG(Log171LockedOnMove, Error, TEXT("FocusedInteractable is NULL in locked on state, this should not happen"));
+		UE_LOG(Log171LockedOnMove, Warning, TEXT("locked object is invalid (This may be okay if the game didn't crash :D)"));
 	}
 	
 	//2D so the camera doesn't tilt with distance
