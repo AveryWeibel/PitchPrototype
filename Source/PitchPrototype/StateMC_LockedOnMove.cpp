@@ -24,6 +24,12 @@ void StateMC_LockedOnMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnMove"));
 	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
+	//Set Ground Trace Params
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
@@ -31,7 +37,6 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	
 	if(IsValid(mainCharacter->lockedObject))
 	{
-		UE_LOG(Log171LockedOnMove, Log, TEXT("Test"));
 		//Update animation variables
 		mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
 
@@ -91,7 +96,7 @@ void StateMC_LockedOnMove::MoveForward(float Value)
 	FVector direction = mainCharacter->mainCamera->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
 	*movementVector += FVector(direction.X, direction.Y, 0);
 	storedMovement = *movementVector;
@@ -107,7 +112,7 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
 	*movementVector += FVector(direction.X, direction.Y, 0);
 	storedMovement = *movementVector;

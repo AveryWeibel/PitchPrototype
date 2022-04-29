@@ -41,7 +41,7 @@ protected:
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime);
+	void MoveCharacter(float DeltaTime, bool slopeCheck = true);
 	
 	//Move Inputs
 	FVector storedMovement;
@@ -55,6 +55,8 @@ protected:
 	FHitResult chestSweepResult;
 	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
+	UPROPERTY()
+	bool StepDownThisFrame;
 
 	UPROPERTY()
 	FVector PrevStepDirVector;

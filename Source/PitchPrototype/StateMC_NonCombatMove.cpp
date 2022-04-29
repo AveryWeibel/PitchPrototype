@@ -96,6 +96,11 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	SweepForInteractables();
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, mainCharacter->feetCollider->GetComponentRotation().Yaw, 0));
+	
+	// if(!FeetOnGround && !StepDownThisFrame)
+	// {
+	// 	RequestStateChange(TidesStateName::NonCombatInAir);
+	// }
 } //End Execute()
 
 void StateMC_NonCombatMove::MoveForward(float Value)
@@ -139,7 +144,7 @@ void StateMC_NonCombatMove::LookUpRate(float Value)
 
 void StateMC_NonCombatMove::Jump()
 {
-	RequestStateChange(TidesStateName::NonCombatJump);
+	//RequestStateChange(TidesStateName::NonCombatJump);
 }
 
 void StateMC_NonCombatMove::LockOn()
@@ -161,12 +166,17 @@ void StateMC_NonCombatMove::Die()
 
 void StateMC_NonCombatMove::BeginOverlapFeet()
 {
-	
+	FeetOnGround = true;
 }
 
 void StateMC_NonCombatMove::EndOverlapFeet()
 {
-	//RequestStateChange(StateName::NonCombatInAir);
+	FeetOnGround = false;
+	UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
+	if (!StepDownThisFrame)
+	{
+		RequestStateChange(TidesStateName::NonCombatInAir);
+	}
 }
 
 void StateMC_NonCombatMove::StartOverlapAI()

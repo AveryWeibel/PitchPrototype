@@ -15,7 +15,7 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime)
+void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 {
 	//Spherecast down, check for drop height
 	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
@@ -24,7 +24,8 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
 		ECollisionChannel::ECC_WorldStatic,
 		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-		groundTraceParams))
+		groundTraceParams)
+		&& slopeCheck)
 	{
 		//Calculate drop height this frame
 		float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
@@ -41,6 +42,11 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
 		{
 			movementVector->Z = StepDown;
+			StepDownThisFrame = true;
+		}
+		else
+		{
+			StepDownThisFrame = false;
 		}
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
@@ -50,7 +56,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 	bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
 		chestSweepResult,
 		mainCharacter->bodyCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (*movementVector * 6 * DeltaTime)),
+		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(movementVector->X, movementVector->Y, 0) * 6 * DeltaTime)),
 		mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
 		ECollisionChannel::ECC_WorldStatic,
 		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()/2),
@@ -58,10 +64,13 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 	);
 	
 	if (chestSweepHit)
+	{
 		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
+		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+	}
 	
 
-	mainCharacter->AddActorWorldOffset(FVector(0, 0, movementVector->Z) * DeltaTime, false);
+	//mainCharacter->AddActorWorldOffset(FVector(0, 0, ) * DeltaTime, false);
 	//mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, true, &movementSweepResult);
 
 	//Calculate step height this frame
@@ -74,24 +83,24 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 	//Debugging
 	if(movementVector->X != 0 || movementVector->Y != 0)
 	{
-		UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
-		chestSweepResult.Normal.Z
-		);
+		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
+		// chestSweepResult.Normal.Z
+		// );
 	}
 
 	//Translate character
-	if(chestSweepHit/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
+	if(chestSweepHit && slopeCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
 	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * .01 * DeltaTime, false);
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * .01 * DeltaTime, false);
 	}
 	else
 	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, false);
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * DeltaTime, false);
 	}
 	
 
 	//Update external velocity field
-	mainCharacter->horizontalVelocity = *movementVector * DeltaTime;
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (FVector(movementVector->X, movementVector->Y, 0 )* DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
 }
 
 void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
