@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "State.h"
+#include "DrawDebugHelpers.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
 
@@ -51,7 +52,12 @@ protected:
 	UPROPERTY()
 	FHitResult movementSweepResult;
 	UPROPERTY()
+	FHitResult chestSweepResult;
+	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
+
+	UPROPERTY()
+	FVector PrevStepDirVector;
 
 	//Camera variables
 	FRotator cameraRotationLerpTarget;
