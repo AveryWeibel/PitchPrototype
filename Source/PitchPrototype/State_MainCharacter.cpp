@@ -74,23 +74,21 @@ void State_MainCharacter::MoveCharacter(float DeltaTime)
 	//Debugging
 	if(movementVector->X != 0 || movementVector->Y != 0)
 	{
-		UE_LOG(Log171MainCharState, Log, TEXT("StepUp Calc: NormalZ: %f * PenDepth: %f = StepUp: %f\nbStartPenetrating: %s"),
-			movementSweepResult.Normal.Z,
-			movementSweepResult.PenetrationDepth,
-			0,
-			movementSweepResult.bStartPenetrating ? TEXT("true") : TEXT("false")
+		UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
+		chestSweepResult.Normal.Z
 		);
 	}
 
 	//Translate character
-	if(!chestSweepHit /*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
+	if(chestSweepHit/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
 	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, false);
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * .01 * DeltaTime, false);
 	}
 	else
 	{
-		//mainCharacter->AddActorWorldOffset(FVector(PenetrationVectorToPoint.X, PenetrationVectorToPoint.Y, 0) * DeltaTime, false);
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, false);
 	}
+	
 
 	//Update external velocity field
 	mainCharacter->horizontalVelocity = *movementVector * DeltaTime;
