@@ -283,6 +283,17 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
 
+	/*ABaseAICharacter* character = Cast<ABaseAICharacter>(OtherActor);
+	ABaseAIController* controller = Cast<ABaseAIController>(character->GetController());
+
+	if (controller) {
+		TidesStateName state = controller->GetState();
+
+		if (state == TidesStateName::AI_CombatStrafe || state == TidesStateName::AI_CombatDialogue || state == TidesStateName::AI_CombatDialogueWait) {
+			controller->UpdateState(TidesStateName::AI_NonCombatIdle, character->Animator);
+		}
+	}*/
+
 	characterStateMachine->SendInput(StateAction::EndOverlapAI);
 }
 

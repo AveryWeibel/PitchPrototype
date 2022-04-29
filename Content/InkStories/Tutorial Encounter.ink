@@ -37,7 +37,7 @@ VAR destinationKnot = ""
     = tutorialstart
     Oh you've finally Awoken. Took you <red>long enough</>.
 
-    + [Whats going on?]
+    + [<red>Whats going on?</>]
         -> whoareyou
     + [Who are you?]
         -> whoareyou

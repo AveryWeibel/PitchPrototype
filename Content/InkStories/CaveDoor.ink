@@ -15,10 +15,10 @@ VAR doorOpen = 0
         -> inspectdoor
         
     + {canReadRunes == 1 && doorOpen == 0} [Read the runes]
-        ->opendoor
+        -> opendoor
         
     + {canReadRunes == 1 && doorOpen == 1} [Unread the runes]
-        ->closedoor
+        -> closedoor
         
     + [(Leave)]
         -> END
@@ -31,10 +31,10 @@ VAR doorOpen = 0
     The door begins to open.
         ~ doorOpen = 1
         # function Open_Door
-        ->END
+        -> END
     
     = closedoor
     The door begins to close.
         ~ doorOpen = 0
         # function Open_Door
-        ->END
+        -> END
