@@ -123,7 +123,12 @@ void AMainCharacter::BeginPlay()
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
-}
+
+	if(feetCollider->GetComponentRotation().Yaw != 0)
+	{
+		feetCollider->SetWorldRotation(FRotator::ZeroRotator);
+	}
+} //End BeginPlay
 
 int AMainCharacter::NativeGetDialogueInt_Implementation(const FString& name)
 {
@@ -142,7 +147,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	//Debug
 	currentPhysicsLinearVelocity = feetCollider->GetPhysicsLinearVelocity();
 
-	velocityArrow->SetWorldRotation(currentPhysicsLinearVelocity.Rotation());
+	velocityArrow->SetRelativeRotation(horizontalVelocity.Rotation());
 }
 
 // Called to bind functionality to input

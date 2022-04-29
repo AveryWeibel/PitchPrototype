@@ -15,17 +15,114 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-//Apply inputs for this frame to movement vector and reset them to zero
-void State_MainCharacter::ConsumeMoveInputs()
+void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 {
-	moveFwd = moveRht = moveZ = 0;
+	//Spherecast down, check for drop height
+	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
+		mainCharacter->feetCollider->GetComponentLocation(),
+		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
+		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+		ECollisionChannel::ECC_WorldStatic,
+		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+		groundTraceParams)
+		&& slopeCheck)
+	{
+		//Calculate drop height this frame
+		float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
+
+		//Debugging
+		if((movementVector->X != 0 || movementVector->Y != 0) && StepDown < -mainCharacter->StepDownHeight)
+		{
+			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f"),
+				StepDown
+			);
+		}
+
+		//Validate StepDown
+		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
+		{
+			movementVector->Z = StepDown;
+			StepDownThisFrame = true;
+		}
+		else
+		{
+			StepDownThisFrame = false;
+		}
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
+	}
+
+	//Spherecast forward check for slope
+	bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
+		chestSweepResult,
+		mainCharacter->bodyCollider->GetComponentLocation(),
+		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(movementVector->X, movementVector->Y, 0) * 6 * DeltaTime)),
+		mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
+		ECollisionChannel::ECC_WorldStatic,
+		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()/2),
+		groundTraceParams
+	);
+	
+	if (chestSweepHit)
+	{
+		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
+		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+	}
+	
+
+	//mainCharacter->AddActorWorldOffset(FVector(0, 0, ) * DeltaTime, false);
+	//mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, true, &movementSweepResult);
+
+	//Calculate step height this frame
+	//FVector PenetrationVectorToPoint = (movementSweepResult.Normal * (movementSweepResult.PenetrationDepth - FVector::Dist(movementSweepResult.ImpactPoint, movementSweepResult.TraceEnd)));
+	//FVector stepDirVector = movementSweepResult.TraceEnd - movementSweepResult.ImpactPoint;
+	//float stepHeightThisFrame = stepDirVector.Z;//PenetrationVectorToPoint.Z;
+	
+	 //float stepHeightThisFrame = (movementSweepResult.Normal * movementSweepResult.PenetrationDepth).Z;
+
+	//Debugging
+	if(movementVector->X != 0 || movementVector->Y != 0)
+	{
+		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
+		// chestSweepResult.Normal.Z
+		// );
+	}
+
+	//Translate character
+	if(chestSweepHit && slopeCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
+	{
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * .01 * DeltaTime, false);
+	}
+	else
+	{
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * DeltaTime, false);
+	}
+	
+
+	//Update external velocity field
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (FVector(movementVector->X, movementVector->Y, 0 )* DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
 }
 
 void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
 {
-	cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
-	cameraTurnVector->Pitch = FMath::Clamp(cameraTurnVector->Pitch, -40.0f, 40.0f);
-	cameraInputX = cameraInputY = 0;
+	//cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
+	
+}
+
+void State_MainCharacter::AddCameraOrbitYaw(float Value)
+{
+	*cameraTurnVector += FRotator(
+		0,
+		  FMath::Clamp(Value * mainCharacter->cameraAccelerationForce, -mainCharacter->maxCameraVelocity, mainCharacter->maxCameraVelocity),
+		0);
+}
+
+void State_MainCharacter::AddCameraOrbitPitch(float Value)
+{
+	*cameraTurnVector += FRotator(
+		FMath::Clamp(-Value * mainCharacter->cameraAccelerationForce, -mainCharacter->maxCameraVelocity, mainCharacter->maxCameraVelocity),
+		0,
+		0);
 }
 
 bool State_MainCharacter::IsInCameraView(FVector obj)
@@ -77,7 +174,7 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	);
 
 	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
+	cameraRotationLerpTarget = dirToTarget.Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
 }
 

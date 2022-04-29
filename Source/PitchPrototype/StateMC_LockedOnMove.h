@@ -44,4 +44,6 @@ protected:
 
 	//Internal variables
 	float ParryLerpTarget;
+	UPROPERTY()
+	FVector dirToTarget;
 };

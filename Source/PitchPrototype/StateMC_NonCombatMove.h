@@ -36,5 +36,9 @@ protected:
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
 	virtual void Interact() override;
+
+	//Internal variables for state
+	bool FeetOnGround;
+	
 	
 };
