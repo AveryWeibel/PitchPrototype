@@ -215,6 +215,8 @@ void StateMC_LockedOnMove::Interact()
 
 void StateMC_LockedOnMove::EndOverlapAI()
 {
+	return;
+	
 	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
 		mainCharacter->lockedObject = nullptr;
 

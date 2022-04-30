@@ -207,7 +207,7 @@ void ABaseAICharacter::ReactToFocus_Implementation()
 {
 	IInteractableInterface::ReactToFocus_Implementation();
 	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayLockOnPrompt();
-	//Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
 	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
 }
 
