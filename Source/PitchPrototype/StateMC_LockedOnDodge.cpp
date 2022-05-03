@@ -21,7 +21,6 @@ void StateMC_LockedOnDodge::Start()
 {
 	DodgeStartedTime = mainCharacter->GetWorld()->GetTimeSeconds();
 	DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
-	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 }
 
 void StateMC_LockedOnDodge::Execute(float DeltaTime)
@@ -46,6 +45,10 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 		DodgeMoveVelocity += DodgeDirection * (mainCharacter->dodgeSpeed / DodgeDamping) * DeltaTime;
 		mainCharacter->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
 	}
+
+	//Maintain camera tracking
+	dirToTarget.Z = 0;
+	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Check if dodge time has elapsed
 	if(DodgeElapsedTime >= mainCharacter->dodgeLength)
