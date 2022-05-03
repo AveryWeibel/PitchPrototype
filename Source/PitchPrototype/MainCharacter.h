@@ -94,7 +94,10 @@ public:
 		FVector horizontalVelocity;
 
 	UPROPERTY(Category = Jumping, EditAnywhere)
-		float jumpForce;
+		float jumpAccel;
+
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float MaxJumpAccelTime;
 
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float jumpDirectionalMultiplier;

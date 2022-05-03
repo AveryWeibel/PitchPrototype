@@ -99,14 +99,9 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 	}
 	
 
-	//Update external velocity field
+	//Update external velocity fields
+	storedMovement = *movementVector;
 	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (FVector(movementVector->X, movementVector->Y, 0 )* DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
-}
-
-void State_MainCharacter::ConsumeCameraInput(float DeltaTime)
-{
-	//cameraTurnVector->Add(-cameraInputY * DeltaTime, cameraInputX * DeltaTime, 0);
-	
 }
 
 void State_MainCharacter::AddCameraOrbitYaw(float Value)
@@ -154,9 +149,10 @@ bool State_MainCharacter::IsInCameraView(FVector obj)
 
 void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod)
 {
+	
 	//Position the camera
 	//Lerp to proper camera boom length
-	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime);
+	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, mainCharacter->cameraLockedBoomLength, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime);
 
 	//Lerp cameraBoom to rotate between player and target
 	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
@@ -176,6 +172,34 @@ void State_MainCharacter::MoveCameraLocked(float DeltaTime, FVector dirToTarget,
 	//Lerp camera to face target
 	cameraRotationLerpTarget = dirToTarget.Rotation();
 	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * speedMod * DeltaTime));
+}
+
+void State_MainCharacter::MoveCameraUnLocked(float DeltaTime, float speedMod)
+{
+	//Rotate camera to face in same direction as cameraBoom
+	cameraRotationLerpTarget = mainCharacter->cameraBoom->GetComponentRotation();
+	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
+
+	//Lerp camera boom length to correct length
+	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, mainCharacter->cameraUnLockedBoomLength, mainCharacter->cameraLerpAlpha * DeltaTime);
+
+	//Rotate cameraBoom to face turnvector
+	cameraBoomRotationLerpTarget = mainCharacter->cameraBoom->GetRelativeRotation() + *cameraTurnVector;
+	cameraRotationLerpTarget.Roll = 0;
+	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, -60.0f, 60.0f);
+	//UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
+	
+	mainCharacter->cameraBoom->SetRelativeRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
+	
+	mainCharacter->cameraBoom->SetRelativeLocation(
+		FVector (
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
+			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraUnLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
+		)
+	);
+
+	*cameraTurnVector = FRotator::ZeroRotator;
 }
 
 void State_MainCharacter::RagdollModel()

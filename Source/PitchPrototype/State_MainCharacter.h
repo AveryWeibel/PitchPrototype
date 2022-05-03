@@ -64,7 +64,6 @@ protected:
 	//Camera variables
 	FRotator cameraRotationLerpTarget;
 	FRotator cameraBoomRotationLerpTarget;
-	float cameraBoomTargetLength;
 
 	//Camera Inputs
 	float cameraFrontThreshold = 0.95f;
@@ -75,6 +74,7 @@ protected:
 	void AddCameraOrbitPitch(float Value);
 	bool IsInCameraView(FVector);
 	void MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod = 1);
+	void MoveCameraUnLocked(float DeltaTime, float speedMod = 1);
 	void RagdollModel();
 	void CallInteractBP();
 
