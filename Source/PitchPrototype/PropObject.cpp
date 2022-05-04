@@ -25,3 +25,33 @@ void APropObject::Tick(float DeltaTime)
 
 }
 
+void APropObject::ReactToFocus_Implementation()
+{
+	IInteractableInterface::ReactToFocus_Implementation();
+}
+
+void APropObject::ReactToUnFocus_Implementation()
+{
+	IInteractableInterface::ReactToUnFocus_Implementation();
+}
+
+void APropObject::PlayerLock_Implementation()
+{
+	IInteractableInterface::PlayerLock_Implementation();
+}
+
+void APropObject::PlayerUnLock_Implementation()
+{
+	IInteractableInterface::PlayerUnLock_Implementation();
+}
+
+void APropObject::WhileFocused_Implementation()
+{
+	IInteractableInterface::WhileFocused_Implementation();
+}
+
+bool APropObject::InteractToLockOn_Implementation()
+{
+	return IInteractableInterface::InteractToLockOn_Implementation();
+}
+
