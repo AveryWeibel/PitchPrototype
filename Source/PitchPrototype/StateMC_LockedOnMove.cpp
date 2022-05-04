@@ -23,7 +23,6 @@ StateMC_LockedOnMove::~StateMC_LockedOnMove()
 void StateMC_LockedOnMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnMove"));
-	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 	//Set Ground Trace Params
 	if(mainCharacter)
 	{
@@ -99,7 +98,6 @@ void StateMC_LockedOnMove::MoveForward(float Value)
 	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
 	*movementVector += FVector(direction.X, direction.Y, 0);
-	storedMovement = *movementVector;
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
@@ -115,7 +113,6 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
 	*movementVector += FVector(direction.X, direction.Y, 0);
-	storedMovement = *movementVector;
 }
 
 void StateMC_LockedOnMove::LockOn()

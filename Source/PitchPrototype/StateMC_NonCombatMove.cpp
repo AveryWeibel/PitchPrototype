@@ -29,20 +29,13 @@ void StateMC_NonCombatMove::Start()
 	}
 	
 	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
-	cameraBoomTargetLength = mainCharacter->cameraUnLockedBoomLength;
-	//*cameraTurnVector = mainCharacter->cameraBoom->GetRelativeRotation();
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
 	
 	//Apply skeletal forces
-	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->);
-
-
-	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
-	
-	ConsumeCameraInput(DeltaTime);
+	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->)
 
 	if(mainCharacter->currentPhysicsLinearVelocity.Z > .25)
 	{
@@ -53,30 +46,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	MoveCharacter(DeltaTime);
 
 	//Position the camera
-	//Rotate camera to face in same direction as cameraBoom
-	cameraRotationLerpTarget = mainCharacter->cameraBoom->GetComponentRotation();
-	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
-
-	//Lerp camera boom length to correct length
-	mainCharacter->cameraBoom->TargetArmLength = FMath::Lerp(mainCharacter->cameraBoom->TargetArmLength, cameraBoomTargetLength, mainCharacter->cameraLerpAlpha * DeltaTime);
-
-	//Rotate cameraBoom to face turnvector
-	cameraBoomRotationLerpTarget = mainCharacter->cameraBoom->GetRelativeRotation() + *cameraTurnVector;
-	cameraRotationLerpTarget.Roll = 0;
-	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, -60.0f, 60.0f);
-	//UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
-	
-	mainCharacter->cameraBoom->SetRelativeRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
-	
-	mainCharacter->cameraBoom->SetRelativeLocation(
-		FVector (
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraUnLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraUnLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
-		)
-	);
-
-	*cameraTurnVector = FRotator::ZeroRotator;
+	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0)
@@ -144,7 +114,7 @@ void StateMC_NonCombatMove::LookUpRate(float Value)
 
 void StateMC_NonCombatMove::Jump()
 {
-	//RequestStateChange(TidesStateName::NonCombatJump);
+	RequestStateChange(TidesStateName::NonCombatJump);
 }
 
 void StateMC_NonCombatMove::LockOn()
