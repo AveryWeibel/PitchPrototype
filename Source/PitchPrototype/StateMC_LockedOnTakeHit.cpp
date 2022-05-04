@@ -26,11 +26,9 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 {
 	//Update animation variables
 	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
-	mainCharacter->Animator->SetControlDirection(FVector(moveFwd, moveRht, 0));
+	mainCharacter->Animator->SetControlDirection(FVector(movementVector->X, movementVector->Y, 0));
 
 	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
-
-	ConsumeMoveInputs();
 
 	//Move the character
 	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->takeHitMaxSpeed) {
@@ -71,7 +69,6 @@ void StateMC_LockedOnTakeHit::AnimEnd()
 
 void StateMC_LockedOnTakeHit::MoveForward(float Value)
 {
-	moveFwd = Value;
 	//if(Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
@@ -80,13 +77,12 @@ void StateMC_LockedOnTakeHit::MoveForward(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	*movementVector += FVector(direction.X, direction.Y, 0);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
 void StateMC_LockedOnTakeHit::MoveRight(float Value)
 {
-	moveRht = Value;
 
 	//if (Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
@@ -96,5 +92,5 @@ void StateMC_LockedOnTakeHit::MoveRight(float Value)
 	direction.Z = 0;
 	direction.Normalize();
 	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
+	*movementVector += FVector(direction.X, direction.Y, 0);
 }

@@ -75,11 +75,35 @@ public:
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float maximumHorizontalVelocity;
 
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float lockedMovementMultiplier;
+
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float modelTurningRate = 25;
+	
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float StepUpHeight = .375;
+
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
+	float StepDownHeight = .375;
+
+	UPROPERTY()
+		float targetHorizontalVelocity;
+
+	UPROPERTY(BlueprintReadOnly)
+		FVector horizontalVelocity;
+
 	UPROPERTY(Category = Jumping, EditAnywhere)
-		float jumpForce;
+		float jumpAccel;
+
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float MaxJumpAccelTime;
 
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float jumpDirectionalMultiplier;
+
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float jumpDirMultiplierRampSpeed = 0.01f;
 
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float risingGravityAmount;
@@ -87,8 +111,14 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float fallingGravityAmount;
 
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float maxFallingSpeed;
+
 	UPROPERTY(Category = Camera, EditAnywhere)
 		float cameraAccelerationForce;
+
+	UPROPERTY(Category = Camera, EditAnywhere)
+		float maxCameraVelocity;
 	
 	//Value between 0 & 1
 	UPROPERTY(Category = Camera, EditAnywhere)

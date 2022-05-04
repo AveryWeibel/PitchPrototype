@@ -11,8 +11,8 @@ UTidesGameInstance::UTidesGameInstance() {
 	canReadRunes = false;
 
 	CameraSensitivity = 100.0f;
-	MasterVolume = 1.0f;
-	SFXVolume = 1.0f;
+	MasterVolume = 0.5f;
+	SFXVolume = 0.5f;
 	fullscreen = false;
 }
 
@@ -36,11 +36,13 @@ void UTidesGameInstance::setFullScreen(bool newFullScreen)
 void UTidesGameInstance::setMasterVolume(float newVolume)
 {
 	MasterVolume = newVolume;
+	MasterVolumeChanged(MasterVolume);
 	//UE_LOG(LogTemp, Log, TEXT("New Master Volume: %d"), newVolume);
 }
 
 void UTidesGameInstance::setSFXVolume(float newVolume)
 {
 	SFXVolume = newVolume;
+	SFXVolumeChanged(SFXVolume);
 	//UE_LOG(LogTemp, Log, TEXT("New SFX Volume: %d"), newVolume);
 }

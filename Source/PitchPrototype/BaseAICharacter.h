@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
+#include "DialogueSystem.h"
 #include "BaseAICharacter.generated.h"
 
 UCLASS()
@@ -106,6 +107,29 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "PlayerUnLockBP"))
 	void PlayerUnLockBP();
 
+	float DodgeCooldownStartTime;
+	float DodgeCooldownElapsedTime;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeCooldown;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		bool canDodge;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeTime;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
+		float dodgeSpeed;
+
+	float DodgeStartedTime;
+	float DodgeElapsedTime;
+	FVector DodgeMoveVelocity;
+	FVector DodgeDirection;
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+		void Dodge();
+
 	UFUNCTION()
 		bool GetIsDead();
 	UFUNCTION()
@@ -125,4 +149,7 @@ public:
 	void WhileFocused_Implementation() override;
 
 	bool InteractToLockOn_Implementation() override;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dialogue System")
+		UDialogueSystem* dialogueSystem;
 };

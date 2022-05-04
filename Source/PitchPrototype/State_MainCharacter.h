@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "State.h"
+#include "DrawDebugHelpers.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
 
@@ -29,33 +30,51 @@ protected:
 	void RequestStateChange(TidesStateName) override;
 	
 	//Variables/Objects managed by this state
+	UPROPERTY()
 	AMainCharacter* mainCharacter;
 
+	UPROPERTY()
 	FVector* movementVector = new FVector(FVector::ZeroVector);
+	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
 
+	//Move functions
+	UFUNCTION()
+	void MoveCharacter(float DeltaTime, bool slopeCheck = true);
+	
 	//Move Inputs
-	float moveFwd = 0;
-	float moveRht = 0;
-	float moveZ = 0;
 	FVector storedMovement;
+	
+	//Movement variables
+	UPROPERTY()
+	FHitResult groundTraceResult;
+	UPROPERTY()
+	FHitResult movementSweepResult;
+	UPROPERTY()
+	FHitResult chestSweepResult;
+	UPROPERTY()
+	FCollisionQueryParams groundTraceParams;
+	UPROPERTY()
+	bool StepDownThisFrame;
+
+	UPROPERTY()
+	FVector PrevStepDirVector;
 
 	//Camera variables
 	FRotator cameraRotationLerpTarget;
 	FRotator cameraBoomRotationLerpTarget;
-	float cameraBoomTargetLength;
 
 	//Camera Inputs
-	float cameraInputX = 0;
-	float cameraInputY = 0;
 	float cameraFrontThreshold = 0.95f;
 
 	//Functions for managed variables
-	void ConsumeMoveInputs();
 	void ConsumeCameraInput(float DeltaTime);
+	void AddCameraOrbitYaw(float Value);
+	void AddCameraOrbitPitch(float Value);
 	bool IsInCameraView(FVector);
 	void MoveCameraLocked(float DeltaTime, FVector dirToTarget, float speedMod = 1);
+	void MoveCameraUnLocked(float DeltaTime, float speedMod = 1);
 	void RagdollModel();
 	void CallInteractBP();
 

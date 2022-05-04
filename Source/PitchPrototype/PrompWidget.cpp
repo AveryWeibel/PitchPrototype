@@ -36,23 +36,29 @@ void UPrompWidget::DisplayLockOnPrompt() {
 
 void UPrompWidget::RemoveInteractPrompt() {
 	//UE_LOG(Log171Prompts, Log, TEXT("Remove Interact"));
-	
-	if(activePrompts.Contains("InteractPrompt"))
-	{
-		PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
 
-		activePrompts.Remove("InteractPrompt");
+	if(PromptHorizontalBox != nullptr && IsValid(PromptHorizontalBox))
+	{
+		if(activePrompts.Contains("InteractPrompt"))
+		{
+			PromptHorizontalBox->RemoveChild(activePrompts["InteractPrompt"]);
+
+			activePrompts.Remove("InteractPrompt");
+		}
 	}
 }
 
 void UPrompWidget::RemoveLockOnPrompt() {
 	//UE_LOG(Log171Prompts, Log, TEXT("Remove LockOn"));
-	
-	if(activePrompts.Contains("LockOnPrompt"))
-	{
-		PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
 
-		activePrompts.Remove("LockOnPrompt");
+	if(PromptHorizontalBox != nullptr && IsValid(PromptHorizontalBox))
+	{
+		if(activePrompts.Contains("LockOnPrompt"))
+		{
+			PromptHorizontalBox->RemoveChild(activePrompts["LockOnPrompt"]);
+
+			activePrompts.Remove("LockOnPrompt");
+		}
 	}
 }
 

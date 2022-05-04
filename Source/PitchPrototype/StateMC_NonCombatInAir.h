@@ -21,10 +21,15 @@ protected:
 
 	//State_MainCharacter overrides
 	void BeginOverlapFeet() override;
+	void MoveForward(float) override;
+	void MoveRight(float) override;
+	void LookUpRate(float) override;
+	void TurnRate(float) override;
 
 	//Internal functions
 	void ApplyGravity();
 
 	//Internal variables
 	float gravityAccumulation = 0;
+	float JumpDirMultiplierAlpha = 0;
 };

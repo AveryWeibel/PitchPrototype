@@ -21,7 +21,6 @@ void StateMC_LockedOnDodge::Start()
 {
 	DodgeStartedTime = mainCharacter->GetWorld()->GetTimeSeconds();
 	DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
-	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
 }
 
 void StateMC_LockedOnDodge::Execute(float DeltaTime)
@@ -31,8 +30,6 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	DodgeElapsedTime = mainCharacter->GetWorld()->GetTimeSeconds() - DodgeStartedTime;
 	
 	//Setup moveVector
-
-	ConsumeMoveInputs();
 
 	//Move the camera
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
@@ -48,6 +45,10 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 		DodgeMoveVelocity += DodgeDirection * (mainCharacter->dodgeSpeed / DodgeDamping) * DeltaTime;
 		mainCharacter->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
 	}
+
+	//Maintain camera tracking
+	dirToTarget.Z = 0;
+	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Check if dodge time has elapsed
 	if(DodgeElapsedTime >= mainCharacter->dodgeLength)
@@ -73,7 +74,7 @@ void StateMC_LockedOnDodge::MoveForward(float Value)
 	direction.Normalize();
 	direction *= Value;
 
-	FVector dirVector = FVector(direction.X, direction.Y, moveZ);
+	FVector dirVector = FVector(direction.X, direction.Y, 0);
 
 	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
 	DodgeDirection += dirVector;
@@ -92,7 +93,7 @@ void StateMC_LockedOnDodge::MoveRight(float Value)
 	direction.Normalize();
 	direction *= Value;
 
-	FVector dirVector = FVector(direction.X, direction.Y, moveZ);
+	FVector dirVector = FVector(direction.X, direction.Y, 0);
 
 	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
 	

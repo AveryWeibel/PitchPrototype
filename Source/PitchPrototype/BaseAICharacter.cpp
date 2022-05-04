@@ -5,6 +5,7 @@
 #include "BaseAIController.h"
 #include "MainCharacter.h"
 #include "PrompWidget.h"
+#include "Components/WidgetComponent.h"
 #include "State_MainCharacter.h"
 
 // Sets default values
@@ -22,7 +23,19 @@ void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AIMesh = FindComponentByClass<USkeletalMeshComponent>();	
+	AIMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	//TArray<UActorComponent*> components = GetComponentsByClass(UWidgetComponent::StaticClass);
+
+	TArray<UActorComponent*> components = GetComponentsByClass(UWidgetComponent::StaticClass());
+
+	for (auto it : components) {
+		UDialogueSystem* temp = Cast<UDialogueSystem>(Cast<UWidgetComponent>(it)->GetWidget());
+		if (temp) {
+			dialogueSystem = temp;
+			UE_LOG(LogTemp, Log, TEXT("dialogue system %s"), *dialogueSystem->GetName());
+		}
+	}
 
 	pawnSensingComp = FindComponentByClass<UPawnSensingComponent>();
 
@@ -74,6 +87,27 @@ void ABaseAICharacter::DoAttack()
 void ABaseAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (!canDodge) {
+		DodgeCooldownElapsedTime = this->GetWorld()->GetTimeSeconds() - DodgeCooldownStartTime;
+
+		if (DodgeCooldownElapsedTime >= dodgeCooldown) {
+			canDodge = true;
+		}
+	}
+
+	if (DodgeStartedTime > 0) {
+		DodgeElapsedTime = this->GetWorld()->GetTimeSeconds() - DodgeStartedTime;
+
+		DodgeDirection.Normalize();
+		DodgeMoveVelocity += DodgeDirection * dodgeSpeed * DeltaTime;
+		this->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
+
+		if (DodgeElapsedTime >= dodgeTime) {
+			DodgeMoveVelocity = FVector::ZeroVector;
+			DodgeStartedTime = -1;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -107,6 +141,18 @@ void ABaseAICharacter::RecieveParry()
 	if (AIController)
 	{
 		AIController->UpdateState(TidesStateName::AI_ParryStun, Animator);
+	}
+}
+
+void ABaseAICharacter::Dodge()
+{
+	UE_LOG(Log171General, Log, TEXT("Dodged Player Attack"));
+	if (canDodge) {
+		DodgeStartedTime = this->GetWorld()->GetTimeSeconds();
+		DodgeDirection = this->GetActorRightVector() * (FMath::RandBool() ? 1 : -1);
+
+		DodgeCooldownStartTime = DodgeStartedTime;
+		canDodge = false;
 	}
 }
 
@@ -174,7 +220,7 @@ void ABaseAICharacter::ReactToFocus_Implementation()
 {
 	IInteractableInterface::ReactToFocus_Implementation();
 	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayLockOnPrompt();
-	//Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
+	Cast<UPrompWidget>(PromptWidgetComponent->GetWidget())->DisplayInteractPrompt();
 	UE_LOG(Log171General, Log, TEXT("Focused %s"), *this->GetName());
 }
 

@@ -123,7 +123,12 @@ void AMainCharacter::BeginPlay()
 
 	print(Mesh->GetName());
 	print(feetCollider->GetName());
-}
+
+	if(feetCollider->GetComponentRotation().Yaw != 0)
+	{
+		feetCollider->SetWorldRotation(FRotator::ZeroRotator);
+	}
+} //End BeginPlay
 
 int AMainCharacter::NativeGetDialogueInt_Implementation(const FString& name)
 {
@@ -142,7 +147,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	//Debug
 	currentPhysicsLinearVelocity = feetCollider->GetPhysicsLinearVelocity();
 
-	velocityArrow->SetWorldRotation(currentPhysicsLinearVelocity.Rotation());
+	velocityArrow->SetRelativeRotation(horizontalVelocity.Rotation());
 }
 
 // Called to bind functionality to input
@@ -282,6 +287,17 @@ void AMainCharacter::HandleAIEndOverlap(UPrimitiveComponent* OverlappedComponent
 		InteractableList.Remove(OtherActor);
 		//UE_LOG(Log171General, Log, TEXT("Stopped AI Overlap with %s"), *OtherActor->GetName());
 	}
+
+	/*ABaseAICharacter* character = Cast<ABaseAICharacter>(OtherActor);
+	ABaseAIController* controller = Cast<ABaseAIController>(character->GetController());
+
+	if (controller) {
+		TidesStateName state = controller->GetState();
+
+		if (state == TidesStateName::AI_CombatStrafe || state == TidesStateName::AI_CombatDialogue || state == TidesStateName::AI_CombatDialogueWait) {
+			controller->UpdateState(TidesStateName::AI_NonCombatIdle, character->Animator);
+		}
+	}*/
 
 	characterStateMachine->SendInput(StateAction::EndOverlapAI);
 }

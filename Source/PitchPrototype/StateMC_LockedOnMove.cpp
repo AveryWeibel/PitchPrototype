@@ -23,40 +23,49 @@ StateMC_LockedOnMove::~StateMC_LockedOnMove()
 void StateMC_LockedOnMove::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnMove"));
-	cameraBoomTargetLength = mainCharacter->cameraLockedBoomLength;
+	//Set Ground Trace Params
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
 {
 	
-	
-	//Update animation variables
-	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
-
-	mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), FVector(moveFwd, moveRht, 0), 0.2f) );
-
-	if(mainCharacter->Animator->GetParryAlpha() >= .95)
+	if(IsValid(mainCharacter->lockedObject))
 	{
-		ParryLerpTarget = 0;
+		//Update animation variables
+		mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
+
+		mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), FVector(movementVector->X, movementVector->Y, 0), 0.2f) );
+
+		if(mainCharacter->Animator->GetParryAlpha() >= .95)
+		{
+			ParryLerpTarget = 0;
+		}
+		
+		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
+
+		//Move the character
+		MoveCharacter(DeltaTime);
+		
+		//Move the camera
+		if (IsValid(mainCharacter->lockedObject))
+		{
+			dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
+		}
+		else
+		{
+			UE_LOG(Log171LockedOnMove, Warning, TEXT("locked object is invalid (This may be okay if the game didn't crash :D)"));
+		}
+	}
+	else
+	{
+		UE_LOG(Log171LockedOnMove, Warning, TEXT("locked object is invalid (This may be okay if the game didn't crash :D)"));
 	}
 	
-	mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
-
-
-	
-	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
-
-	ConsumeMoveInputs();
-
-	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->maximumHorizontalVelocity / 3) {
-		//FVector forceDirection(, , 0);
-		mainCharacter->feetCollider->AddForce(*movementVector);
-		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
-	}
-	
-	//Move the camera
-	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	//2D so the camera doesn't tilt with distance
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
@@ -79,7 +88,6 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 void StateMC_LockedOnMove::MoveForward(float Value)
 {
-	moveFwd = Value;
 	//if(Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 	
@@ -87,19 +95,14 @@ void StateMC_LockedOnMove::MoveForward(float Value)
 	FVector direction = mainCharacter->mainCamera->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
-	storedMovement = *movementVector;
+	*movementVector += FVector(direction.X, direction.Y, 0);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
 
 void StateMC_LockedOnMove::MoveRight(float Value)
 {
-	moveRht = Value;
-
-
-	
 	//if (Value != 0)
 	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
 
@@ -107,10 +110,9 @@ void StateMC_LockedOnMove::MoveRight(float Value)
 	FVector direction = mainCharacter->mainCamera->GetRightVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
 	
-	*movementVector += FVector(direction.X, direction.Y, moveZ);
-	storedMovement = *movementVector;
+	*movementVector += FVector(direction.X, direction.Y, 0);
 }
 
 void StateMC_LockedOnMove::LockOn()
@@ -210,6 +212,8 @@ void StateMC_LockedOnMove::Interact()
 
 void StateMC_LockedOnMove::EndOverlapAI()
 {
+	return;
+	
 	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
 		mainCharacter->lockedObject = nullptr;
 
