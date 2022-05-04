@@ -11,8 +11,8 @@ UTidesGameInstance::UTidesGameInstance() {
 	canReadRunes = false;
 
 	CameraSensitivity = 100.0f;
-	MasterVolume = 1.0f;
-	SFXVolume = 1.0f;
+	MasterVolume = 0.5f;
+	SFXVolume = 0.5f;
 	fullscreen = false;
 }
 

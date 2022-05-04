@@ -5,6 +5,7 @@
 #include "BaseAIController.h"
 #include "MainCharacter.h"
 #include "PrompWidget.h"
+#include "Components/WidgetComponent.h"
 #include "State_MainCharacter.h"
 
 // Sets default values
@@ -22,7 +23,19 @@ void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AIMesh = FindComponentByClass<USkeletalMeshComponent>();	
+	AIMesh = FindComponentByClass<USkeletalMeshComponent>();
+
+	//TArray<UActorComponent*> components = GetComponentsByClass(UWidgetComponent::StaticClass);
+
+	TArray<UActorComponent*> components = GetComponentsByClass(UWidgetComponent::StaticClass());
+
+	for (auto it : components) {
+		UDialogueSystem* temp = Cast<UDialogueSystem>(Cast<UWidgetComponent>(it)->GetWidget());
+		if (temp) {
+			dialogueSystem = temp;
+			UE_LOG(LogTemp, Log, TEXT("dialogue system %s"), *dialogueSystem->GetName());
+		}
+	}
 
 	pawnSensingComp = FindComponentByClass<UPawnSensingComponent>();
 
