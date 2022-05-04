@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Perception/PawnSensingComponent.h"
+#include "DialogueSystem.h"
 #include "BaseAICharacter.generated.h"
 
 UCLASS()
@@ -148,4 +149,7 @@ public:
 	void WhileFocused_Implementation() override;
 
 	bool InteractToLockOn_Implementation() override;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Dialogue System")
+		UDialogueSystem* dialogueSystem;
 };
