@@ -22,11 +22,8 @@ class PITCHPROTOTYPE_API UMainMenu : public UUserWidget
 	
 protected:
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), EditAnywhere)
-		UButton* ContinueButton;
-
 	UPROPERTY(meta = (BindWidget))
-		UButton* NewGameButton;
+		UButton* PlayButton;
 
 	UPROPERTY(meta = (BindWidget))
 		UButton* OptionsButton;
@@ -50,10 +47,7 @@ protected:
 		UTextBlock* TeamName;
 
 	UFUNCTION()
-		void OnContinueButtonClicked();
-
-	UFUNCTION()
-		void OnNewGameButtonClicked();
+		void OnPlayButtonClicked();
 
 	UFUNCTION()
 		void OnOptionsButtonClicked();
