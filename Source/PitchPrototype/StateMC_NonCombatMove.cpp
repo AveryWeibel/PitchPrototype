@@ -177,6 +177,12 @@ void StateMC_NonCombatMove::Interact()
 	}
 }
 
+void StateMC_NonCombatMove::EnterWater()
+{
+	State_MainCharacter::EnterWater();
+	RequestStateChange(TidesStateName::InWater);
+}
+
 
 
 

@@ -25,6 +25,7 @@ protected:
 	void MoveRight(float) override;
 	void LookUpRate(float) override;
 	void TurnRate(float) override;
+	virtual void EnterWater() override;
 
 	//Internal functions
 	void ApplyGravity();

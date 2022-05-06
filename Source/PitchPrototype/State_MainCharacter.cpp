@@ -257,6 +257,12 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::EndOverlapAI:
 		EndOverlapAI();
 		break;
+	case StateAction::EnterWater:
+		EnterWater();
+		break;
+	case StateAction::ExitWater:
+		ExitWater();
+		break;
 	default:
 		break;
 	}
@@ -358,6 +364,14 @@ void State_MainCharacter::StartOverlapAI()
 }
 
 void State_MainCharacter::EndOverlapAI()
+{
+}
+
+void State_MainCharacter::EnterWater()
+{
+}
+
+void State_MainCharacter::ExitWater()
 {
 }
 

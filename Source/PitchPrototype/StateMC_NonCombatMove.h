@@ -36,6 +36,7 @@ protected:
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
 	virtual void Interact() override;
+	virtual void EnterWater() override;
 
 	//Internal variables for state
 	bool FeetOnGround;

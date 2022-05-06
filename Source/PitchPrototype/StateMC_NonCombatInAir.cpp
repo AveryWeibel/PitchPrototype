@@ -34,7 +34,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	JumpDirMultiplierAlpha = FMath::Lerp(1.0f, mainCharacter->jumpDirectionalMultiplier, FMath::Clamp<float>(mainCharacter->jumpDirMultiplierRampSpeed * DeltaTime, mainCharacter->jumpDirectionalMultiplier, 1));
 	
 	//ApplyGravity();
-	UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
+	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
 	//Move character
 	MoveCharacter(DeltaTime, false);
@@ -97,6 +97,12 @@ void StateMC_NonCombatInAir::MoveRight(float Value)
 void StateMC_NonCombatInAir::TurnRate(float Value)
 {
 	AddCameraOrbitYaw(Value);
+}
+
+void StateMC_NonCombatInAir::EnterWater()
+{
+	State_MainCharacter::EnterWater();
+	RequestStateChange(TidesStateName::InWater);
 }
 
 void StateMC_NonCombatInAir::LookUpRate(float Value)

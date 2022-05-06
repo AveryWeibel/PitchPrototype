@@ -262,6 +262,12 @@ private:
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:
+	UFUNCTION(BlueprintCallable)
+		void EnterWater();
+
+	UFUNCTION(BlueprintCallable)
+		void ExitWater();
+	
 	UFUNCTION()
 		void TakeWeaponHit(float damage);
 

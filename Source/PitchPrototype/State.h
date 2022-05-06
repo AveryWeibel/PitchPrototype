@@ -14,6 +14,7 @@ enum TidesStateName {
 	LockedOnDodging,
 	LockedOnTakeHit,
 	Dead,
+	InWater,
 	AI_AttemptAttack,
 	AI_CombatStrafe,
 	AI_DoAttack,
@@ -49,7 +50,9 @@ enum StateAction
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	StartOverlapAI,
-	EndOverlapAI
+	EndOverlapAI,
+	EnterWater,
+	ExitWater
 };
 
 class StateMachine;

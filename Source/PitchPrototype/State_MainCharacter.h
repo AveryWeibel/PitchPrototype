@@ -111,4 +111,6 @@ protected:
 	virtual void EndOverlapFeet();
 	virtual void StartOverlapAI();
 	virtual void EndOverlapAI();
+	virtual void EnterWater();
+	virtual void ExitWater();
 };
