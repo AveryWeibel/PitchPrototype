@@ -39,7 +39,6 @@ protected:
 	virtual void EnterWater() override;
 
 	//Internal variables for state
-	bool FeetOnGround;
 	
 	
 };
