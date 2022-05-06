@@ -39,7 +39,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
 	//Move character
-	MoveCharacter(DeltaTime, false);
+	MoveCharacter(DeltaTime, true, false);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
@@ -64,7 +64,10 @@ void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 	//movementVector->Z = 0;
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
-	RequestStateChange(TidesStateName::NonCombatMove);
+	if(!OtherActor.Tags.Contains("Ocean"))
+	{
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
 }
 
 void StateMC_NonCombatInAir::ApplyGravity()

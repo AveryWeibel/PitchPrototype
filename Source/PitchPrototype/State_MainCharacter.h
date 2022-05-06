@@ -41,7 +41,7 @@ protected:
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, bool slopeCheck = true);
+	void MoveCharacter(float DeltaTime, bool slopeUpCheck = true, bool SlopeDownCheck = true);
 	
 	//Move Inputs
 	FVector storedMovement;

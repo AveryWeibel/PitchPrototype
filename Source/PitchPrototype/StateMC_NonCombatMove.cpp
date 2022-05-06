@@ -135,19 +135,19 @@ void StateMC_NonCombatMove::Die()
 
 void StateMC_NonCombatMove::BeginOverlapFeet(AActor& OtherActor)
 {
-	if(OtherActor.Tags.Contains("Landscape"))
+	if(!OtherActor.Tags.Contains("Ocean"))
 	{
-		UE_LOG(Log171NonCombatMove, Log, TEXT("Begin overlap feet"));
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("Begin overlap feet"));
 		FeetOnGround = true;
 	}
 }
 
 void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
 {
-	if (OtherActor.Tags.Contains("Landscape"))
+	if (!OtherActor.Tags.Contains("Ocean"))
 	{
 		FeetOnGround = false;
-		UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
+		//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
 		if (!StepDownThisFrame)
 		{
 			RequestStateChange(TidesStateName::NonCombatInAir);

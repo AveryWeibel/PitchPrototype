@@ -5,6 +5,8 @@
 #include "MainCharacter.h"
 #include "CustomDefines.h"
 
+DEFINE_LOG_CATEGORY(Log171NonCombatJump);
+
 StateMC_NonCombatJump::StateMC_NonCombatJump(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
@@ -18,12 +20,16 @@ StateMC_NonCombatJump::~StateMC_NonCombatJump()
 
 void StateMC_NonCombatJump::Start()
 {
-	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_NonCombatJump"));
+	UE_LOG(Log171NonCombatJump, Log, TEXT("Enter State StateMC_NonCombatJump"));
 	//Initial jump functionality
 	JumpStartedTime = mainCharacter->GetWorld()->TimeSeconds;
 	upwardsVelocityAccumulation += mainCharacter->jumpAccel;
 	*movementVector = storedMovement;
-	*movementVector += FVector(0, 0, upwardsVelocityAccumulation);
+	*movementVector += FVector(0, 0, upwardsVelocityAccumulation*10);
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+	}
 }
 
 void StateMC_NonCombatJump::Execute(float DeltaTime)
@@ -40,7 +46,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	ApplyGravity();
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, false);
+	MoveCharacter(DeltaTime, true, false);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

@@ -8,6 +8,8 @@
 ///	<summary>
 /// This state handles character speed, movement and duration while rising in a jump
 ///	</summary>
+
+DECLARE_LOG_CATEGORY_EXTERN(Log171NonCombatJump, Log, All);
 class PITCHPROTOTYPE_API StateMC_NonCombatJump : public State_MainCharacter
 {
 public:

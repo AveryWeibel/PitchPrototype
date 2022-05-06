@@ -15,28 +15,20 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
+void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool slopeDownCheck)
 {
 	//Spherecast down, check for drop height
 	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
 		mainCharacter->feetCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 300)),
+		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, mainCharacter->StepDownHeight + 300)),
 		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
 		ECollisionChannel::ECC_WorldStatic,
 		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
 		groundTraceParams)
-		&& slopeCheck)
+		&& slopeDownCheck)
 	{
 		//Calculate drop height this frame
-		float StepDown = -(mainCharacter->feetCollider->GetComponentLocation() - (groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z * 12; //*10 to account for deltatime
-
-		//Debugging
-		if((movementVector->X != 0 || movementVector->Y != 0) && StepDown < -mainCharacter->StepDownHeight)
-		{
-			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f"),
-				StepDown
-			);
-		}
+		float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius()).Z); //*10 to account for deltatime
 
 		//Validate StepDown
 		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
@@ -48,8 +40,22 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 		{
 			StepDownThisFrame = false;
 		}
+
+		//Debugging
+		if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
+		{
+			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
+				StepDown,
+				StepDownThisFrame ? TEXT("True") : TEXT("False")
+			);
+		}
+		
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
+	}
+	else
+	{
+		StepDownThisFrame = false;
 	}
 
 	//Spherecast forward check for slope
@@ -58,7 +64,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 		mainCharacter->bodyCollider->GetComponentLocation(),
 		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(movementVector->X, movementVector->Y, 0) * 6 * DeltaTime)),
 		mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
-		ECollisionChannel::ECC_WorldStatic,
+		ECC_WorldStatic,
 		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()/2),
 		groundTraceParams
 	);
@@ -66,7 +72,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 	if (chestSweepHit)
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
-		//UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
 	}
 	
 
@@ -89,9 +95,9 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 	}
 
 	//Translate character
-	if(chestSweepHit && slopeCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
+	if(chestSweepHit && slopeUpCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
 	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * .01 * DeltaTime, false);
+		mainCharacter->AddActorWorldOffset(FVector(movementVector->X * .01, movementVector->Y * .01, movementVector->Z) * DeltaTime, false);
 	}
 	else
 	{

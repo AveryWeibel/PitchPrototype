@@ -26,6 +26,10 @@ void StateMC_InWater::Start()
 	mainCharacter->feetCollider->SetEnableGravity(false);
 	mainCharacter->feetCollider->SetSimulatePhysics(false);
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+	}
 }
 
 void StateMC_InWater::Execute(float DeltaTime)
@@ -34,7 +38,7 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//Setup moveVector	
 
 	//Apply moveVector
-	MoveCharacter(DeltaTime, false);
+	MoveCharacter(DeltaTime, true, false);
 
 	//Position the camera
 	MoveCameraUnLocked(DeltaTime);
@@ -84,7 +88,7 @@ void StateMC_InWater::LookUpRate(float Value)
 
 void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 {
-	if (OtherActor.Tags.Contains("Landscape"))
+	if (!OtherActor.Tags.Contains("Ocean"))
 	{
 		State_MainCharacter::BeginOverlapFeet( OtherActor);
 		UE_LOG(Log171InWater, Log, TEXT("Enter Landscape from Water"));
