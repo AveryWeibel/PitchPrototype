@@ -8,6 +8,8 @@
 ///	<summary>
 /// This state handles in-air behavior in all circumstances
 ///	</summary>
+DECLARE_LOG_CATEGORY_EXTERN(Log171InAir, Log, All);
+
 class PITCHPROTOTYPE_API StateMC_NonCombatInAir : public State_MainCharacter
 {
 public:
@@ -20,11 +22,12 @@ protected:
 	void Execute(float) override;
 
 	//State_MainCharacter overrides
-	void BeginOverlapFeet() override;
+	void BeginOverlapFeet(AActor& OtherActor) override;
 	void MoveForward(float) override;
 	void MoveRight(float) override;
 	void LookUpRate(float) override;
 	void TurnRate(float) override;
+	virtual void EnterWater() override;
 
 	//Internal functions
 	void ApplyGravity();

@@ -87,6 +87,9 @@ public:
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 	float StepDownHeight = .375;
 
+	UPROPERTY(Category = WaterMovement, EditAnywhere)
+	float WaterMovementMultiplier = .3;
+	
 	UPROPERTY()
 		float targetHorizontalVelocity;
 
@@ -262,6 +265,12 @@ private:
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:
+	UFUNCTION(BlueprintCallable)
+		void EnterWater();
+
+	UFUNCTION(BlueprintCallable)
+		void ExitWater();
+	
 	UFUNCTION()
 		void TakeWeaponHit(float damage);
 

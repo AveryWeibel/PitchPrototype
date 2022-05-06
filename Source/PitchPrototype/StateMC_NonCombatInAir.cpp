@@ -5,6 +5,8 @@
 #include "MainCharacter.h"
 #include "CustomDefines.h"
 
+DEFINE_LOG_CATEGORY(Log171InAir);
+
 StateMC_NonCombatInAir::StateMC_NonCombatInAir(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	stateName = TidesStateName::NonCombatInAir;
@@ -16,7 +18,7 @@ StateMC_NonCombatInAir::~StateMC_NonCombatInAir()
 
 void StateMC_NonCombatInAir::Start()
 {
-	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatInAir"));
+	UE_LOG(Log171InAir, Log, TEXT("Enter State NonCombatInAir"));
 	gravityAccumulation = 0;
 	JumpDirMultiplierAlpha = 0;
 
@@ -34,7 +36,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	JumpDirMultiplierAlpha = FMath::Lerp(1.0f, mainCharacter->jumpDirectionalMultiplier, FMath::Clamp<float>(mainCharacter->jumpDirMultiplierRampSpeed * DeltaTime, mainCharacter->jumpDirectionalMultiplier, 1));
 	
 	//ApplyGravity();
-	UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
+	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
 	//Move character
 	MoveCharacter(DeltaTime, false);
@@ -52,7 +54,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	*movementVector = FVector::ZeroVector;
 }
 
-void StateMC_NonCombatInAir::BeginOverlapFeet()
+void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 {
 	print("Hit Feets");
 
@@ -97,6 +99,12 @@ void StateMC_NonCombatInAir::MoveRight(float Value)
 void StateMC_NonCombatInAir::TurnRate(float Value)
 {
 	AddCameraOrbitYaw(Value);
+}
+
+void StateMC_NonCombatInAir::EnterWater()
+{
+	State_MainCharacter::EnterWater();
+	RequestStateChange(TidesStateName::InWater);
 }
 
 void StateMC_NonCombatInAir::LookUpRate(float Value)

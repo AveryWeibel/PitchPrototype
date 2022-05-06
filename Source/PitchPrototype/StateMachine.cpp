@@ -58,6 +58,11 @@ void StateMachine::SendInput(StateAction Action, float Value)
 	activeState->SendInput(Action, Value);
 }
 
+void StateMachine::SendInput(StateAction Action, AActor& OtherActor)
+{
+	activeState->SendInput(Action, OtherActor);
+}
+
 FString StateMachine::GetStateNameString(TidesStateName stateName)
 {
 	//This shouldn't ever return because of type safety

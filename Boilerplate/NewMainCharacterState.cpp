@@ -27,8 +27,6 @@ void <ClassName>::Execute(float DeltaTime)
 	//UE_LOG(LogTemp, Log, TEXT("Execute State <ClassName>"));
 	//Setup moveVector	
 
-	ConsumeMoveInputs();
-
 	//Apply moveVector
 }
 
