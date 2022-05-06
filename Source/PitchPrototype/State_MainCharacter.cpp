@@ -20,7 +20,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool
 	//Spherecast down, check for drop height
 	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
 		mainCharacter->feetCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, mainCharacter->StepDownHeight + 300)),
+		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 1000000)),
 		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
 		ECollisionChannel::ECC_WorldStatic,
 		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
@@ -69,10 +69,19 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool
 		groundTraceParams
 	);
 	
-	if (chestSweepHit)
+	if (chestSweepHit && slopeUpCheck)
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
 		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+	}
+
+	if(StepDownThisFrame && slopeDownCheck)
+	{
+		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
+	}
+	else
+	{
+		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
 	}
 	
 
