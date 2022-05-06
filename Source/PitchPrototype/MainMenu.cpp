@@ -2,6 +2,7 @@
 
 
 #include "MainMenu.h"
+#include "TidesGameInstance.h"
 #include "Components/CanvasPanelSlot.h"
 
 void UMainMenu::NativeConstruct() {

@@ -35,7 +35,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 		if (Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatDialogue || Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_RecieveHit) {
 			RequestStateChange(TidesStateName::LockedOnTakeHit);
 			hitThisAttack = true;
-		} else if (hitAI->canDodge) {
+		} else if (hitAI->canDodge && Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatStrafe) {
 			hitAI->Dodge();
 			hitThisAttack = true;
 		} else {
