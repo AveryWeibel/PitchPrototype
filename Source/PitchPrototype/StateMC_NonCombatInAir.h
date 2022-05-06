@@ -28,6 +28,7 @@ protected:
 	void LookUpRate(float) override;
 	void TurnRate(float) override;
 	virtual void EnterWater() override;
+	virtual void Die() override;
 
 	//Internal functions
 	void ApplyGravity();
@@ -35,4 +36,5 @@ protected:
 	//Internal variables
 	float gravityAccumulation = 0;
 	float JumpDirMultiplierAlpha = 0;
+	float InAirStartHeight = 0;
 };
