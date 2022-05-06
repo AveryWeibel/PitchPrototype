@@ -27,6 +27,7 @@ public:
 	//template<typename stateType>
 	void SendInput(StateAction);
 	void SendInput(StateAction, float);
+	void SendInput(StateAction Action, AActor& OtherActor);
 
 
 	//Utility

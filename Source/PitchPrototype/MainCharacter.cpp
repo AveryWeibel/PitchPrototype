@@ -9,6 +9,7 @@
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
 #include "StateMC_Dead.h"
+#include "StateMC_InWater.h"
 #include "StateMC_LockedOnDodge.h"
 #include "StateMC_LockedOnMove.h"
 #include "StateMC_LockedOnSwordSwing.h"
@@ -105,6 +106,7 @@ void AMainCharacter::BeginPlay()
 	StateMC_LockedOnTakeHit* LockedOnTakeHit = new StateMC_LockedOnTakeHit(this);
 	StateMC_LockedOnDodge* LockedOnDodge = new StateMC_LockedOnDodge(this);
 	StateMC_Dead* Dead = new StateMC_Dead(this);
+	StateMC_InWater* InWater = new StateMC_InWater(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
@@ -114,6 +116,8 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnTakeHit);
 	characterStateInstances.Add(LockedOnDodge);
 	characterStateInstances.Add(Dead);
+	characterStateInstances.Add(InWater);
+	
 	//Initialize state machine
 	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
 
@@ -165,6 +169,16 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+}
+
+void AMainCharacter::EnterWater()
+{
+	characterStateMachine->SendInput(StateAction::EnterWater);
+}
+
+void AMainCharacter::ExitWater()
+{
+	characterStateMachine->SendInput(StateAction::ExitWater);	
 }
 
 void AMainCharacter::TakeWeaponHit(float damage)
@@ -254,19 +268,20 @@ void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* Ot
 
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Hit with %s"), *OtherActor->GetName())
+	//characterStateMachine->SendInput(StateAction::BeginOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleFeetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(Log171General, Log, TEXT("Began Overlap with %s"), *OtherActor->GetName())
-		characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Began Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::BeginOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
-		characterStateMachine->SendInput(StateAction::EndOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::EndOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

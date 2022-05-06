@@ -28,7 +28,7 @@ void StateMC_NonCombatMove::Start()
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
 	
-	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatMove"));
+	UE_LOG(Log171NonCombatMove, Log, TEXT("Enter State NonCombatMove"));
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
@@ -65,7 +65,6 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	SweepForInteractables();
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, mainCharacter->feetCollider->GetComponentRotation().Yaw, 0));
 	
 	// if(!FeetOnGround && !StepDownThisFrame)
 	// {
@@ -134,18 +133,25 @@ void StateMC_NonCombatMove::Die()
 	RequestStateChange(TidesStateName::Dead);
 }
 
-void StateMC_NonCombatMove::BeginOverlapFeet()
+void StateMC_NonCombatMove::BeginOverlapFeet(AActor& OtherActor)
 {
-	FeetOnGround = true;
+	if(OtherActor.Tags.Contains("Landscape"))
+	{
+		UE_LOG(Log171NonCombatMove, Log, TEXT("Begin overlap feet"));
+		FeetOnGround = true;
+	}
 }
 
-void StateMC_NonCombatMove::EndOverlapFeet()
+void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
 {
-	FeetOnGround = false;
-	UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
-	if (!StepDownThisFrame)
+	if (OtherActor.Tags.Contains("Landscape"))
 	{
-		RequestStateChange(TidesStateName::NonCombatInAir);
+		FeetOnGround = false;
+		UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
+		if (!StepDownThisFrame)
+		{
+			RequestStateChange(TidesStateName::NonCombatInAir);
+		}
 	}
 }
 
@@ -175,6 +181,12 @@ void StateMC_NonCombatMove::Interact()
 		//Call BP implementation
 		CallInteractBP();
 	}
+}
+
+void StateMC_NonCombatMove::EnterWater()
+{
+	State_MainCharacter::EnterWater();
+	RequestStateChange(TidesStateName::InWater);
 }
 
 

@@ -14,6 +14,7 @@ enum TidesStateName {
 	LockedOnDodging,
 	LockedOnTakeHit,
 	Dead,
+	InWater,
 	AI_AttemptAttack,
 	AI_CombatStrafe,
 	AI_DoAttack,
@@ -49,7 +50,9 @@ enum StateAction
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	StartOverlapAI,
-	EndOverlapAI
+	EndOverlapAI,
+	EnterWater,
+	ExitWater
 };
 
 class StateMachine;
@@ -81,6 +84,7 @@ protected:
 	//Input function dispatchers
 	virtual void SendInput(StateAction Action) = 0;
 	virtual void SendInput(StateAction Action, float Value) = 0;
+	virtual void SendInput(StateAction Action, AActor& OtherActor) = 0;
 
 	TMap<StateAction, NewFunction> StateAxisDelegates;
 
