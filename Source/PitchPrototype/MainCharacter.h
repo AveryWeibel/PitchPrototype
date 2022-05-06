@@ -117,6 +117,12 @@ public:
 	UPROPERTY(Category = Jumping, EditAnywhere)
 		float maxFallingSpeed;
 
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float FallDamageDistThreshold = 600;
+	
+	UPROPERTY(Category = Jumping, EditAnywhere)
+		float DamagePerHundredUnits = 10;
+
 	UPROPERTY(Category = Camera, EditAnywhere)
 		float cameraAccelerationForce;
 
