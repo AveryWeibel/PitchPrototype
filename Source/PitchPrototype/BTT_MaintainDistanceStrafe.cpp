@@ -37,18 +37,24 @@ EBTNodeResult::Type UBTT_MaintainDistanceStrafe::ExecuteTask(UBehaviorTreeCompon
 	UE_LOG(Log171GuardAI, Log, TEXT("Strafe Execute at %f"), TaskMemory->taskStartTime);//owningChar == NULL ? TEXT("NULL") : TEXT("NOT NULL"));
 	
 	FCollisionQueryParams queryParams = FCollisionQueryParams::FCollisionQueryParams();
-	//queryParams.bDebugQuery = true;
 	queryParams.AddIgnoredActor(owningChar);
 	queryParams.AddIgnoredActor(UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
-	bool hitSuccess;
-	FHitResult hitResult;
-	FColor traceColor = FColor::Red;
 
 	FVector right = owningChar->GetActorLocation() + (owningChar->GetActorRightVector() * speed);
 	DrawDebugDirectionalArrow(owningChar->GetWorld(), owningChar->GetActorLocation(), right, 15.0f, FColor::Yellow, false, 3.0f, 0, 5.0f);
-
 	FVector down = right + (FVector::DownVector * 300.0f);
+
+	bool hitSuccess;
+	FHitResult hitResult;
 	hitSuccess = owningChar->GetWorld()->LineTraceSingleByChannel(hitResult, right, down, ECollisionChannel::ECC_Visibility, queryParams);
+	
+	bool hitRight;
+	FHitResult hitRightResult;
+	hitRight = owningChar->GetWorld()->LineTraceSingleByChannel(hitRightResult, owningChar->GetActorLocation(), right*10.0f, ECollisionChannel::ECC_Visibility, queryParams);
+
+	bool hitLeft;
+	FHitResult hitLeftResult;
+	hitLeft = owningChar->GetWorld()->LineTraceSingleByChannel(hitLeftResult, owningChar->GetActorLocation(), right * 10.0f * -1.0f, ECollisionChannel::ECC_Visibility, queryParams);
 
 	if (hitSuccess) {
 		if(hitResult.GetActor()->GetName() == "Ocean2") {
@@ -56,8 +62,17 @@ EBTNodeResult::Type UBTT_MaintainDistanceStrafe::ExecuteTask(UBehaviorTreeCompon
 			DrawDebugDirectionalArrow(owningChar->GetWorld(), right, down, 15.0f, FColor::Green, false, 3.0f, 0, 5.0f);
 		}
 	}
-	else {
-		TaskMemory->rightDirection = UKismetMathLibrary::RandomBool();
+
+	if (hitRight)
+	{
+		TaskMemory->rightDirection = false;
+		DrawDebugDirectionalArrow(owningChar->GetWorld(), owningChar->GetActorLocation(), right * 10.0f, 15.0f, FColor::Green, false, 3.0f, 0, 5.0f);
+	}
+	
+	if (hitLeft)
+	{
+		TaskMemory->rightDirection = true;
+		DrawDebugDirectionalArrow(owningChar->GetWorld(), owningChar->GetActorLocation(), right * 10.0f * -1.0f, 15.0f, FColor::Green, false, 3.0f, 0, 5.0f);
 	}
 	
 	return EBTNodeResult::InProgress;
