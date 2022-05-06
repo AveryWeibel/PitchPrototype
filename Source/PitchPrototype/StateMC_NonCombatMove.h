@@ -31,8 +31,8 @@ protected:
 	virtual void Jump() override;
 	virtual void LockOn() override;
 	virtual void Die() override;
-	virtual void BeginOverlapFeet() override;
-	virtual void EndOverlapFeet() override;
+	virtual void BeginOverlapFeet(AActor& OtherActor) override;
+	virtual void EndOverlapFeet(AActor& OtherActor) override;
 	virtual void StartOverlapAI() override;
 	virtual void EndOverlapAI() override;
 	virtual void Interact() override;

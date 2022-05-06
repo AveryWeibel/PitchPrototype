@@ -25,7 +25,9 @@ protected:
 	virtual void MoveForward(float) override;
 	virtual void MoveRight(float) override;
 	//virtual void Jump() override;
-	virtual void BeginOverlapFeet() override;
+	virtual void BeginOverlapFeet(AActor& OtherActor) override;
+	virtual void Die() override;
+	virtual void ExitWater() override;
 
 	//Internal functions
 

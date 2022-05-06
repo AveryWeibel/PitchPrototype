@@ -81,6 +81,7 @@ protected:
 	//Implement State SendInput
 	void SendInput(StateAction) override;
 	void SendInput(StateAction, float) override;
+	void SendInput(StateAction, AActor&) override;
 
 	//SubClass variables
 	AActor* focusedInteractable = nullptr;
@@ -107,8 +108,8 @@ protected:
 	virtual void TakeHit();
 	virtual void Die();
 	virtual void Interact();
-	virtual void BeginOverlapFeet();
-	virtual void EndOverlapFeet();
+	virtual void BeginOverlapFeet(AActor& OtherActor);
+	virtual void EndOverlapFeet(AActor& OtherActor);
 	virtual void StartOverlapAI();
 	virtual void EndOverlapAI();
 	virtual void EnterWater();

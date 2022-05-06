@@ -66,7 +66,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 	if (chestSweepHit)
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
-		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+		//UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
 	}
 	
 
@@ -102,6 +102,8 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeCheck)
 	//Update external velocity fields
 	storedMovement = *movementVector;
 	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (FVector(movementVector->X, movementVector->Y, 0 )* DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
+
+	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void State_MainCharacter::AddCameraOrbitYaw(float Value)
@@ -218,12 +220,6 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::Jump:
 		Jump();
 		break;
-	case StateAction::BeginOverlapFeet:
-		BeginOverlapFeet();
-		break;
-	case StateAction::EndOverlapFeet:
-		EndOverlapFeet();
-		break;
 	case StateAction::LockOn:
 		LockOn();
 		break;
@@ -289,6 +285,18 @@ void State_MainCharacter::SendInput(StateAction Action, float Value)
 
 }
 
+void State_MainCharacter::SendInput(StateAction Action, AActor& OtherActor)
+{
+	switch (Action) {
+	case StateAction::BeginOverlapFeet:
+		BeginOverlapFeet(OtherActor);
+		break;
+	case StateAction::EndOverlapFeet:
+		EndOverlapFeet(OtherActor);
+		break;
+	}
+}
+
 void State_MainCharacter::MoveForward(float)
 {
 }
@@ -351,11 +359,11 @@ void State_MainCharacter::Interact()
 {
 }
 
-void State_MainCharacter::BeginOverlapFeet()
+void State_MainCharacter::BeginOverlapFeet(AActor& OtherActor)
 {
 }
 
-void State_MainCharacter::EndOverlapFeet()
+void State_MainCharacter::EndOverlapFeet(AActor& OtherActor)
 {
 }
 

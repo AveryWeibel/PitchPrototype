@@ -84,6 +84,7 @@ protected:
 	//Input function dispatchers
 	virtual void SendInput(StateAction Action) = 0;
 	virtual void SendInput(StateAction Action, float Value) = 0;
+	virtual void SendInput(StateAction Action, AActor& OtherActor) = 0;
 
 	TMap<StateAction, NewFunction> StateAxisDelegates;
 

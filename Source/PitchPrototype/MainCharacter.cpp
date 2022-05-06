@@ -268,19 +268,20 @@ void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* Ot
 
 void AMainCharacter::HandleFeetHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Hit with %s"), *OtherActor->GetName())
+	//characterStateMachine->SendInput(StateAction::BeginOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleFeetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(Log171General, Log, TEXT("Began Overlap with %s"), *OtherActor->GetName())
-		characterStateMachine->SendInput(StateAction::BeginOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Began Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::BeginOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleFeetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
-		characterStateMachine->SendInput(StateAction::EndOverlapFeet);
+	//UE_LOG(Log171General, Log, TEXT("Stopped Overlap with %s"), *OtherActor->GetName())
+		characterStateMachine->SendInput(StateAction::EndOverlapFeet, *OtherActor);
 }
 
 void AMainCharacter::HandleAIBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

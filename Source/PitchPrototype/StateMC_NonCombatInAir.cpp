@@ -5,6 +5,8 @@
 #include "MainCharacter.h"
 #include "CustomDefines.h"
 
+DEFINE_LOG_CATEGORY(Log171InAir);
+
 StateMC_NonCombatInAir::StateMC_NonCombatInAir(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	stateName = TidesStateName::NonCombatInAir;
@@ -16,7 +18,7 @@ StateMC_NonCombatInAir::~StateMC_NonCombatInAir()
 
 void StateMC_NonCombatInAir::Start()
 {
-	UE_LOG(LogTemp, Log, TEXT("Enter State NonCombatInAir"));
+	UE_LOG(Log171InAir, Log, TEXT("Enter State NonCombatInAir"));
 	gravityAccumulation = 0;
 	JumpDirMultiplierAlpha = 0;
 
@@ -52,7 +54,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	*movementVector = FVector::ZeroVector;
 }
 
-void StateMC_NonCombatInAir::BeginOverlapFeet()
+void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 {
 	print("Hit Feets");
 
