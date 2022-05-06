@@ -28,6 +28,8 @@ void StateMC_NonCombatInAir::Start()
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
+
+	InAirStartHeight = mainCharacter->feetCollider->GetComponentLocation().Z;
 }
 
 void StateMC_NonCombatInAir::Execute(float DeltaTime)
@@ -66,7 +68,23 @@ void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 
 	if(!OtherActor.Tags.Contains("Ocean"))
 	{
-		RequestStateChange(TidesStateName::NonCombatMove);
+		const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->feetCollider->GetComponentLocation().Z);
+
+		if(FallDist > mainCharacter->FallDamageDistThreshold)
+		{
+			const int DamageDist = FallDist - mainCharacter->FallDamageDistThreshold;
+			mainCharacter->takeDamage( (DamageDist / 100) * mainCharacter->DamagePerHundredUnits);
+			if(mainCharacter->playerHealth > 0)
+			{
+				RequestStateChange(TidesStateName::NonCombatMove);
+			}
+		}
+		else
+		{
+			RequestStateChange(TidesStateName::NonCombatMove);
+		}
+		
+		UE_LOG(Log171InAir, Log, TEXT("Fall height: %f"), FallDist);
 	}
 }
 
@@ -108,6 +126,12 @@ void StateMC_NonCombatInAir::EnterWater()
 {
 	State_MainCharacter::EnterWater();
 	RequestStateChange(TidesStateName::InWater);
+}
+
+void StateMC_NonCombatInAir::Die()
+{
+	State_MainCharacter::Die();
+	RequestStateChange(TidesStateName::Dead);
 }
 
 void StateMC_NonCombatInAir::LookUpRate(float Value)
