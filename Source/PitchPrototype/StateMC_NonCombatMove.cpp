@@ -81,7 +81,7 @@ void StateMC_NonCombatMove::MoveForward(float Value)
 	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * (sprinting ? mainCharacter->SprintMultiplier : 1));
 	*movementVector += FVector(direction.X, direction.Y, 0);
 	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
 }
@@ -95,7 +95,7 @@ void StateMC_NonCombatMove::MoveRight(float Value)
 	FVector direction = mainCharacter->cameraBoom->GetRightVector();
 	direction.Z = 0;
 	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
+	direction *= (Value * mainCharacter->accelerationForce * (sprinting ? mainCharacter->SprintMultiplier : 1));
 	*movementVector += FVector(direction.X, direction.Y, 0);
 }
 
@@ -125,6 +125,13 @@ void StateMC_NonCombatMove::LockOn()
 		RequestStateChange(TidesStateName::LockedOnMove);
 		UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *mainCharacter->lockedObject->GetName());
 	}
+}
+
+void StateMC_NonCombatMove::ToggleSprint()
+{
+	State_MainCharacter::ToggleSprint();
+	sprinting = !sprinting;
+	UE_LOG(Log171NonCombatMove, Log, TEXT("Sprinting: %s"), sprinting ? TEXT("True") : TEXT("False"));
 }
 
 void StateMC_NonCombatMove::Die()

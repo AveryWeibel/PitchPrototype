@@ -238,6 +238,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::LockOn:
 		LockOn();
 		break;
+	case StateAction::ToggleSprint:
+		ToggleSprint();
+		break;
 	case StateAction::DoAttack:
 		DoAttack();
 		break;
@@ -347,6 +350,10 @@ void State_MainCharacter::Jump()
 }
 
 void State_MainCharacter::LockOn()
+{
+}
+
+void State_MainCharacter::ToggleSprint()
 {
 }
 

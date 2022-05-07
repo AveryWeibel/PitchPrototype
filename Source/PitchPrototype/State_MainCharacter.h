@@ -102,6 +102,7 @@ protected:
 	virtual void AnimHitboxInactive();
 	virtual void Jump();
 	virtual void LockOn();
+	virtual void ToggleSprint();
 	virtual void DoAttack();
 	virtual void Parry();
 	virtual void Dodge();

@@ -46,6 +46,7 @@ enum StateAction
 	AnimEnd,
 	TakeHit,
 	Die,
+	ToggleSprint,
 	Interact,
 	AnimHitboxActive,
 	AnimHitboxInactive,
