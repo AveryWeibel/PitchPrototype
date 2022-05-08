@@ -46,10 +46,10 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	if (movementVector->Size() > 0)
 	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  movementVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
+		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  HorizontalDirVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
 	}
 
-	*movementVector = FVector::ZeroVector;
+	//*movementVector = FVector::ZeroVector;
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	//UE_LOG(Log171InWater, Log, TEXT("VelocityF: %f"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size());
 	//UE_LOG(Log171InWater, Log, TEXT("VelocityB: %f"), mainCharacter->bodyCollider->GetPhysicsLinearVelocity().Size());

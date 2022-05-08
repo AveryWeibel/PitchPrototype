@@ -24,8 +24,7 @@ void StateMC_NonCombatJump::Start()
 	//Initial jump functionality
 	JumpStartedTime = mainCharacter->GetWorld()->TimeSeconds;
 	upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-	*movementVector = storedMovement;
-	*movementVector += FVector(0, 0, upwardsVelocityAccumulation*10);
+	VerticalVector +=  upwardsVelocityAccumulation*10;
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
@@ -41,7 +40,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
 	{
 		upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-		*movementVector += FVector(0, 0, upwardsVelocityAccumulation);
+		VerticalVector += upwardsVelocityAccumulation;
 	}
 	ApplyGravity();
 	
@@ -52,7 +51,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	MoveCameraUnLocked(DeltaTime);
 
 	//Change to inair state once we start falling
-	if (movementVector->Z <= 0) {
+	if (VerticalVector <= 0) {
 		gravityAccumulation = 0;
 		upwardsVelocityAccumulation = 0;
 		JumpElapsedTime = 0;
@@ -61,13 +60,9 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	}
 
 	//Rotate model towards the movement vector
-	if (movementVector->Size() > 0)
-	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  movementVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
-	}
-
+	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
-	*movementVector = FVector::ZeroVector;
 }
 
 void StateMC_NonCombatJump::Jump()
@@ -78,23 +73,13 @@ void StateMC_NonCombatJump::Jump()
 
 void StateMC_NonCombatJump::MoveForward(float Value)
 {
-
-	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->jumpDirectionalMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetForwardInput(Value);
 }
 
 void StateMC_NonCombatJump::MoveRight(float Value)
 {
 
-	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->cameraBoom->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->jumpDirectionalMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }
 
 void StateMC_NonCombatJump::TurnRate(float Value)
@@ -109,9 +94,9 @@ void StateMC_NonCombatJump::LookUpRate(float Value)
 
 void StateMC_NonCombatJump::ApplyGravity()
 {
-	if (FMath::Abs(movementVector->Z) < mainCharacter->maxFallingSpeed)
+	if (FMath::Abs(VerticalVector) < mainCharacter->maxFallingSpeed)
 	{
 		gravityAccumulation -= mainCharacter->risingGravityAmount;
-		(*movementVector).Z += gravityAccumulation;
+		VerticalVector += gravityAccumulation;
 	}
 }

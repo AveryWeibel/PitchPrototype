@@ -26,39 +26,22 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 {
 	//Update animation variables
 	mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
-	mainCharacter->Animator->SetControlDirection(FVector(movementVector->X, movementVector->Y, 0));
-
-	//UE_LOG(Log171General, Log, TEXT("Fwd: %f, Rht: %f"), FMath::Abs(moveFwd), FMath::Abs(moveRht));
-
-	//Move the character
-	if (mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size() <= mainCharacter->takeHitMaxSpeed) {
-		//FVector forceDirection(, , 0);
-		mainCharacter->feetCollider->AddForce(*movementVector);
-		//mainCharacter->AddActorWorldOffset(*movementVector / 500000);
-	}
+	mainCharacter->Animator->SetControlDirection(*HorizontalDirVector);
 	
-	//Lerp cameraBoom to rotate between player and target
-	//2D so the camera doesn't tilt with distance
+	//Move camera to look at target
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
 	dirToTarget.Z = 0;
-	//Lerp camera to face target
-	cameraRotationLerpTarget = (mainCharacter->lockedObject->GetActorLocation() - mainCharacter->mainCamera->GetComponentLocation()).Rotation();
-	mainCharacter->mainCamera->SetWorldRotation(FMath::Lerp(mainCharacter->mainCamera->GetComponentRotation(), cameraRotationLerpTarget, mainCharacter->cameraLerpAlpha * DeltaTime));
-
-	//Lerp cameraBoom to rotate between player and target
-	//2D so the camera doesn't tilt with distance
-	cameraBoomRotationLerpTarget = (dirToTarget).Rotation();
-	mainCharacter->cameraBoom->SetWorldRotation(FMath::Lerp(mainCharacter->cameraBoom->GetComponentRotation(), cameraBoomRotationLerpTarget, FMath::Clamp(mainCharacter->cameraLerpAlpha * 35 * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	
-
+	
+	MoveCameraLocked(DeltaTime, dirToTarget);
 	
 	//Rotate model towards the locked target
-	if (movementVector->Size() > 0) {
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), FMath::Clamp( 4 * DeltaTime, DeltaTime, 4.0f)));
-	}
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
+
+	//Move the character
+	MoveCharacter(DeltaTime);
 
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
-	*movementVector = FVector::ZeroVector;
 }
 
 void StateMC_LockedOnTakeHit::AnimEnd()
@@ -69,28 +52,10 @@ void StateMC_LockedOnTakeHit::AnimEnd()
 
 void StateMC_LockedOnTakeHit::MoveForward(float Value)
 {
-	//if(Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-
-	FVector direction = mainCharacter->mainCamera->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, 0);
-	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
+	GetForwardInput(Value);
 }
 
 void StateMC_LockedOnTakeHit::MoveRight(float Value)
 {
-
-	//if (Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-
-	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->mainCamera->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }

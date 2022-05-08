@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "State.h"
 #include "DrawDebugHelpers.h"
+#include "MainCharacter.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
 
@@ -36,15 +37,26 @@ protected:
 	UPROPERTY()
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	UPROPERTY()
+	FVector* HorizontalDirVector = new FVector(FVector::ZeroVector);
+	UPROPERTY()
+	float VerticalVector = 0;
+	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, bool slopeUpCheck = true, bool SlopeDownCheck = true);
+	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool slopeUpCheck = true, bool SlopeDownCheck = true);
+
+	UFUNCTION()
+	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
 	
 	//Move Inputs
 	FVector storedMovement;
+
+	//Move Input functions
+	void GetRightInput(float Value);
+	void GetForwardInput(float Value);
 	
 	//Movement variables
 	UPROPERTY()

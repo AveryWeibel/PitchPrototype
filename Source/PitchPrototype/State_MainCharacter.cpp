@@ -15,7 +15,7 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool slopeDownCheck)
+void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool slopeUpCheck, bool slopeDownCheck)
 {
 	//Spherecast down, check for drop height
 	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
@@ -33,7 +33,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool
 		//Validate StepDown
 		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
 		{
-			movementVector->Z = StepDown;
+			VerticalVector = StepDown;
 			StepDownThisFrame = true;
 		}
 		else
@@ -101,24 +101,64 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, bool slopeUpCheck, bool
 		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
 		// chestSweepResult.Normal.Z
 		// );
+		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
 	}
 
 	//Translate character
 	if(chestSweepHit && slopeUpCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
 	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X * .01, movementVector->Y * .01, movementVector->Z) * DeltaTime, false);
-	}
-	else
-	{
-		mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, movementVector->Z) * DeltaTime, false);
+		*HorizontalDirVector *= 0.1f;
 	}
 	
+	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);
+
+	mainCharacter->AddActorWorldOffset(*movementVector * DeltaTime, false);
 
 	//Update external velocity fields
-	storedMovement = *movementVector;
-	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (FVector(movementVector->X, movementVector->Y, 0 )* DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
+	//storedMovement = *movementVector;
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (*HorizontalDirVector * DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
 
+	*HorizontalDirVector = FVector::ZeroVector;
+	VerticalVector = 0;
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+}
+
+void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
+{
+	mainCharacter->Mesh->SetWorldRotation(
+		FMath::Lerp
+		(
+			mainCharacter->Mesh->GetComponentRotation(),
+			FRotator
+			(
+				mainCharacter->Mesh->GetComponentRotation().Pitch,
+				FaceDirection.Rotation().Yaw,
+				mainCharacter->Mesh->GetComponentRotation().Roll
+			),
+			FMath::Clamp
+			(
+				turningRate * DeltaTime,
+				DeltaTime,
+				1.0f
+			)
+		)
+	);
+}
+
+void State_MainCharacter::GetRightInput(float Value)
+{
+	FVector direction = mainCharacter->cameraBoom->GetRightVector();
+	direction.Z = 0;
+	direction *= (Value);
+	*HorizontalDirVector += FVector(direction.X, direction.Y, 0);
+}
+
+void State_MainCharacter::GetForwardInput(float Value)
+{
+	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
+	direction.Z = 0;
+	direction *= (Value);
+	*HorizontalDirVector += FVector(direction.X, direction.Y, 0);
 }
 
 void State_MainCharacter::AddCameraOrbitYaw(float Value)
