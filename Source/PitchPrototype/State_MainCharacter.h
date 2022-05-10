@@ -34,6 +34,7 @@ protected:
 	UPROPERTY()
 	AMainCharacter* mainCharacter;
 
+	//Movement variables
 	UPROPERTY()
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	UPROPERTY()
@@ -47,6 +48,14 @@ protected:
 	
 	UPROPERTY()
 	float VerticalVector = 0;
+
+
+	UPROPERTY()
+	FVector PositionLastFrame;
+	UPROPERTY()
+	float ActualSpeed = 0;
+	UPROPERTY()
+	
 	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;

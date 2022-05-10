@@ -28,12 +28,12 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 		&& slopeDownCheck)
 	{
 		//Calculate drop height this frame
-		float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius()).Z); //*10 to account for deltatime
+		float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius()).Z) * DeltaTime; //*10 to account for deltatime
 
 		//Validate StepDown
 		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
 		{
-			VerticalVector += StepDown * DeltaTime;
+			VerticalVector += StepDown;
 			StepDownThisFrame = true;
 		}
 		else
@@ -91,11 +91,14 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
 		// chestSweepResult.Normal.Z
 		// );
-		FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector) * DeltaTime;
+		FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector);
+		DirVector.Normalize();
+		//DirVector *= DeltaTime;
 		*HorizontalDirVector = FVector(DirVector.X, DirVector.Y, 0);
-		HorizontalDirVector->Normalize();
+		//HorizontalDirVector->Normalize();
 		*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
 		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
+		*HorizontalDirVector *= DeltaTime;
 	}
 
 	//Translate character
@@ -108,10 +111,18 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	mainCharacter->AddActorWorldOffset(*movementVector, false);
 
-	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nStickLen: %f\nHorizontal Vector: X: %f, Y: %f"), FVector(movementVector->X, movementVector->Y, 0).Size(), stickLength, HorizontalDirVector->X, HorizontalDirVector->Y);
+	//Speed measurements
+	const FVector DeltaVector = *HorizontalDirVector/DeltaTime;
+	ActualSpeed = FVector(DeltaVector.X, DeltaVector.Y, 0).Size();
+
+	//PositionLastFrame = mainCharacter->feetCollider->GetComponentLocation();
+
+	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nStickLen: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, stickLength, HorizontalDirVector->X, HorizontalDirVector->Y);
+	if(VerticalVector > 0.0f)
+	UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
 
 	//Update external velocity fields
-	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(movementVector->X, movementVector->Y, 0), FMath::Clamp(10.0f * DeltaTime, 0.0f, 1.0f));
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp(10.0f * DeltaTime, 0.0f, 1.0f));
 
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;

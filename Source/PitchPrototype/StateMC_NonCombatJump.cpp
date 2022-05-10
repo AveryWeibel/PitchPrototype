@@ -24,7 +24,7 @@ void StateMC_NonCombatJump::Start()
 	//Initial jump functionality
 	JumpStartedTime = mainCharacter->GetWorld()->TimeSeconds;
 	//upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-	//VerticalVector += upwardsVelocityAccumulation*20;
+	//VerticalVector += upwardsVelocityAccumulation;
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
@@ -42,18 +42,18 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 		upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
 		VerticalVector += upwardsVelocityAccumulation * DeltaTime;
 	}
-
 	//Change to inair state once we start falling
-	if (VerticalVector <= 0) {
+	else if (VerticalVector <= 0) {
 		gravityAccumulation = 0;
 		upwardsVelocityAccumulation = 0;
+		UE_LOG(Log171NonCombatJump, Log, TEXT("Jump time: %f"), JumpElapsedTime);
 		JumpElapsedTime = 0;
 		JumpStartedTime = 0;
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
 
-	ApplyGravity(DeltaTime);
-
+	//ApplyGravity(DeltaTime);
+	
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
 	
@@ -98,7 +98,7 @@ void StateMC_NonCombatJump::ApplyGravity(float DeltaTime)
 {
 	if (FMath::Abs(VerticalVector) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation -= mainCharacter->risingGravityAmount * DeltaTime;
+		gravityAccumulation -= mainCharacter->risingGravityAmount;
 		VerticalVector += gravityAccumulation * DeltaTime;
 	}
 }
