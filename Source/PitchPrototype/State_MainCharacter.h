@@ -38,6 +38,13 @@ protected:
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	UPROPERTY()
 	FVector* HorizontalDirVector = new FVector(FVector::ZeroVector);
+
+	UPROPERTY()
+	FVector2D RightDirectionVector = FVector2D(FVector::ZeroVector);
+
+	UPROPERTY()
+	FVector2D ForwardDirectionVector = FVector2D(FVector::ZeroVector);
+	
 	UPROPERTY()
 	float VerticalVector = 0;
 	UPROPERTY()
@@ -52,7 +59,7 @@ protected:
 	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
 	
 	//Move Inputs
-	FVector storedMovement;
+	FVector2D InputValues;
 
 	//Move Input functions
 	void GetRightInput(float Value);
@@ -69,6 +76,8 @@ protected:
 	FCollisionQueryParams groundTraceParams;
 	UPROPERTY()
 	bool StepDownThisFrame;
+	
+	float StoredDeltaTime;
 
 	UPROPERTY()
 	FVector PrevStepDirVector;

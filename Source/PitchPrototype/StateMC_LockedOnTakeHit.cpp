@@ -38,7 +38,7 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
 
 	//Move the character
-	MoveCharacter(DeltaTime);
+	MoveCharacter(DeltaTime, 0, false, false);
 
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));

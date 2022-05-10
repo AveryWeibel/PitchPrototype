@@ -37,40 +37,27 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//UE_LOG(LogTemp, Log, TEXT("Execute State InWater"));
 	//Setup moveVector	
 
-	//Apply moveVector
-	MoveCharacter(DeltaTime, true, false);
-
 	//Position the camera
 	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
-	if (movementVector->Size() > 0)
-	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  HorizontalDirVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
-	}
+	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	
+	//Apply moveVector
+	MoveCharacter(DeltaTime,   mainCharacter->WaterMovementMultiplier, true, true);
 
 	//*movementVector = FVector::ZeroVector;
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
-	//UE_LOG(Log171InWater, Log, TEXT("VelocityF: %f"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size());
-	//UE_LOG(Log171InWater, Log, TEXT("VelocityB: %f"), mainCharacter->bodyCollider->GetPhysicsLinearVelocity().Size());
 }
 
 void StateMC_InWater::MoveForward(float Value)
 {
-	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->WaterMovementMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetForwardInput(Value);
 }
 
 void StateMC_InWater::MoveRight(float Value)
 {
-	FVector direction = mainCharacter->cameraBoom->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->WaterMovementMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }
 
 void StateMC_InWater::TurnRate(float Value)

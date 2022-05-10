@@ -28,6 +28,8 @@ void StateMC_NonCombatMove::Start()
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
 	
+	sprinting = false;
+	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("Enter State NonCombatMove"));
 }
 
@@ -47,9 +49,14 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+
+	if(InputValues.Size() < 0.875f)
+	{
+		sprinting = false;
+	}
 	
 	//Move the character
-	MoveCharacter(DeltaTime);
+	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1));
 	
 	//Ensure collision does not rotate
 	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));

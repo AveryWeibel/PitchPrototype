@@ -40,14 +40,15 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	//ApplyGravity();
 	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
+	//Rotate model towards the movement vector
+	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	
 	//Move character
-	MoveCharacter(DeltaTime, true, false);
+	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, false);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
-
-	//Rotate model towards the movement vector
-	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	
 
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, mainCharacter->feetCollider->GetComponentRotation().Yaw, 0));
 }
@@ -84,13 +85,13 @@ void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 	}
 }
 
-void StateMC_NonCombatInAir::ApplyGravity()
+void StateMC_NonCombatInAir::ApplyGravity(float DeltaTime)
 {
 	//New comments
 	if (VerticalVector > -mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation -= mainCharacter->fallingGravityAmount;
-		VerticalVector += gravityAccumulation;
+		gravityAccumulation -= mainCharacter->fallingGravityAmount * DeltaTime;
+		VerticalVector += gravityAccumulation * DeltaTime;
 	}
 }
 

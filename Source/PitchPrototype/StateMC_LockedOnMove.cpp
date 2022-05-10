@@ -49,7 +49,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 		//Move the character
-		MoveCharacter(DeltaTime);
+		MoveCharacter(DeltaTime, mainCharacter->lockedMovementMultiplier, true, true);
 		
 		//Move the camera
 		if (IsValid(mainCharacter->lockedObject))
@@ -75,38 +75,18 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 	//Ensure collision does not rotate
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
-	*movementVector = FVector::ZeroVector;
 
 	SweepForInteractables();
 }
 
 void StateMC_LockedOnMove::MoveForward(float Value)
 {
-	//if(Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-
-	FVector direction = mainCharacter->mainCamera->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
-	
-	*movementVector += FVector(direction.X, direction.Y, 0);
-	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
+	GetForwardInput(Value);
 }
 
 void StateMC_LockedOnMove::MoveRight(float Value)
 {
-	//if (Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-
-	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->mainCamera->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->lockedMovementMultiplier);
-	
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }
 
 void StateMC_LockedOnMove::LockOn()

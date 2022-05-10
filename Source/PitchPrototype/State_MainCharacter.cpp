@@ -33,7 +33,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 		//Validate StepDown
 		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
 		{
-			VerticalVector = StepDown;
+			VerticalVector += StepDown * DeltaTime;
 			StepDownThisFrame = true;
 		}
 		else
@@ -44,10 +44,10 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 		//Debugging
 		if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
 		{
-			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
-				StepDown,
-				StepDownThisFrame ? TEXT("True") : TEXT("False")
-			);
+			// UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
+			// 	StepDown,
+			// 	StepDownThisFrame ? TEXT("True") : TEXT("False")
+			// );
 		}
 		
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
@@ -83,24 +83,18 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
 	}
-	
-
-	//mainCharacter->AddActorWorldOffset(FVector(0, 0, ) * DeltaTime, false);
-	//mainCharacter->AddActorWorldOffset(FVector(movementVector->X, movementVector->Y, 0) * DeltaTime, true, &movementSweepResult);
-
-	//Calculate step height this frame
-	//FVector PenetrationVectorToPoint = (movementSweepResult.Normal * (movementSweepResult.PenetrationDepth - FVector::Dist(movementSweepResult.ImpactPoint, movementSweepResult.TraceEnd)));
-	//FVector stepDirVector = movementSweepResult.TraceEnd - movementSweepResult.ImpactPoint;
-	//float stepHeightThisFrame = stepDirVector.Z;//PenetrationVectorToPoint.Z;
-	
-	 //float stepHeightThisFrame = (movementSweepResult.Normal * movementSweepResult.PenetrationDepth).Z;
 
 	//Debugging
-	if(movementVector->X != 0 || movementVector->Y != 0)
+	float stickLength = FMath::Sqrt((InputValues.X * InputValues.X) + (InputValues.Y * InputValues.Y));
+	if(InputValues.X != 0 || InputValues.Y != 0)
 	{
 		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
 		// chestSweepResult.Normal.Z
 		// );
+		FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector) * DeltaTime;
+		*HorizontalDirVector = FVector(DirVector.X, DirVector.Y, 0);
+		HorizontalDirVector->Normalize();
+		*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
 		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
 	}
 
@@ -110,21 +104,28 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 		*HorizontalDirVector *= 0.1f;
 	}
 	
-	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);
+	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
 
-	mainCharacter->AddActorWorldOffset(*movementVector * DeltaTime, false);
+	mainCharacter->AddActorWorldOffset(*movementVector, false);
+
+	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nStickLen: %f\nHorizontal Vector: X: %f, Y: %f"), FVector(movementVector->X, movementVector->Y, 0).Size(), stickLength, HorizontalDirVector->X, HorizontalDirVector->Y);
 
 	//Update external velocity fields
-	//storedMovement = *movementVector;
-	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, (*HorizontalDirVector * DeltaTime), FMath::Clamp(0.1f, DeltaTime, 1.0f));
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(movementVector->X, movementVector->Y, 0), FMath::Clamp(10.0f * DeltaTime, 0.0f, 1.0f));
 
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
+	
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
 {
+	if(FaceDirection.Size() == 0)
+	{
+		return;
+	}
+	
 	mainCharacter->Mesh->SetWorldRotation(
 		FMath::Lerp
 		(
@@ -150,7 +151,8 @@ void State_MainCharacter::GetRightInput(float Value)
 	FVector direction = mainCharacter->cameraBoom->GetRightVector();
 	direction.Z = 0;
 	direction *= (Value);
-	*HorizontalDirVector += FVector(direction.X, direction.Y, 0);
+	RightDirectionVector = FVector2D(direction.X, direction.Y);
+	InputValues.X = Value;
 }
 
 void State_MainCharacter::GetForwardInput(float Value)
@@ -158,7 +160,8 @@ void State_MainCharacter::GetForwardInput(float Value)
 	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
 	direction.Z = 0;
 	direction *= (Value);
-	*HorizontalDirVector += FVector(direction.X, direction.Y, 0);
+	ForwardDirectionVector = FVector2D(direction.X, direction.Y);
+	InputValues.Y = Value;
 }
 
 void State_MainCharacter::AddCameraOrbitYaw(float Value)

@@ -23,8 +23,8 @@ void StateMC_NonCombatJump::Start()
 	UE_LOG(Log171NonCombatJump, Log, TEXT("Enter State StateMC_NonCombatJump"));
 	//Initial jump functionality
 	JumpStartedTime = mainCharacter->GetWorld()->TimeSeconds;
-	upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-	VerticalVector +=  upwardsVelocityAccumulation*10;
+	//upwardsVelocityAccumulation += mainCharacter->jumpAccel;
+	//VerticalVector += upwardsVelocityAccumulation*20;
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
@@ -39,16 +39,9 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	//Setup moveVector
 	if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
 	{
-		upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-		VerticalVector += upwardsVelocityAccumulation;
+		upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
+		VerticalVector += upwardsVelocityAccumulation * DeltaTime;
 	}
-	ApplyGravity();
-	
-	//Apply moveVector
-	MoveCharacter(DeltaTime, true, false);
-
-	//Move camera
-	MoveCameraUnLocked(DeltaTime);
 
 	//Change to inair state once we start falling
 	if (VerticalVector <= 0) {
@@ -59,8 +52,17 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
 
+	ApplyGravity(DeltaTime);
+
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	
+	//Apply moveVector
+	MoveCharacter(DeltaTime, 1, true, false);
+
+	//Move camera
+	MoveCameraUnLocked(DeltaTime);
+	
 	
 	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
@@ -92,11 +94,11 @@ void StateMC_NonCombatJump::LookUpRate(float Value)
 	AddCameraOrbitPitch(Value);
 }
 
-void StateMC_NonCombatJump::ApplyGravity()
+void StateMC_NonCombatJump::ApplyGravity(float DeltaTime)
 {
 	if (FMath::Abs(VerticalVector) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation -= mainCharacter->risingGravityAmount;
-		VerticalVector += gravityAccumulation;
+		gravityAccumulation -= mainCharacter->risingGravityAmount * DeltaTime;
+		VerticalVector += gravityAccumulation * DeltaTime;
 	}
 }
