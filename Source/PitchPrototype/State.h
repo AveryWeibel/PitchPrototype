@@ -46,6 +46,7 @@ enum StateAction
 	AnimEnd,
 	TakeHit,
 	Die,
+	ToggleSprint,
 	Interact,
 	AnimHitboxActive,
 	AnimHitboxInactive,
@@ -90,6 +91,6 @@ protected:
 
 	TidesStateName stateName;
 
-private:
+protected:
 	StateMachine* parentStateMachine;
 };

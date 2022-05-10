@@ -73,6 +73,9 @@ public:
 		float accelerationForce;
 
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
+		float SprintMultiplier = 1.5f;
+	
+	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float maximumHorizontalVelocity;
 
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
@@ -216,6 +219,8 @@ protected:
 	void Jump();
 
 	void LockOn();
+
+	void ToggleSprint();
 
 	void Attack();
 

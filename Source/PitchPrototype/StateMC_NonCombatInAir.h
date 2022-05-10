@@ -31,7 +31,7 @@ protected:
 	virtual void Die() override;
 
 	//Internal functions
-	void ApplyGravity();
+	void ApplyGravity(float DeltaTime);
 
 	//Internal variables
 	float gravityAccumulation = 0;
