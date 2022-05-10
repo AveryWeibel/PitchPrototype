@@ -28,6 +28,8 @@ void StateMC_NonCombatMove::Start()
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
 	
+	sprinting = false;
+	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("Enter State NonCombatMove"));
 }
 
@@ -42,26 +44,23 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("Moving Up by %f [%f]"), mainCharacter->currentPhysicsLinearVelocity.Z, UGameplayStatics::GetRealTimeSeconds(mainCharacter->GetWorld()));
 	}
 
-	//Move the character
-	MoveCharacter(DeltaTime);
-
 	//Position the camera
 	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
-	if (movementVector->Size() > 0)
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
+
+	if(InputValues.Size() < 0.875f)
 	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  movementVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
+		sprinting = false;
 	}
-
-		//float turnDelta = 
-		
-		//UE_LOG(Log171General, Log, TEXT("MovementDirection X[%f], Y[%f], Z[%f]"), movementVector->X, movementVector->Y, movementVector->Z);
-
-
+	
+	//Move the character
+	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1));
+	
 	//Ensure collision does not rotate
 	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
-	*movementVector = FVector::ZeroVector;
+	//*movementVector = FVector::ZeroVector;
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	SweepForInteractables();
@@ -74,29 +73,12 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 void StateMC_NonCombatMove::MoveForward(float Value)
 {
-	//if(Value != 0)
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-
-	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, 0);
-	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
+	GetForwardInput(Value);
 }
 
 void StateMC_NonCombatMove::MoveRight(float Value)
 {
-	//if (Value != 0)
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-
-	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->cameraBoom->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }
 
 void StateMC_NonCombatMove::TurnRate(float Value)
@@ -125,6 +107,13 @@ void StateMC_NonCombatMove::LockOn()
 		RequestStateChange(TidesStateName::LockedOnMove);
 		UE_LOG(Log171NonCombatMove, Log, TEXT("Locked onto [%s]"), *mainCharacter->lockedObject->GetName());
 	}
+}
+
+void StateMC_NonCombatMove::ToggleSprint()
+{
+	State_MainCharacter::ToggleSprint();
+	sprinting = !sprinting;
+	UE_LOG(Log171NonCombatMove, Log, TEXT("Sprinting: %s"), sprinting ? TEXT("True") : TEXT("False"));
 }
 
 void StateMC_NonCombatMove::Die()
