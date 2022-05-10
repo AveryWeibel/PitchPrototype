@@ -91,6 +91,6 @@ protected:
 
 	TidesStateName stateName;
 
-private:
+protected:
 	StateMachine* parentStateMachine;
 };

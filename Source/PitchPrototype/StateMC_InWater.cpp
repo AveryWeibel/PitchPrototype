@@ -24,7 +24,7 @@ void StateMC_InWater::Start()
 	UE_LOG(Log171InWater, Log, TEXT("Enter State StateMC_InWater"));
 	mainCharacter->feetCollider->SetConstraintMode(EDOFMode::XYPlane);
 	mainCharacter->feetCollider->SetEnableGravity(false);
-	mainCharacter->feetCollider->SetSimulatePhysics(false);
+	//mainCharacter->feetCollider->SetSimulatePhysics(false);
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	if(mainCharacter)
 	{
@@ -44,10 +44,11 @@ void StateMC_InWater::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime,   mainCharacter->WaterMovementMultiplier, true, true);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, false);
 
 	//*movementVector = FVector::ZeroVector;
 	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	mainCharacter->bodyCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 }
 
 void StateMC_InWater::MoveForward(float Value)
