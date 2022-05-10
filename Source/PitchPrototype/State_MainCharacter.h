@@ -49,12 +49,9 @@ protected:
 	UPROPERTY()
 	float VerticalVector = 0;
 
-
-	UPROPERTY()
-	FVector PositionLastFrame;
+	
 	UPROPERTY()
 	float ActualSpeed = 0;
-	UPROPERTY()
 	
 	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);

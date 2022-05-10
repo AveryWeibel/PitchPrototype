@@ -41,7 +41,7 @@ void StateMC_InWater::Execute(float DeltaTime)
 	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
-	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
 	MoveCharacter(DeltaTime,   mainCharacter->WaterMovementMultiplier, true, true);

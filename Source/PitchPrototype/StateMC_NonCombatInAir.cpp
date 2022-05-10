@@ -41,7 +41,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
 	//Rotate model towards the movement vector
-	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Move character
 	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, false);

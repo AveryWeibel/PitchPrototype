@@ -55,7 +55,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	//ApplyGravity(DeltaTime);
 	
 	//Rotate model towards the movement vector
-	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
 	MoveCharacter(DeltaTime, 1, true, false);

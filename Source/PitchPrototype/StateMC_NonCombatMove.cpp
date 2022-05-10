@@ -48,7 +48,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
-	RotateCharacterModel(DeltaTime, *HorizontalDirVector, mainCharacter->modelTurningRate);
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 
 	if(InputValues.Size() < 0.875f)
 	{
