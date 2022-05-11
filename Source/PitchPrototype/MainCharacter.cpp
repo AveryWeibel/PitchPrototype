@@ -169,6 +169,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Parry", IE_Pressed, this, &AMainCharacter::Parry);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Interact);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::ToggleSprint);
 }
 
 void AMainCharacter::EnterWater()
@@ -224,6 +225,11 @@ void AMainCharacter::Jump()
 void AMainCharacter::LockOn()
 {
 	characterStateMachine->SendInput(StateAction::LockOn);
+}
+
+void AMainCharacter::ToggleSprint()
+{
+	characterStateMachine->SendInput(StateAction::ToggleSprint);
 }
 
 void AMainCharacter::Attack()

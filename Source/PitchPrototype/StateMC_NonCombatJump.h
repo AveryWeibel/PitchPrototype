@@ -30,7 +30,7 @@ protected:
 	//virtual void CollideFeet();
 
 	//Internal functions
-	void ApplyGravity();
+	void ApplyGravity(float DeltaTime);
 
 	//Internal variables
 	float gravityAccumulation = 0;
