@@ -65,7 +65,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	SweepForInteractables();
 	
-	if(!StepDownThisFrame)
+	if(!StepDownThisFrame && ActualSpeed > 0)
 	{
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}

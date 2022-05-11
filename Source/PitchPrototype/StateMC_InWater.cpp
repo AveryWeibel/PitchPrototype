@@ -24,8 +24,9 @@ void StateMC_InWater::Start()
 	UE_LOG(Log171InWater, Log, TEXT("Enter State StateMC_InWater"));
 	mainCharacter->feetCollider->SetConstraintMode(EDOFMode::XYPlane);
 	mainCharacter->feetCollider->SetEnableGravity(false);
-	//mainCharacter->feetCollider->SetSimulatePhysics(false);
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	mainCharacter->feetCollider->SetSimulatePhysics(false);
+	mainCharacter->feetCollider->SetAllPhysicsLinearVelocity(FVector(0, 0, 0));
+	mainCharacter->feetCollider->SetAllPhysicsAngularVelocityInDegrees(FVector(0,0,0));
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
@@ -34,7 +35,9 @@ void StateMC_InWater::Start()
 
 void StateMC_InWater::Execute(float DeltaTime)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Execute State InWater"));
+	mainCharacter->feetCollider->SetAllPhysicsLinearVelocity(FVector(0, 0, 0));
+	mainCharacter->feetCollider->SetAllPhysicsAngularVelocityInDegrees(FVector(0,0,0));
+	UE_LOG(Log171InWater, Log, TEXT("Physics Linear Vel: %f"), mainCharacter->feetCollider->GetPhysicsAngularVelocityInDegrees().Size());
 	//Setup moveVector	
 
 	//Position the camera
@@ -47,8 +50,7 @@ void StateMC_InWater::Execute(float DeltaTime)
 	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, false);
 
 	//*movementVector = FVector::ZeroVector;
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
-	mainCharacter->bodyCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	//SetPhysicsLinearVelocity(FVector(0, 0, 0));
 }
 
 void StateMC_InWater::MoveForward(float Value)
@@ -96,9 +98,10 @@ void StateMC_InWater::Die()
 
 void StateMC_InWater::ExitWater()
 {
-	// State_MainCharacter::ExitWater();
-	// mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
-	// mainCharacter->feetCollider->SetEnableGravity(true);
-	// RequestStateChange(TidesStateName::NonCombatMove);
+	State_MainCharacter::ExitWater();
+	mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
+	mainCharacter->feetCollider->SetEnableGravity(true);
+	mainCharacter->feetCollider->SetSimulatePhysics(true);
+	RequestStateChange(TidesStateName::NonCombatMove);
 }
 
