@@ -56,7 +56,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	}
 	
 	//Move the character
-	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1));
+	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1), true, mainCharacter->fallingGravityAmount);
 	
 	//Ensure collision does not rotate
 	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
@@ -64,7 +64,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 
 	SweepForInteractables();
 	
-	if(!StepDownThisFrame && ActualSpeed > 0)
+	if(!IsGrounded)
 	{
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
@@ -123,10 +123,7 @@ void StateMC_NonCombatMove::Die()
 
 void StateMC_NonCombatMove::BeginOverlapFeet(AActor& OtherActor)
 {
-	if(!OtherActor.Tags.Contains("Ocean"))
-	{
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("Begin overlap feet"));
-	}
+	
 }
 
 void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
@@ -134,7 +131,7 @@ void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
 	if (!OtherActor.Tags.Contains("Ocean"))
 	{
 		//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
-		if (!StepDownThisFrame)
+		if (!IsGrounded)
 		{
 			RequestStateChange(TidesStateName::NonCombatInAir);
 		}

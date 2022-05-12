@@ -39,10 +39,15 @@ void StateMC_InWater::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, false);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, 0);
 
 	//*movementVector = FVector::ZeroVector;
 	//SetPhysicsLinearVelocity(FVector(0, 0, 0));
+
+	if(IsGrounded)
+	{
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
 }
 
 void StateMC_InWater::MoveForward(float Value)
@@ -87,6 +92,5 @@ void StateMC_InWater::Die()
 void StateMC_InWater::ExitWater()
 {
 	State_MainCharacter::ExitWater();
-	RequestStateChange(TidesStateName::NonCombatMove);
 }
 

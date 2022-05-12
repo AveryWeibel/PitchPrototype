@@ -38,7 +38,7 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
 
 	//Move the character
-	MoveCharacter(DeltaTime, 0, false, false);
+	MoveCharacter(DeltaTime, 0, false, mainCharacter->fallingGravityAmount);
 	
 }
 

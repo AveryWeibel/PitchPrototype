@@ -15,15 +15,22 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool slopeUpCheck, bool slopeDownCheck)
+void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundCheck, float GravityAmount)
 {
 
+	//Remove physics forces
+	mainCharacter->bodyCollider->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+	mainCharacter->bodyCollider->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+	
 	//Sets HorizontalVector
-	CalculateVelocityHorizontal(DeltaTime, MovementModifier, slopeUpCheck);
+	CalculateVelocityHorizontal(DeltaTime, MovementModifier);
 
 	//Vertical must be checked after horizontal
 	//Sets VerticalVector
-	CalculateVelocityVertical(DeltaTime, slopeDownCheck);
+	CalculateVerticalPosition(DeltaTime, GroundCheck);
+
+	//Apply Gravity
+	ApplyGravity(GravityAmount);
 	
 	//Translate character
 	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
@@ -51,58 +58,72 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
-void State_MainCharacter::CalculateVelocityVertical(float DeltaTime, bool slopeDownCheck)
+void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundCheck)
 {
+	
 	//Spherecast down, check for drop height
-	if(mainCharacter->GetWorld()->SweepSingleByChannel(
-		groundTraceResult,
-		mainCharacter->feetCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 1000000)),
-		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
-		ECollisionChannel::ECC_WorldStatic,
-		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-		groundTraceParams)
-		&& slopeDownCheck)
+	FVector GroundTraceVerticalOffset = FVector(0, 0, mainCharacter->StepUpHeight);
+	FCollisionShape GroundTraceShape = FCollisionShape::MakeSphere(mainCharacter->bodyCollider->GetScaledCapsuleRadius()/4);
+	FVector GroundTraceEndLocation = mainCharacter->bodyCollider->GetComponentLocation() - GroundTraceVerticalOffset;
+	
+	if(
+		mainCharacter->GetWorld()->SweepSingleByChannel(
+			groundTraceResult,
+			mainCharacter->bodyCollider->GetComponentLocation(),
+			GroundTraceEndLocation,
+			mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
+			ECollisionChannel::ECC_WorldStatic,
+			GroundTraceShape,
+			groundTraceParams
+		)
+		&& GroundCheck
+	)
 	{
+		//parentStateMachine->SendInput(StateAction::OverlapFeet);
+		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
+		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
+		IsGrounded = true;
+		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
 		//Calculate drop height this frame
-		float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + FVector(0, 0, mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z) * 10 * DeltaTime; //*10 to account for deltatime
+		//float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + FVector(0, 0, mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z) * 10 * DeltaTime; //*10 to account for deltatime
 
 		//Validate StepDown
-		if (HorizontalDirVector->Size() > 0 && StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
-		{
-			VerticalVector += StepDown;
-			StepDownThisFrame = true;
-		}
-		else
-		{
-			StepDownThisFrame = false;
-		}
+		// if (HorizontalDirVector->Size() > 0 && StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
+		// {
+		// 	VerticalVector += StepDown;
+		// 	StepDownThisFrame = true;
+		// }
+		// else
+		// {
+		// 	StepDownThisFrame = false;
+		// }
 
 		//Debugging
-		if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
-		{
-			UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
-				StepDown,
-				StepDownThisFrame ? TEXT("True") : TEXT("False")
-			);
-		}
+		// if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
+		// {
+		// 	UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
+		// 		StepDown,
+		// 		StepDownThisFrame ? TEXT("True") : TEXT("False")
+		// 	);
+		// }
 	}
 	else
 	{
-		StepDownThisFrame = false;
+		DrawDebugSphere(mainCharacter->GetWorld(), GroundTraceEndLocation, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
+		IsGrounded = false;
 	}
 
-	if(StepDownThisFrame && slopeDownCheck)
-	{
-		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
-	}
-	else
-	{
-		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
-	}
+	// if(StepDownThisFrame && slopeDownCheck)
+	// {
+	// 	DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
+	// }
+	// else
+	// {
+	// 	DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
+	// }
 }
 
-void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool slopeUpCheck)
+void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier)
 {
 	float stickLength = FMath::Sqrt((InputValues.X * InputValues.X) + (InputValues.Y * InputValues.Y));
 	FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector);
@@ -121,27 +142,27 @@ void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float Mov
 	}
 
 	//Spherecast forward check for slope
-	bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
-		chestSweepResult,
-		mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight),
-		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(DirVector.X, DirVector.Y, 0) * mainCharacter->feetCollider->GetScaledCapsuleRadius())),
-		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
-		ECC_WorldStatic,
-		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-		groundTraceParams
-	);
+	// bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
+	// 	chestSweepResult,
+	// 	mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight),
+	// 	(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(DirVector.X, DirVector.Y, 0) * mainCharacter->feetCollider->GetScaledCapsuleRadius())),
+	// 	mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+	// 	ECC_WorldStatic,
+	// 	FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+	// 	groundTraceParams
+	// );
 
-	HitWall = false;
-	if (chestSweepHit && slopeUpCheck)
-	{
-		//Debugging
-		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Green, false, 0.1f);
-		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
-
-		//Reverse movement if moving into wall
-		*HorizontalDirVector *= 0.0f;
-		HitWall = true;
-	}
+	// HitWall = false;
+	// if (chestSweepHit && slopeUpCheck)
+	// {
+	// 	//Debugging
+	// 	DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Green, false, 0.1f);
+	// 	UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+	//
+	// 	//Reverse movement if moving into wall
+	// 	*HorizontalDirVector *= 0.0f;
+	// 	HitWall = true;
+	// }
 }
 
 void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
@@ -169,6 +190,11 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 			)
 		)
 	);
+}
+
+void State_MainCharacter::ApplyGravity(float GravityAmount)
+{
+	VerticalVector += GravityAmount;
 }
 
 void State_MainCharacter::GetRightInput(float Value)
@@ -374,7 +400,7 @@ void State_MainCharacter::SendInput(StateAction Action, float Value)
 void State_MainCharacter::SendInput(StateAction Action, AActor& OtherActor)
 {
 	switch (Action) {
-	case StateAction::BeginOverlapFeet:
+	case StateAction::OverlapFeet:
 		BeginOverlapFeet(OtherActor);
 		break;
 	case StateAction::EndOverlapFeet:

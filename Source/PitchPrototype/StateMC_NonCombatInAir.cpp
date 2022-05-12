@@ -44,12 +44,15 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Move character
-	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, false);
+	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, mainCharacter->fallingGravityAmount);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
 	
-	
+	if(IsGrounded)
+	{
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
 }
 
 void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
