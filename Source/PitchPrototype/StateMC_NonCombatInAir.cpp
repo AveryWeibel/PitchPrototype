@@ -42,58 +42,36 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
+
+	if(FMath::Abs(gravityAccumulation) < mainCharacter->maxFallingSpeed)
+	{
+		gravityAccumulation += mainCharacter->fallingGravityAmount/36;
+	}
 	
 	//Move character
-	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, mainCharacter->fallingGravityAmount);
+	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, gravityAccumulation);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
 	
 	if(IsGrounded)
 	{
-		RequestStateChange(TidesStateName::NonCombatMove);
+		//If survived fall damage
+		if(ApplyFallDamage())
+		{
+			gravityAccumulation = 0;
+			RequestStateChange(TidesStateName::NonCombatMove);
+		}
+		//Else the damage will take us to the death state
 	}
 }
 
 void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 {
-	print("Hit Feets");
 
 	//Zero out vertical actual velocity and vertical input velocity
-	gravityAccumulation = 0;
-	JumpDirMultiplierAlpha = 0;
-	//movementVector->Z = 0;
 
-	if(!OtherActor.Tags.Contains("Ocean"))
-	{
-		const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->bodyCollider->GetComponentLocation().Z);
 
-		if(FallDist > mainCharacter->FallDamageDistThreshold)
-		{
-			const int DamageDist = FallDist - mainCharacter->FallDamageDistThreshold;
-			mainCharacter->takeDamage( (DamageDist / 100) * mainCharacter->DamagePerHundredUnits);
-			if(mainCharacter->playerHealth > 0)
-			{
-				RequestStateChange(TidesStateName::NonCombatMove);
-			}
-		}
-		else
-		{
-			RequestStateChange(TidesStateName::NonCombatMove);
-		}
-		
-		UE_LOG(Log171InAir, Log, TEXT("Fall height: %f"), FallDist);
-	}
-}
-
-void StateMC_NonCombatInAir::ApplyGravity(float DeltaTime)
-{
-	//New comments
-	if (VerticalVector > -mainCharacter->maxFallingSpeed)
-	{
-		gravityAccumulation -= mainCharacter->fallingGravityAmount * DeltaTime;
-		VerticalVector += gravityAccumulation * DeltaTime;
-	}
 }
 
 void StateMC_NonCombatInAir::MoveForward(float Value)
@@ -114,13 +92,33 @@ void StateMC_NonCombatInAir::TurnRate(float Value)
 void StateMC_NonCombatInAir::EnterWater()
 {
 	State_MainCharacter::EnterWater();
+	gravityAccumulation = 0;
 	RequestStateChange(TidesStateName::InWater);
 }
 
 void StateMC_NonCombatInAir::Die()
 {
 	State_MainCharacter::Die();
+	gravityAccumulation = 0;
 	RequestStateChange(TidesStateName::Dead);
+}
+
+bool StateMC_NonCombatInAir::ApplyFallDamage()
+{
+	const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->bodyCollider->GetComponentLocation().Z);
+
+	if(FallDist > mainCharacter->FallDamageDistThreshold)
+	{
+		const int DamageDist = FallDist - mainCharacter->FallDamageDistThreshold;
+		mainCharacter->takeDamage( (DamageDist / 100) * mainCharacter->DamagePerHundredUnits);
+		if(mainCharacter->playerHealth <= 0)
+		{
+			return false;
+		}
+	}
+
+	return true;
+	UE_LOG(Log171InAir, Log, TEXT("Fall height: %f"), FallDist);
 }
 
 void StateMC_NonCombatInAir::LookUpRate(float Value)
