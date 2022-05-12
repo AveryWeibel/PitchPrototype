@@ -33,7 +33,4 @@ protected:
 	//Internal variables
 	float DodgeStartedTime;
 	float DodgeElapsedTime;
-	float DodgeDamping;
-	FVector DodgeMoveVelocity;
-	FVector DodgeDirection;
 };

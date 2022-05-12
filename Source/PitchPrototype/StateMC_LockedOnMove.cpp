@@ -39,7 +39,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		//Update animation variables
 		mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
 
-		mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), *HorizontalDirVector, 0.2f) );
+		mainCharacter->Animator->SetControlDirection(FVector(InputValues.Y, InputValues.X, 0));
 
 		if(mainCharacter->Animator->GetParryAlpha() >= .95)
 		{
@@ -49,7 +49,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 		//Move the character
-		MoveCharacter(DeltaTime, mainCharacter->lockedMovementMultiplier, true, true);
+		MoveCharacter(DeltaTime, mainCharacter->lockedMovementMultiplier, true, mainCharacter->fallingGravityAmount, true);
 		
 		//Move the camera
 		if (IsValid(mainCharacter->lockedObject))
@@ -72,9 +72,6 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 	//Rotate model towards the locked target
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
-
-	//Ensure collision does not rotate
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 
 	SweepForInteractables();
 }
@@ -157,6 +154,7 @@ void StateMC_LockedOnMove::Parry()
 			if(AI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedObject) < mainCharacter->parryDistance)
 			{
 				AI->RecieveParry();
+				mainCharacter->Animator->ParrySound();
 			}
 		}
 	}
@@ -167,7 +165,10 @@ void StateMC_LockedOnMove::Parry()
 void StateMC_LockedOnMove::Dodge()
 {
 	State_MainCharacter::Dodge();
-	RequestStateChange(TidesStateName::LockedOnDodging);
+	if(DirVector.Size() > 0)
+	{
+		RequestStateChange(TidesStateName::LockedOnDodging);
+	}
 }
 
 void StateMC_LockedOnMove::Interact()

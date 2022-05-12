@@ -22,19 +22,18 @@ StateMC_InWater::~StateMC_InWater()
 void StateMC_InWater::Start()
 {
 	UE_LOG(Log171InWater, Log, TEXT("Enter State StateMC_InWater"));
-	mainCharacter->feetCollider->SetConstraintMode(EDOFMode::XYPlane);
-	mainCharacter->feetCollider->SetEnableGravity(false);
-	//mainCharacter->feetCollider->SetSimulatePhysics(false);
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 	}
+	StoredStepHeight = mainCharacter->StepUpHeight;
+	mainCharacter->StepUpHeight -= 10;
+
+	TargetFloatHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
 }
 
 void StateMC_InWater::Execute(float DeltaTime)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Execute State InWater"));
 	//Setup moveVector	
 
 	//Position the camera
@@ -43,12 +42,18 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
-	//Apply moveVector
-	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, false);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, BouyantGravity, true);
 
+	//Apply moveVector
+	BouyantGravity = TargetFloatHeight - mainCharacter->bodyCollider->GetComponentLocation().Z;
 	//*movementVector = FVector::ZeroVector;
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
-	mainCharacter->bodyCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
+	//SetPhysicsLinearVelocity(FVector(0, 0, 0));
+
+	if(IsGrounded)
+	{
+		mainCharacter->StepUpHeight = StoredStepHeight;
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
 }
 
 void StateMC_InWater::MoveForward(float Value)
@@ -80,9 +85,7 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 	{
 		State_MainCharacter::BeginOverlapFeet( OtherActor);
 		UE_LOG(Log171InWater, Log, TEXT("Enter Landscape from Water"));
-		mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
-		mainCharacter->feetCollider->SetEnableGravity(true);
-		mainCharacter->feetCollider->SetSimulatePhysics(true);
+		mainCharacter->StepUpHeight = StoredStepHeight;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
@@ -90,15 +93,12 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 void StateMC_InWater::Die()
 {
 	State_MainCharacter::Die();
-	mainCharacter->feetCollider->SetSimulatePhysics(false);
+	mainCharacter->StepUpHeight = StoredStepHeight;
 	RequestStateChange(TidesStateName::Dead);
 }
 
 void StateMC_InWater::ExitWater()
 {
-	// State_MainCharacter::ExitWater();
-	// mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
-	// mainCharacter->feetCollider->SetEnableGravity(true);
-	// RequestStateChange(TidesStateName::NonCombatMove);
+	State_MainCharacter::ExitWater();
 }
 

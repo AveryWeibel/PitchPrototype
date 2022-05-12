@@ -2,6 +2,8 @@
 
 
 #include "State_MainCharacter.h"
+
+#include "CustomDefines.h"
 #include "MainCharacter.h"
 
 DEFINE_LOG_CATEGORY(Log171MainCharState);
@@ -15,98 +17,23 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool slopeUpCheck, bool slopeDownCheck)
-{
-	//Spherecast down, check for drop height
-	if(mainCharacter->GetWorld()->SweepSingleByChannel(groundTraceResult,
-		mainCharacter->feetCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() - FVector(0, 0, 1000000)),
-		mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
-		ECollisionChannel::ECC_WorldStatic,
-		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
-		groundTraceParams)
-		&& slopeDownCheck)
-	{
-		//Calculate drop height this frame
-		float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + mainCharacter->feetCollider->GetScaledCapsuleRadius()).Z) * DeltaTime; //*10 to account for deltatime
+void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundSnap, float GravityAmount, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection) {
 
-		//Validate StepDown
-		if (StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
-		{
-			VerticalVector += StepDown;
-			StepDownThisFrame = true;
-		}
-		else
-		{
-			StepDownThisFrame = false;
-		}
-
-		//Debugging
-		if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
-		{
-			// UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
-			// 	StepDown,
-			// 	StepDownThisFrame ? TEXT("True") : TEXT("False")
-			// );
-		}
-		
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), FVector::DotProduct(groundTraceResult.Normal, FVector::ZAxisVector));
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("Normal Dot { %s }: %f"), *groundTraceResult.Actor->GetName(), movementVector->Z);
-	}
-	else
-	{
-		StepDownThisFrame = false;
-	}
-
-	//Spherecast forward check for slope
-	bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
-		chestSweepResult,
-		mainCharacter->bodyCollider->GetComponentLocation(),
-		(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(movementVector->X, movementVector->Y, 0) * 6 * DeltaTime)),
-		mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
-		ECC_WorldStatic,
-		FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()/2),
-		groundTraceParams
-	);
+	//Remove physics forces
+	mainCharacter->bodyCollider->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
+	mainCharacter->bodyCollider->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 	
-	if (chestSweepHit && slopeUpCheck)
-	{
-		DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius()/2, 20, FColor::Green, false, 0.1f);
-		UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
-	}
+	//Sets HorizontalVector
+	CalculateVelocityHorizontal(DeltaTime, MovementModifier, UseStickMagnitudeForSpeed, OverrideDirection);
 
-	if(StepDownThisFrame && slopeDownCheck)
-	{
-		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
-	}
-	else
-	{
-		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
-	}
+	//Vertical must be checked after horizontal
+	//Sets VerticalVector
+	CalculateVerticalPosition(DeltaTime, GroundSnap);
 
-	//Debugging
-	float stickLength = FMath::Sqrt((InputValues.X * InputValues.X) + (InputValues.Y * InputValues.Y));
-	if(InputValues.X != 0 || InputValues.Y != 0)
-	{
-		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
-		// chestSweepResult.Normal.Z
-		// );
-		FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector);
-		DirVector.Normalize();
-		//DirVector *= DeltaTime;
-		*HorizontalDirVector = FVector(DirVector.X, DirVector.Y, 0);
-		//HorizontalDirVector->Normalize();
-		*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
-		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
-		*HorizontalDirVector *= DeltaTime;
-	}
-
+	//Apply Gravity
+	ApplyGravity(GravityAmount, DeltaTime);
+	
 	//Translate character
-	if(chestSweepHit && slopeUpCheck/*&& PrevStepDirVector.Z <= mainCharacter->StepUpHeight && stepHeightThisFrame <= mainCharacter->StepUpHeight*/)
-	{
-		*HorizontalDirVector *= 0.1f;
-	}
-	
 	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
 
 	mainCharacter->AddActorWorldOffset(*movementVector, false);
@@ -117,17 +44,121 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//PositionLastFrame = mainCharacter->feetCollider->GetComponentLocation();
 
-	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nStickLen: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, stickLength, HorizontalDirVector->X, HorizontalDirVector->Y);
+	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
 	if(VerticalVector > 0.0f)
-	UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
+	{
+		//UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
+	}
 
 	//Update external velocity fields
-	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp(10.0f * DeltaTime, 0.0f, 1.0f));
+	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp( HitWall ? 0.85f : 8.0f * DeltaTime, 0.0f, 1.0f));
 
+	//UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	//UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
+	
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
 	
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+	mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
+}
+
+void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundSnap)
+{
+	FVector GroundTraceVerticalOffset = FVector(0, 0, mainCharacter->StepUpHeight);
+	FCollisionShape GroundTraceShape = FCollisionShape::MakeSphere(mainCharacter->bodyCollider->GetScaledCapsuleRadius()/4);
+
+	//Perform ground check
+	const FVector GroundTraceEndLocation = mainCharacter->bodyCollider->GetComponentLocation() - GroundTraceVerticalOffset;
+	if(
+		mainCharacter->GetWorld()->SweepSingleByChannel(
+			groundTraceResult,
+			mainCharacter->bodyCollider->GetComponentLocation(),
+			GroundTraceEndLocation,
+			mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
+			ECollisionChannel::ECC_WorldStatic,
+			GroundTraceShape,
+			groundTraceParams
+		)
+	)
+	{
+		//parentStateMachine->SendInput(StateAction::OverlapFeet);
+		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
+		IsGrounded = true;
+		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
+	}
+	else
+	{
+		DrawDebugSphere(mainCharacter->GetWorld(), GroundTraceEndLocation, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
+		IsGrounded = false;
+	}
+	UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
+
+	//Snap to ground if found
+	if(GroundSnap && IsGrounded)
+	{
+		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
+		UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	}
+}
+
+void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection)
+{
+	float stickLength = FMath::Sqrt((InputValues.X * InputValues.X) + (InputValues.Y * InputValues.Y));
+	
+	if (OverrideDirection != FVector2D::ZeroVector)
+	{
+		DirVector = OverrideDirection;
+	}
+	else
+	{
+		DirVector = (RightDirectionVector + ForwardDirectionVector);
+	}
+	
+	if(InputValues.X != 0 || InputValues.Y != 0)
+	{
+		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
+		// chestSweepResult.Normal.Z
+		// );;
+		DirVector.Normalize();
+		//DirVector *= DeltaTime;
+		*HorizontalDirVector = FVector(DirVector.X, DirVector.Y, 0);
+		//HorizontalDirVector->Normalize();
+		if(UseStickMagnitudeForSpeed)
+		{
+			*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
+		}
+		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
+		*HorizontalDirVector *= DeltaTime;
+	}
+
+	//Spherecast forward check for slope
+	// bool chestSweepHit = mainCharacter->GetWorld()->SweepSingleByChannel(
+	// 	chestSweepResult,
+	// 	mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight),
+	// 	(mainCharacter->feetCollider->GetComponentLocation() + FVector(0, 0, mainCharacter->StepUpHeight) + (FVector(DirVector.X, DirVector.Y, 0) * mainCharacter->feetCollider->GetScaledCapsuleRadius())),
+	// 	mainCharacter->feetCollider->GetComponentRotation().Quaternion(),
+	// 	ECC_WorldStatic,
+	// 	FCollisionShape::MakeSphere(mainCharacter->feetCollider->GetScaledCapsuleRadius()),
+	// 	groundTraceParams
+	// );
+
+	// HitWall = false;
+	// if (chestSweepHit && slopeUpCheck)
+	// {
+	// 	//Debugging
+	// 	DrawDebugSphere(mainCharacter->GetWorld(), chestSweepResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Green, false, 0.1f);
+	// 	UE_LOG(Log171MainCharState, Log, TEXT("Sphere hit obj: %s"), *chestSweepResult.Actor->GetName())
+	//
+	// 	//Reverse movement if moving into wall
+	// 	*HorizontalDirVector *= 0.0f;
+	// 	HitWall = true;
+	// }
+}
+
+void State_MainCharacter::PerformGroundCheck()
+{
+	//Spherecast down, check for drop height
+
 }
 
 void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
@@ -155,6 +186,11 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 			)
 		)
 	);
+}
+
+void State_MainCharacter::ApplyGravity(float GravityAmount, float DeltaTime)
+{
+	VerticalVector += GravityAmount;// FMath::Clamp(GravityAmount * DeltaTime, -98.1f, 0.0f);
 }
 
 void State_MainCharacter::GetRightInput(float Value)
@@ -360,7 +396,7 @@ void State_MainCharacter::SendInput(StateAction Action, float Value)
 void State_MainCharacter::SendInput(StateAction Action, AActor& OtherActor)
 {
 	switch (Action) {
-	case StateAction::BeginOverlapFeet:
+	case StateAction::OverlapFeet:
 		BeginOverlapFeet(OtherActor);
 		break;
 	case StateAction::EndOverlapFeet:

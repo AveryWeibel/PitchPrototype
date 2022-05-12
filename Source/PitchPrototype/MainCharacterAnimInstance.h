@@ -96,4 +96,7 @@ public:
 
 	UFUNCTION()
 		FVector GetParryIKTarget();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void ParrySound();
 };
