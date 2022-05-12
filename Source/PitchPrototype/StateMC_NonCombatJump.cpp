@@ -56,7 +56,7 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, 1, true, mainCharacter->risingGravityAmount);
+	MoveCharacter(DeltaTime, 1, true, mainCharacter->risingGravityAmount, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

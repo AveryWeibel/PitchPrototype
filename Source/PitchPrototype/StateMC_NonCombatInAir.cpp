@@ -49,7 +49,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	}
 	
 	//Move character
-	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, gravityAccumulation);
+	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, gravityAccumulation, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

@@ -42,7 +42,7 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
-	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, BouyantGravity);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, BouyantGravity, true);
 
 	//Apply moveVector
 	BouyantGravity = TargetFloatHeight - mainCharacter->bodyCollider->GetComponentLocation().Z;

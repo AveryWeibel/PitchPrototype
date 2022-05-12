@@ -2,6 +2,8 @@
 
 
 #include "State_MainCharacter.h"
+
+#include "CustomDefines.h"
 #include "MainCharacter.h"
 
 DEFINE_LOG_CATEGORY(Log171MainCharState);
@@ -15,15 +17,14 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundSnap, float GravityAmount)
-{
+void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundSnap, float GravityAmount, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection) {
 
 	//Remove physics forces
 	mainCharacter->bodyCollider->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
 	mainCharacter->bodyCollider->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 	
 	//Sets HorizontalVector
-	CalculateVelocityHorizontal(DeltaTime, MovementModifier);
+	CalculateVelocityHorizontal(DeltaTime, MovementModifier, UseStickMagnitudeForSpeed, OverrideDirection);
 
 	//Vertical must be checked after horizontal
 	//Sets VerticalVector
@@ -43,7 +44,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//PositionLastFrame = mainCharacter->feetCollider->GetComponentLocation();
 
-	//UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nStickLen: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, stickLength, HorizontalDirVector->X, HorizontalDirVector->Y);
+	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
 	if(VerticalVector > 0.0f)
 	{
 		//UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
@@ -52,8 +53,8 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	//Update external velocity fields
 	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp( HitWall ? 0.85f : 8.0f * DeltaTime, 0.0f, 1.0f));
 
-	UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
-	UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
+	//UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	//UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
 	
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
@@ -100,10 +101,19 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 	}
 }
 
-void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier)
+void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection)
 {
 	float stickLength = FMath::Sqrt((InputValues.X * InputValues.X) + (InputValues.Y * InputValues.Y));
-	FVector2D DirVector = (RightDirectionVector + ForwardDirectionVector);
+	
+	if (OverrideDirection != FVector2D::ZeroVector)
+	{
+		DirVector = OverrideDirection;
+	}
+	else
+	{
+		DirVector = (RightDirectionVector + ForwardDirectionVector);
+	}
+	
 	if(InputValues.X != 0 || InputValues.Y != 0)
 	{
 		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
@@ -113,7 +123,10 @@ void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float Mov
 		//DirVector *= DeltaTime;
 		*HorizontalDirVector = FVector(DirVector.X, DirVector.Y, 0);
 		//HorizontalDirVector->Normalize();
-		*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
+		if(UseStickMagnitudeForSpeed)
+		{
+			*HorizontalDirVector *= FMath::Clamp(stickLength, 0.0f, 1.0f);
+		}
 		*HorizontalDirVector *= mainCharacter->accelerationForce * MovementModifier;
 		*HorizontalDirVector *= DeltaTime;
 	}

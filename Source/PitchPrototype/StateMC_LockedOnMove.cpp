@@ -49,7 +49,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
 
 		//Move the character
-		MoveCharacter(DeltaTime, mainCharacter->lockedMovementMultiplier, true, mainCharacter->fallingGravityAmount);
+		MoveCharacter(DeltaTime, mainCharacter->lockedMovementMultiplier, true, mainCharacter->fallingGravityAmount, true);
 		
 		//Move the camera
 		if (IsValid(mainCharacter->lockedObject))
@@ -165,7 +165,10 @@ void StateMC_LockedOnMove::Parry()
 void StateMC_LockedOnMove::Dodge()
 {
 	State_MainCharacter::Dodge();
-	RequestStateChange(TidesStateName::LockedOnDodging);
+	if(DirVector.Size() > 0)
+	{
+		RequestStateChange(TidesStateName::LockedOnDodging);
+	}
 }
 
 void StateMC_LockedOnMove::Interact()

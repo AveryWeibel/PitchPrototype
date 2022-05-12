@@ -48,6 +48,12 @@ protected:
 	
 	UPROPERTY()
 	float VerticalVector = 0;
+
+	UPROPERTY()
+	FVector2D DirVector;
+
+	UPROPERTY()
+	FVector2D StoredDodgeDirection = FVector2D::ZeroVector;
 	
 	UPROPERTY()
 	float ActualSpeed = 0;
@@ -59,13 +65,14 @@ protected:
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0);
+	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0, bool UseStickMagnitudeForSpeed = true, FVector2D
+	                   OverrideDirection = FVector2D::ZeroVector);
 	
 	UFUNCTION()
 	void CalculateVerticalPosition(float DeltaTime, bool GroundSnap);
 
 	UFUNCTION()
-	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier);
+	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed = true, FVector2D OverrideDirection = FVector2D::ZeroVector);
 
 	UFUNCTION()
 	void PerformGroundCheck();

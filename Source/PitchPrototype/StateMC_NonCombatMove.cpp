@@ -56,7 +56,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	}
 	
 	//Move the character
-	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1), true, mainCharacter->fallingGravityAmount);
+	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1), true, mainCharacter->fallingGravityAmount, true);
 	
 	//Ensure collision does not rotate
 	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
