@@ -48,7 +48,6 @@ protected:
 	
 	UPROPERTY()
 	float VerticalVector = 0;
-
 	
 	UPROPERTY()
 	float ActualSpeed = 0;
@@ -56,10 +55,17 @@ protected:
 	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
+	bool HitWall;
 
 	//Move functions
 	UFUNCTION()
 	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool slopeUpCheck = true, bool SlopeDownCheck = true);
+	
+	UFUNCTION()
+	void CalculateVelocityVertical(float DeltaTime, bool slopeDownCheck);
+
+	UFUNCTION()
+	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool slopeUpCheck);
 
 	UFUNCTION()
 	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
