@@ -29,7 +29,8 @@ protected:
 	virtual void TurnRate(float) override;
 	virtual void LookUpRate(float) override;
 	virtual void Jump() override;
-	virtual void LockOn() override;
+	virtual void LockOn() override;\
+	virtual void ToggleSprint() override;
 	virtual void Die() override;
 	virtual void BeginOverlapFeet(AActor& OtherActor) override;
 	virtual void EndOverlapFeet(AActor& OtherActor) override;
@@ -39,6 +40,6 @@ protected:
 	virtual void EnterWater() override;
 
 	//Internal variables for state
-	
+	bool sprinting = false;
 	
 };

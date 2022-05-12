@@ -56,7 +56,7 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* CameraSensText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* CameraSensBar;
 
 	UPROPERTY(meta = (BindWidget))
@@ -65,13 +65,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* MasterVolumeText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* MasterVolumeBar;
 
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* SFXVolumeText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* SFXVolumeBar;
 
 	UFUNCTION(BlueprintCallable)

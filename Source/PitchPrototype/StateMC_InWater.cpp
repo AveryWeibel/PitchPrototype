@@ -22,55 +22,48 @@ StateMC_InWater::~StateMC_InWater()
 void StateMC_InWater::Start()
 {
 	UE_LOG(Log171InWater, Log, TEXT("Enter State StateMC_InWater"));
-	mainCharacter->feetCollider->SetConstraintMode(EDOFMode::XYPlane);
-	mainCharacter->feetCollider->SetEnableGravity(false);
-	mainCharacter->feetCollider->SetSimulatePhysics(false);
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 	}
+	StoredStepHeight = mainCharacter->StepUpHeight;
+	mainCharacter->StepUpHeight -= 10;
+
+	TargetFloatHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
 }
 
 void StateMC_InWater::Execute(float DeltaTime)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Execute State InWater"));
 	//Setup moveVector	
-
-	//Apply moveVector
-	MoveCharacter(DeltaTime, true, false);
 
 	//Position the camera
 	MoveCameraUnLocked(DeltaTime);
 
 	//Rotate model towards the movement vector
-	if (movementVector->Size() > 0)
-	{
-		mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetComponentRotation(),  FRotator(mainCharacter->Mesh->GetComponentRotation().Pitch,  movementVector->Rotation().Yaw, mainCharacter->Mesh->GetComponentRotation().Roll), FMath::Clamp( mainCharacter->modelTurningRate * DeltaTime, DeltaTime, mainCharacter->modelTurningRate)));
-	}
+	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
+	
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, BouyantGravity, true);
 
-	*movementVector = FVector::ZeroVector;
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, 0));
-	//UE_LOG(Log171InWater, Log, TEXT("VelocityF: %f"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().Size());
-	//UE_LOG(Log171InWater, Log, TEXT("VelocityB: %f"), mainCharacter->bodyCollider->GetPhysicsLinearVelocity().Size());
+	//Apply moveVector
+	BouyantGravity = TargetFloatHeight - mainCharacter->bodyCollider->GetComponentLocation().Z;
+	//*movementVector = FVector::ZeroVector;
+	//SetPhysicsLinearVelocity(FVector(0, 0, 0));
+
+	if(IsGrounded)
+	{
+		mainCharacter->StepUpHeight = StoredStepHeight;
+		RequestStateChange(TidesStateName::NonCombatMove);
+	}
 }
 
 void StateMC_InWater::MoveForward(float Value)
 {
-	FVector direction = mainCharacter->cameraBoom->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->WaterMovementMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetForwardInput(Value);
 }
 
 void StateMC_InWater::MoveRight(float Value)
 {
-	FVector direction = mainCharacter->cameraBoom->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= (Value * mainCharacter->accelerationForce * mainCharacter->WaterMovementMultiplier);
-	*movementVector += FVector(direction.X, direction.Y, 0);
+	GetRightInput(Value);
 }
 
 void StateMC_InWater::TurnRate(float Value)
@@ -92,9 +85,7 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 	{
 		State_MainCharacter::BeginOverlapFeet( OtherActor);
 		UE_LOG(Log171InWater, Log, TEXT("Enter Landscape from Water"));
-		mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
-		mainCharacter->feetCollider->SetEnableGravity(true);
-		mainCharacter->feetCollider->SetSimulatePhysics(true);
+		mainCharacter->StepUpHeight = StoredStepHeight;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
@@ -102,15 +93,12 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 void StateMC_InWater::Die()
 {
 	State_MainCharacter::Die();
-	mainCharacter->feetCollider->SetSimulatePhysics(false);
+	mainCharacter->StepUpHeight = StoredStepHeight;
 	RequestStateChange(TidesStateName::Dead);
 }
 
 void StateMC_InWater::ExitWater()
 {
-	// State_MainCharacter::ExitWater();
-	// mainCharacter->feetCollider->SetConstraintMode(EDOFMode::None);
-	// mainCharacter->feetCollider->SetEnableGravity(true);
-	// RequestStateChange(TidesStateName::NonCombatMove);
+	State_MainCharacter::ExitWater();
 }
 

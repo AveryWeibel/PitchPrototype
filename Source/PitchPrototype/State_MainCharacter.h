@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "State.h"
 #include "DrawDebugHelpers.h"
+#include "MainCharacter.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(Log171MainCharState, Log, All);
 
@@ -33,18 +34,61 @@ protected:
 	UPROPERTY()
 	AMainCharacter* mainCharacter;
 
+	//Movement variables
 	UPROPERTY()
 	FVector* movementVector = new FVector(FVector::ZeroVector);
 	UPROPERTY()
+	FVector* HorizontalDirVector = new FVector(FVector::ZeroVector);
+
+	UPROPERTY()
+	FVector2D RightDirectionVector = FVector2D(FVector::ZeroVector);
+
+	UPROPERTY()
+	FVector2D ForwardDirectionVector = FVector2D(FVector::ZeroVector);
+	
+	UPROPERTY()
+	float VerticalVector = 0;
+
+	UPROPERTY()
+	FVector2D DirVector;
+
+	UPROPERTY()
+	FVector2D StoredDodgeDirection = FVector2D::ZeroVector;
+	
+	UPROPERTY()
+	float ActualSpeed = 0;
+	
+	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);
 	bool grounded = false;
+	bool HitWall;
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, bool slopeUpCheck = true, bool SlopeDownCheck = true);
+	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0, bool UseStickMagnitudeForSpeed = true, FVector2D
+	                   OverrideDirection = FVector2D::ZeroVector);
+	
+	UFUNCTION()
+	void CalculateVerticalPosition(float DeltaTime, bool GroundSnap);
+
+	UFUNCTION()
+	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed = true, FVector2D OverrideDirection = FVector2D::ZeroVector);
+
+	UFUNCTION()
+	void PerformGroundCheck();
+
+	UFUNCTION()
+	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
+	
+	UFUNCTION()
+	void ApplyGravity(float GravityAmount, float DeltaTime);
 	
 	//Move Inputs
-	FVector storedMovement;
+	FVector2D InputValues;
+
+	//Move Input functions
+	void GetRightInput(float Value);
+	void GetForwardInput(float Value);
 	
 	//Movement variables
 	UPROPERTY()
@@ -56,7 +100,9 @@ protected:
 	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
 	UPROPERTY()
-	bool StepDownThisFrame;
+	bool IsGrounded = false;
+	
+	float StoredDeltaTime;
 
 	UPROPERTY()
 	FVector PrevStepDirVector;
@@ -102,6 +148,7 @@ protected:
 	virtual void AnimHitboxInactive();
 	virtual void Jump();
 	virtual void LockOn();
+	virtual void ToggleSprint();
 	virtual void DoAttack();
 	virtual void Parry();
 	virtual void Dodge();
