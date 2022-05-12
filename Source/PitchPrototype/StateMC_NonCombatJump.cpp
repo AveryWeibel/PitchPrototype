@@ -64,7 +64,6 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	MoveCameraUnLocked(DeltaTime);
 	
 	
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void StateMC_NonCombatJump::Jump()

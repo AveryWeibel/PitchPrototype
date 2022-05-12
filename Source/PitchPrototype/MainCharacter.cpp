@@ -44,14 +44,8 @@ void AMainCharacter::BeginPlay()
 	//Assign the correct ones to their accessors
 	for (auto caps : capsuleCollisions)
 	{
-		if (caps->ComponentHasTag(FName("GroundCap"))) {
-			feetCollider = caps;
-		}
-		else if (caps->ComponentHasTag(FName("BodyCap"))) {
+		if (caps->ComponentHasTag(FName("BodyCap"))) {
 			bodyCollider = caps;
-		}
-		else if (caps->ComponentHasTag(FName("FeetOverlapCap"))) {
-			feetOverlap = caps;
 		}
 	}
 
@@ -59,24 +53,13 @@ void AMainCharacter::BeginPlay()
 
 	check(IsValid(AIOverlap));
 	check(IsValid(bodyCollider));
-	check(IsValid(feetCollider));
 
 	//bodyHitDelegate.BindUFunction(this, FName("HandleBodyHit"));
 
 	//Bind ComponentHit events
 	bodyCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleBodyHit);
-	feetCollider->OnComponentHit.AddDynamic(this, &AMainCharacter::HandleFeetHit);
 
 	//Bind ComponentOverlap events
-	//Bind Feet BeginOverlap
-	FScriptDelegate FeetBeginOverlapDelegate;
-	FeetBeginOverlapDelegate.BindUFunction(this, "HandleFeetBeginOverlap");
-	feetOverlap->OnComponentBeginOverlap.Add(FeetBeginOverlapDelegate);
-
-	//Bind Feet EndOverlap
-	FScriptDelegate FeetEndOverlapDelegate;
-	FeetEndOverlapDelegate.BindUFunction(this, "HandleFeetEndOverlap");
-	feetOverlap->OnComponentEndOverlap.Add(FeetEndOverlapDelegate);
 
 	//Bind AI BeginOverlap
 	FScriptDelegate AIBeginOverlapDelegate;
@@ -125,12 +108,9 @@ void AMainCharacter::BeginPlay()
 	playerMaxHealth = 100.0f;
 	playerHealth = 100.0f;
 
-	print(Mesh->GetName());
-	print(feetCollider->GetName());
-
-	if(feetCollider->GetComponentRotation().Yaw != 0)
+	if(bodyCollider->GetComponentRotation().Yaw != 0)
 	{
-		feetCollider->SetWorldRotation(FRotator::ZeroRotator);
+		bodyCollider->SetWorldRotation(FRotator::ZeroRotator);
 	}
 } //End BeginPlay
 
@@ -149,7 +129,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	characterStateMachine->Execute(DeltaTime);
 
 	//Debug
-	currentPhysicsLinearVelocity = feetCollider->GetPhysicsLinearVelocity();
+	currentPhysicsLinearVelocity = bodyCollider->GetPhysicsLinearVelocity();
 
 	velocityArrow->SetRelativeRotation(horizontalVelocity.Rotation());
 }

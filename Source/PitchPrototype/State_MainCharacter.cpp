@@ -48,7 +48,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
 	
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+	mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void State_MainCharacter::CalculateVelocityVertical(float DeltaTime, bool slopeDownCheck)

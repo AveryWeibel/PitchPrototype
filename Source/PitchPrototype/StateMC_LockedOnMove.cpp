@@ -73,9 +73,6 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	//Rotate model towards the locked target
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
 
-	//Ensure collision does not rotate
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
-
 	SweepForInteractables();
 }
 

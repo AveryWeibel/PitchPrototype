@@ -29,7 +29,7 @@ void StateMC_NonCombatInAir::Start()
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
 
-	InAirStartHeight = mainCharacter->feetCollider->GetComponentLocation().Z;
+	InAirStartHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
 }
 
 void StateMC_NonCombatInAir::Execute(float DeltaTime)
@@ -49,8 +49,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
 	
-
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, mainCharacter->feetCollider->GetComponentRotation().Yaw, 0));
+	
 }
 
 void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
@@ -61,11 +60,10 @@ void StateMC_NonCombatInAir::BeginOverlapFeet(AActor& OtherActor)
 	gravityAccumulation = 0;
 	JumpDirMultiplierAlpha = 0;
 	//movementVector->Z = 0;
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0, 0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	if(!OtherActor.Tags.Contains("Ocean"))
 	{
-		const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->feetCollider->GetComponentLocation().Z);
+		const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->bodyCollider->GetComponentLocation().Z);
 
 		if(FallDist > mainCharacter->FallDamageDistThreshold)
 		{

@@ -39,9 +39,7 @@ void StateMC_LockedOnTakeHit::Execute(float DeltaTime)
 
 	//Move the character
 	MoveCharacter(DeltaTime, 0, false, false);
-
-	//Ensure collision does not rotate
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
+	
 }
 
 void StateMC_LockedOnTakeHit::AnimEnd()

@@ -45,14 +45,6 @@ public:
 	UPROPERTY(Category = Character, EditAnywhere, BlueprintReadOnly)
 		USkeletalMeshComponent* Mesh;
 
-	/** The CapsuleComponent being used for movement collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
-	UPROPERTY(Category = Character, EditAnywhere)
-		UCapsuleComponent* feetCollider;
-
-	/** The CapsuleComponent being used for ground collision (by CharacterMovement). Always treated as being vertically aligned in simple collision check functions. */
-	UPROPERTY(Category = Character, EditAnywhere)
-		UCapsuleComponent* feetOverlap;
-
 	/** The SphereComponent being used for AI range detection (by CharacterMovement).*/
 	UPROPERTY(Category  = Chracter, EditAnywhere)
 		USphereComponent* AIOverlap;
