@@ -39,7 +39,7 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 		//Update animation variables
 		mainCharacter->Animator->SetLookAtTarget(mainCharacter->lockedObject->GetActorLocation());
 
-		mainCharacter->Animator->SetControlDirection( FMath::Lerp( mainCharacter->Animator->GetControlDirection(), *HorizontalDirVector, 0.2f) );
+		mainCharacter->Animator->SetControlDirection(FVector(InputValues.Y, InputValues.X, 0));
 
 		if(mainCharacter->Animator->GetParryAlpha() >= .95)
 		{
