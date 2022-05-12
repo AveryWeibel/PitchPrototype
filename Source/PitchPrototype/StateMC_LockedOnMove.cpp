@@ -157,6 +157,7 @@ void StateMC_LockedOnMove::Parry()
 			if(AI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedObject) < mainCharacter->parryDistance)
 			{
 				AI->RecieveParry();
+				mainCharacter->Animator->ParrySound();
 			}
 		}
 	}
