@@ -59,19 +59,22 @@ protected:
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundCheck = true, float GravityAmount = 0);
+	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0);
 	
 	UFUNCTION()
-	void CalculateVerticalPosition(float DeltaTime, bool GroundCheck);
+	void CalculateVerticalPosition(float DeltaTime, bool GroundSnap);
 
 	UFUNCTION()
 	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier);
 
 	UFUNCTION()
+	void PerformGroundCheck();
+
+	UFUNCTION()
 	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
 	
 	UFUNCTION()
-	void ApplyGravity(float GravityAmount);
+	void ApplyGravity(float GravityAmount, float DeltaTime);
 	
 	//Move Inputs
 	FVector2D InputValues;
@@ -90,7 +93,7 @@ protected:
 	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
 	UPROPERTY()
-	bool IsGrounded;
+	bool IsGrounded = false;
 	
 	float StoredDeltaTime;
 

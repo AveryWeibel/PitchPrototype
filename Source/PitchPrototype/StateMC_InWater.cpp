@@ -39,7 +39,7 @@ void StateMC_InWater::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, 0);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, false, 0);
 
 	//*movementVector = FVector::ZeroVector;
 	//SetPhysicsLinearVelocity(FVector(0, 0, 0));

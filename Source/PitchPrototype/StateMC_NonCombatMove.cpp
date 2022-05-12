@@ -68,6 +68,7 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	{
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
+	
 } //End Execute()
 
 void StateMC_NonCombatMove::MoveForward(float Value)
@@ -128,14 +129,14 @@ void StateMC_NonCombatMove::BeginOverlapFeet(AActor& OtherActor)
 
 void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
 {
-	if (!OtherActor.Tags.Contains("Ocean"))
-	{
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
-		if (!IsGrounded)
-		{
-			RequestStateChange(TidesStateName::NonCombatInAir);
-		}
-	}
+	// if (!OtherActor.Tags.Contains("Ocean"))
+	// {
+	// 	//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
+	// 	if (!IsGrounded)
+	// 	{
+	// 		RequestStateChange(TidesStateName::NonCombatInAir);
+	// 	}
+	// }
 }
 
 void StateMC_NonCombatMove::StartOverlapAI()

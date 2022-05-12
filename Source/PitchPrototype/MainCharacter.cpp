@@ -106,7 +106,7 @@ void AMainCharacter::BeginPlay()
 
 	//Combat Initialization
 	playerMaxHealth = 100.0f;
-	playerHealth = 100.0f;
+	playerHealth = playerMaxHealth;
 
 	if(bodyCollider->GetComponentRotation().Yaw != 0)
 	{

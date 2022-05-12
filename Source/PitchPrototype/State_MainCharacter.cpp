@@ -15,7 +15,7 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
 
-void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundCheck, float GravityAmount)
+void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundSnap, float GravityAmount)
 {
 
 	//Remove physics forces
@@ -27,10 +27,10 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//Vertical must be checked after horizontal
 	//Sets VerticalVector
-	CalculateVerticalPosition(DeltaTime, GroundCheck);
+	CalculateVerticalPosition(DeltaTime, GroundSnap);
 
 	//Apply Gravity
-	ApplyGravity(GravityAmount);
+	ApplyGravity(GravityAmount, DeltaTime);
 	
 	//Translate character
 	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
@@ -51,6 +51,9 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//Update external velocity fields
 	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp( HitWall ? 0.85f : 8.0f * DeltaTime, 0.0f, 1.0f));
+
+	UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
 	
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
@@ -58,14 +61,13 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
-void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundCheck)
+void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundSnap)
 {
-	
-	//Spherecast down, check for drop height
 	FVector GroundTraceVerticalOffset = FVector(0, 0, mainCharacter->StepUpHeight);
 	FCollisionShape GroundTraceShape = FCollisionShape::MakeSphere(mainCharacter->bodyCollider->GetScaledCapsuleRadius()/4);
-	FVector GroundTraceEndLocation = mainCharacter->bodyCollider->GetComponentLocation() - GroundTraceVerticalOffset;
-	
+
+	//Perform ground check
+	const FVector GroundTraceEndLocation = mainCharacter->bodyCollider->GetComponentLocation() - GroundTraceVerticalOffset;
 	if(
 		mainCharacter->GetWorld()->SweepSingleByChannel(
 			groundTraceResult,
@@ -76,51 +78,26 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 			GroundTraceShape,
 			groundTraceParams
 		)
-		&& GroundCheck
 	)
 	{
 		//parentStateMachine->SendInput(StateAction::OverlapFeet);
-		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
 		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
 		IsGrounded = true;
 		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
-		//Calculate drop height this frame
-		//float StepDown = -FMath::Abs((mainCharacter->feetCollider->GetComponentLocation() - groundTraceResult.ImpactPoint + FVector(0, 0, mainCharacter->feetCollider->GetScaledCapsuleRadius())).Z) * 10 * DeltaTime; //*10 to account for deltatime
-
-		//Validate StepDown
-		// if (HorizontalDirVector->Size() > 0 && StepDown < 0 && StepDown >= -mainCharacter->StepDownHeight)
-		// {
-		// 	VerticalVector += StepDown;
-		// 	StepDownThisFrame = true;
-		// }
-		// else
-		// {
-		// 	StepDownThisFrame = false;
-		// }
-
-		//Debugging
-		// if((movementVector->X != 0 || movementVector->Y != 0) || StepDown < -mainCharacter->StepDownHeight)
-		// {
-		// 	UE_LOG(Log171MainCharState, Log, TEXT("StepDown: %f, %s"),
-		// 		StepDown,
-		// 		StepDownThisFrame ? TEXT("True") : TEXT("False")
-		// 	);
-		// }
 	}
 	else
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), GroundTraceEndLocation, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
 		IsGrounded = false;
 	}
+	UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
 
-	// if(StepDownThisFrame && slopeDownCheck)
-	// {
-	// 	DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
-	// }
-	// else
-	// {
-	// 	DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, mainCharacter->feetCollider->GetScaledCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
-	// }
+	//Snap to ground if found
+	if(GroundSnap && IsGrounded)
+	{
+		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
+		UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	}
 }
 
 void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier)
@@ -165,6 +142,12 @@ void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float Mov
 	// }
 }
 
+void State_MainCharacter::PerformGroundCheck()
+{
+	//Spherecast down, check for drop height
+
+}
+
 void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
 {
 	if(FaceDirection.Size() == 0)
@@ -192,9 +175,9 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 	);
 }
 
-void State_MainCharacter::ApplyGravity(float GravityAmount)
+void State_MainCharacter::ApplyGravity(float GravityAmount, float DeltaTime)
 {
-	VerticalVector += GravityAmount;
+	VerticalVector += GravityAmount;// FMath::Clamp(GravityAmount * DeltaTime, -98.1f, 0.0f);
 }
 
 void State_MainCharacter::GetRightInput(float Value)
