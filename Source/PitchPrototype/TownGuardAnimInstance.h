@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetParryAlpha(float value);
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void ParrySound();
+
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
