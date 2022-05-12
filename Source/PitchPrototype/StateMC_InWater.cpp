@@ -26,6 +26,10 @@ void StateMC_InWater::Start()
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 	}
+	StoredStepHeight = mainCharacter->StepUpHeight;
+	mainCharacter->StepUpHeight -= 10;
+
+	TargetFloatHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
 }
 
 void StateMC_InWater::Execute(float DeltaTime)
@@ -38,14 +42,16 @@ void StateMC_InWater::Execute(float DeltaTime)
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
-	//Apply moveVector
-	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, false, 0);
+	MoveCharacter(DeltaTime, mainCharacter->WaterMovementMultiplier, true, BouyantGravity);
 
+	//Apply moveVector
+	BouyantGravity = TargetFloatHeight - mainCharacter->bodyCollider->GetComponentLocation().Z;
 	//*movementVector = FVector::ZeroVector;
 	//SetPhysicsLinearVelocity(FVector(0, 0, 0));
 
 	if(IsGrounded)
 	{
+		mainCharacter->StepUpHeight = StoredStepHeight;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
@@ -79,6 +85,7 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 	{
 		State_MainCharacter::BeginOverlapFeet( OtherActor);
 		UE_LOG(Log171InWater, Log, TEXT("Enter Landscape from Water"));
+		mainCharacter->StepUpHeight = StoredStepHeight;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
@@ -86,6 +93,7 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 void StateMC_InWater::Die()
 {
 	State_MainCharacter::Die();
+	mainCharacter->StepUpHeight = StoredStepHeight;
 	RequestStateChange(TidesStateName::Dead);
 }
 

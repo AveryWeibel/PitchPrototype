@@ -34,4 +34,7 @@ protected:
 	//Internal functions
 
 	//Internal variables
+	float StoredStepHeight;
+	float TargetFloatHeight;
+	float BouyantGravity = 0;
 };
