@@ -38,7 +38,7 @@ enum StateAction
 	DoAttack,
 	Parry,
 	Dodge,
-	BeginOverlapFeet, 
+	OverlapFeet, 
 	EndOverlapFeet, 
 	TurnRate,
 	LookUpRate,

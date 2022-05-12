@@ -48,6 +48,12 @@ protected:
 	
 	UPROPERTY()
 	float VerticalVector = 0;
+
+	UPROPERTY()
+	FVector2D DirVector;
+
+	UPROPERTY()
+	FVector2D StoredDodgeDirection = FVector2D::ZeroVector;
 	
 	UPROPERTY()
 	float ActualSpeed = 0;
@@ -59,16 +65,23 @@ protected:
 
 	//Move functions
 	UFUNCTION()
-	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool slopeUpCheck = true, bool SlopeDownCheck = true);
+	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0, bool UseStickMagnitudeForSpeed = true, FVector2D
+	                   OverrideDirection = FVector2D::ZeroVector);
 	
 	UFUNCTION()
-	void CalculateVelocityVertical(float DeltaTime, bool slopeDownCheck);
+	void CalculateVerticalPosition(float DeltaTime, bool GroundSnap);
 
 	UFUNCTION()
-	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool slopeUpCheck);
+	void CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed = true, FVector2D OverrideDirection = FVector2D::ZeroVector);
+
+	UFUNCTION()
+	void PerformGroundCheck();
 
 	UFUNCTION()
 	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
+	
+	UFUNCTION()
+	void ApplyGravity(float GravityAmount, float DeltaTime);
 	
 	//Move Inputs
 	FVector2D InputValues;
@@ -87,7 +100,7 @@ protected:
 	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
 	UPROPERTY()
-	bool StepDownThisFrame;
+	bool IsGrounded = false;
 	
 	float StoredDeltaTime;
 

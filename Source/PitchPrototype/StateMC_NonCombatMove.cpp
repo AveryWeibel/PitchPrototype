@@ -56,19 +56,19 @@ void StateMC_NonCombatMove::Execute(float DeltaTime)
 	}
 	
 	//Move the character
-	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1));
+	MoveCharacter(DeltaTime, (sprinting ? mainCharacter->SprintMultiplier : 1), true, mainCharacter->fallingGravityAmount, true);
 	
 	//Ensure collision does not rotate
 	//mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 	//*movementVector = FVector::ZeroVector;
-	mainCharacter->feetCollider->SetPhysicsLinearVelocity(FVector(0 ,0, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z));
 
 	SweepForInteractables();
 	
-	if(!StepDownThisFrame && ActualSpeed > 0)
+	if(!IsGrounded)
 	{
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
+	
 } //End Execute()
 
 void StateMC_NonCombatMove::MoveForward(float Value)
@@ -124,22 +124,19 @@ void StateMC_NonCombatMove::Die()
 
 void StateMC_NonCombatMove::BeginOverlapFeet(AActor& OtherActor)
 {
-	if(!OtherActor.Tags.Contains("Ocean"))
-	{
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("Begin overlap feet"));
-	}
+	
 }
 
 void StateMC_NonCombatMove::EndOverlapFeet(AActor& OtherActor)
 {
-	if (!OtherActor.Tags.Contains("Ocean"))
-	{
-		//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
-		if (!StepDownThisFrame)
-		{
-			RequestStateChange(TidesStateName::NonCombatInAir);
-		}
-	}
+	// if (!OtherActor.Tags.Contains("Ocean"))
+	// {
+	// 	//UE_LOG(Log171NonCombatMove, Log, TEXT("End overlap feet"));
+	// 	if (!IsGrounded)
+	// 	{
+	// 		RequestStateChange(TidesStateName::NonCombatInAir);
+	// 	}
+	// }
 }
 
 void StateMC_NonCombatMove::StartOverlapAI()

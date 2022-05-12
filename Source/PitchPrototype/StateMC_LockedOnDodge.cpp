@@ -20,7 +20,12 @@ StateMC_LockedOnDodge::~StateMC_LockedOnDodge()
 void StateMC_LockedOnDodge::Start()
 {
 	DodgeStartedTime = mainCharacter->GetWorld()->GetTimeSeconds();
-	DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
+	//DodgeDirection = FVector(mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, 0);
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
 }
 
 void StateMC_LockedOnDodge::Execute(float DeltaTime)
@@ -38,66 +43,28 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	MoveCameraLocked(DeltaTime, dirToTarget, 0.35f);
 
 	//Move the character for dodge
-	if(FMath::Abs(DodgeDirection.X) > .01f || FMath::Abs(DodgeDirection.Y) > .01f)
-	{
-		//UE_LOG(LogTemp, Log, TEXT("(X: %f, Y: %f), DLT: %f"), mainCharacter->currentPhysicsLinearVelocity.X, mainCharacter->currentPhysicsLinearVelocity.Y, DeltaTime);
-		DodgeDirection.Normalize();
-		DodgeMoveVelocity += DodgeDirection * (mainCharacter->dodgeSpeed / DodgeDamping) * DeltaTime;
-		mainCharacter->AddActorWorldOffset(DodgeMoveVelocity * DeltaTime);
-	}
+	MoveCharacter(DeltaTime, mainCharacter->dodgeSpeed, true, mainCharacter->fallingGravityAmount, false);
+	UE_LOG(Log171General, Log, TEXT("StoredDIr: %f, %f"), StoredDodgeDirection.X, StoredDodgeDirection.Y);
 
-	//Maintain camera tracking
-	dirToTarget.Z = 0;
-	MoveCameraLocked(DeltaTime, dirToTarget);
-
+	//Rotate model towards the locked target
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
+	
 	//Check if dodge time has elapsed
 	if(DodgeElapsedTime >= mainCharacter->dodgeLength)
 	{
-		DodgeMoveVelocity = FVector::ZeroVector;
-		DodgeDamping = 1;
+		StoredDodgeDirection = FVector2D::ZeroVector;
 		RequestStateChange(TidesStateName::LockedOnMove);
 	}
-
-	DodgeDirection = FVector::ZeroVector;
-	DodgeDamping = FMath::Clamp(DodgeDamping - 0.025f, 0.2f, 1.0f);
-	//Apply moveVector
 }
 
 void StateMC_LockedOnDodge::MoveForward(float Value)
 {
-	//if(Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-	
-
-	FVector direction = mainCharacter->mainCamera->GetForwardVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= Value;
-
-	FVector dirVector = FVector(direction.X, direction.Y, 0);
-
-	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
-	DodgeDirection += dirVector;
-	//moveX = Value * mainCharacter->mainCamera->GetForwardVector().X * mainCharacter->accelerationForce;
+	GetForwardInput(Value);
 }
 
 void StateMC_LockedOnDodge::MoveRight(float Value)
 {
-	
-	//if (Value != 0)
-	//UE_LOG(Log171NonCombatMove, Log, TEXT("CharacterVelocity[X: %f, Y: %f, Z: %f]"), mainCharacter->feetCollider->GetPhysicsLinearVelocity().X, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Y, mainCharacter->feetCollider->GetPhysicsLinearVelocity().Z);
-
-	//moveY = Value * mainCharacter->accelerationForce;
-	FVector direction = mainCharacter->mainCamera->GetRightVector();
-	direction.Z = 0;
-	direction.Normalize();
-	direction *= Value;
-
-	FVector dirVector = FVector(direction.X, direction.Y, 0);
-
-	//DodgeDamping = FMath::Clamp(FVector::DotProduct(DodgeDirection, DodgeDirection + dirVector), 0.2f, 1.0f);
-	
-	DodgeDirection += dirVector;
+	GetRightInput(Value);
 }
 
 void StateMC_LockedOnDodge::TakeHit()

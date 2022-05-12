@@ -23,8 +23,6 @@ void StateMC_NonCombatJump::Start()
 	UE_LOG(Log171NonCombatJump, Log, TEXT("Enter State StateMC_NonCombatJump"));
 	//Initial jump functionality
 	JumpStartedTime = mainCharacter->GetWorld()->TimeSeconds;
-	//upwardsVelocityAccumulation += mainCharacter->jumpAccel;
-	//VerticalVector += upwardsVelocityAccumulation;
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
@@ -39,8 +37,8 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	//Setup moveVector
 	if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
 	{
-		upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
-		VerticalVector += upwardsVelocityAccumulation * DeltaTime;
+		//upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
+		VerticalVector += mainCharacter->jumpAccel * DeltaTime;
 	}
 	//Change to inair state once we start falling
 	else if (VerticalVector <= 0) {
@@ -58,13 +56,12 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, 1, true, false);
+	MoveCharacter(DeltaTime, 1, true, mainCharacter->risingGravityAmount, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);
 	
 	
-	mainCharacter->feetCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void StateMC_NonCombatJump::Jump()
