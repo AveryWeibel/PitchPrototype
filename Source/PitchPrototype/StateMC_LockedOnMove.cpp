@@ -29,6 +29,11 @@ void StateMC_LockedOnMove::Start()
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
+
+	if (mainCharacter->weapon->Sheathed)
+	{
+		Unsheathing = true;
+	}
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
@@ -41,9 +46,34 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 		mainCharacter->Animator->SetControlDirection(FVector(InputValues.Y, InputValues.X, 0));
 
-		if(mainCharacter->Animator->GetParryAlpha() >= .95)
+		if(mainCharacter->Animator->GetParryAlpha() >= .99)
 		{
 			ParryLerpTarget = 0;
+		}
+
+		if(Unsheathing)
+		{
+			UE_LOG(Log171LockedOnMove, Log, TEXT("SheatheAlpha: %f"), mainCharacter->Animator->GetSheatheAlpha());
+			if(mainCharacter->weapon->Sheathed)
+			{
+				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() + mainCharacter->WeaponSheatheSpeed * DeltaTime);
+				if(mainCharacter->Animator->GetSheatheAlpha() >= 0.99f)
+				{
+					mainCharacter->weapon->Sheathed = false;
+					mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("LeftHandSocket"));
+					UE_LOG(Log171LockedOnMove, Log, TEXT("Attach to hand"));
+				}
+			}
+			else
+			{
+				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() - mainCharacter->WeaponSheatheSpeed * DeltaTime);
+				if(mainCharacter->Animator->GetSheatheAlpha() <= 0.01f)
+				{
+					mainCharacter->Animator->SetSheatheAlpha(0.0f);
+					UE_LOG(Log171LockedOnMove, Log, TEXT("End sheathe animation"));
+					Unsheathing = false;
+				}
+			}
 		}
 		
 		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));

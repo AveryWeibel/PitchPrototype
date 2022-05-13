@@ -157,6 +157,9 @@ public:
 
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float takeHitMaxSpeed;
+	
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float WeaponSheatheSpeed;
 
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
@@ -186,6 +189,9 @@ public:
 
 	UFUNCTION(Category = Combat, BlueprintCallable)
 		float takeDamage(float damageAmount);
+
+	UPROPERTY(BlueprintReadWrite, Category="Weapon")
+		FVector SheatheElbowTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool inWater;

@@ -31,13 +31,40 @@ void StateMC_NonCombatMove::Start()
 	sprinting = false;
 	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("Enter State NonCombatMove"));
+
+	if(!mainCharacter->weapon->Sheathed)
+	{
+		Sheathing = true;
+	}
 }
 
 void StateMC_NonCombatMove::Execute(float DeltaTime)
 {
 	
-	//Apply skeletal forces
-	//mainCharacter->Animator->SetLookAtTarget(mainCharacter->AIList->)
+	if(Sheathing)
+	{
+		UE_LOG(Log171NonCombatMove, Log, TEXT("SheatheAlpha: %f"), mainCharacter->Animator->GetSheatheAlpha());
+		if(!mainCharacter->weapon->Sheathed)
+		{
+			mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() + mainCharacter->WeaponSheatheSpeed * DeltaTime);
+			if(mainCharacter->Animator->GetSheatheAlpha() >= 0.99f)
+			{
+				mainCharacter->weapon->Sheathed = true;
+				mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("BackSocket"));
+				UE_LOG(Log171NonCombatMove, Log, TEXT("Attach to back"));
+			}
+		}
+		else
+		{
+			mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() - mainCharacter->WeaponSheatheSpeed * DeltaTime);
+			if(mainCharacter->Animator->GetSheatheAlpha() <= 0.01f)
+			{
+				mainCharacter->Animator->SetSheatheAlpha(0.0f);
+				UE_LOG(Log171NonCombatMove, Log, TEXT("End sheathe animation"));
+				Sheathing = false;
+			}
+		}
+	}
 
 	if(mainCharacter->currentPhysicsLinearVelocity.Z > .25)
 	{
