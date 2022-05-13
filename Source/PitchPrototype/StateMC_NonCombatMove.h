@@ -41,5 +41,6 @@ protected:
 
 	//Internal variables for state
 	bool sprinting = false;
+	bool Sheathing = false;
 	
 };
