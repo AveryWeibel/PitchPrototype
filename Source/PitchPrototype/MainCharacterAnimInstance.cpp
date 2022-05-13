@@ -77,6 +77,16 @@ float UMainCharacterAnimInstance::GetParryAlpha()
 	return parryAlpha;
 }
 
+void UMainCharacterAnimInstance::SetSheatheAlpha(float value)
+{
+	SheatheArmAlpha = value;
+}
+
+float UMainCharacterAnimInstance::GetSheatheAlpha()
+{
+	return SheatheArmAlpha;
+}
+
 void UMainCharacterAnimInstance::SetParryIKTarget(FVector value)
 {
 	parryIKTarget = value;
