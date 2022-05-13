@@ -217,7 +217,6 @@ void StateMC_LockedOnMove::Interact()
 
 void StateMC_LockedOnMove::EndOverlapAI()
 {
-	return;
 	
 	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
 		mainCharacter->lockedObject = nullptr;
@@ -225,7 +224,7 @@ void StateMC_LockedOnMove::EndOverlapAI()
 		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
 		interactable->Execute_PlayerUnLock(focusedInteractable);
 
-		SweepForInteractables();
+		//SweepForInteractables();
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 
