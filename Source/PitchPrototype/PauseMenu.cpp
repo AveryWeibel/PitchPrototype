@@ -30,7 +30,7 @@ void UPauseMenu::PauseGame()
 	bIsPaused = true;
 	APlayerController* player = UGameplayStatics::GetPlayerController(this, 0);
 
-	this->AddToViewport();
+	this->AddToViewport(10);
 
 	if (player) {
 		player->SetPause(true);
