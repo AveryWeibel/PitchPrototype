@@ -19,6 +19,12 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 
 void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier, bool GroundSnap, float GravityAmount, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection) {
 
+	if(FrameCount <= 10)
+	{
+		FrameCount++;
+	}
+	UE_LOG(Log171MainCharState, Log, TEXT("Frame: %d"), FrameCount)
+	
 	//Remove physics forces
 	mainCharacter->bodyCollider->SetAllPhysicsLinearVelocity(FVector::ZeroVector);
 	mainCharacter->bodyCollider->SetAllPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
@@ -29,9 +35,12 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	//Vertical must be checked after horizontal
 	//Sets VerticalVector
 	CalculateVerticalPosition(DeltaTime, GroundSnap);
-
+	
 	//Apply Gravity
-	ApplyGravity(GravityAmount, DeltaTime);
+	if(FrameCount > 5)
+	{
+		ApplyGravity(GravityAmount, DeltaTime);
+	}
 	
 	//Translate character
 	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
@@ -40,11 +49,14 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//Speed measurements
 	const FVector DeltaVector = *HorizontalDirVector/DeltaTime;
-	ActualSpeed = FVector(DeltaVector.X, DeltaVector.Y, 0).Size();
+	ActualHorizontalSpeed = FVector(DeltaVector.X, DeltaVector.Y, 0).Size();
+
+	ActualVerticalSpeed = VerticalVector/DeltaTime;
 
 	//PositionLastFrame = mainCharacter->feetCollider->GetComponentLocation();
 
-	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
+	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualHorizontalSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
+	UE_LOG(Log171MainCharState, Log, TEXT("Vertical Movement Speed: %f\nVertical Delta: %f"), ActualVerticalSpeed, VerticalVector);
 	if(VerticalVector > 0.0f)
 	{
 		//UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
@@ -53,8 +65,8 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	//Update external velocity fields
 	mainCharacter->horizontalVelocity = FMath::Lerp(mainCharacter->horizontalVelocity, FVector(DeltaVector.X, DeltaVector.Y, 0), FMath::Clamp( HitWall ? 0.85f : 8.0f * DeltaTime, 0.0f, 1.0f));
 
-	//UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
-	//UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
+	UE_LOG(Log171MainCharState, Log, TEXT("Final PosTF: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+	UE_LOG(Log171MainCharState, Log, TEXT("DeltaTime: %f"), DeltaTime);
 	
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
@@ -190,7 +202,7 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 
 void State_MainCharacter::ApplyGravity(float GravityAmount, float DeltaTime)
 {
-	VerticalVector += GravityAmount;// FMath::Clamp(GravityAmount * DeltaTime, -98.1f, 0.0f);
+	VerticalVector += GravityAmount;// FMath::Clamp(VerticalVector + GravityAmount * DeltaTime, -mainCharacter->maxFallingSpeed, 0.0f);
 }
 
 void State_MainCharacter::GetRightInput(float Value)

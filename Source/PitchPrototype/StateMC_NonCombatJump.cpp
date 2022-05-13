@@ -32,7 +32,7 @@ void StateMC_NonCombatJump::Start()
 void StateMC_NonCombatJump::Execute(float DeltaTime)
 {	
 	//Track time
-	JumpElapsedTime = mainCharacter->GetWorld()->TimeSeconds - JumpStartedTime;
+	JumpElapsedTime = mainCharacter->GetWorld()->TimeSeconds + DeltaTime - JumpStartedTime;
 	
 	//Setup moveVector
 	if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
@@ -89,13 +89,4 @@ void StateMC_NonCombatJump::TurnRate(float Value)
 void StateMC_NonCombatJump::LookUpRate(float Value)
 {
 	AddCameraOrbitPitch(Value);
-}
-
-void StateMC_NonCombatJump::ApplyGravity(float DeltaTime)
-{
-	if (FMath::Abs(VerticalVector) < mainCharacter->maxFallingSpeed)
-	{
-		gravityAccumulation -= mainCharacter->risingGravityAmount;
-		VerticalVector += gravityAccumulation * DeltaTime;
-	}
 }

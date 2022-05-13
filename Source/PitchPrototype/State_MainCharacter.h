@@ -56,7 +56,13 @@ protected:
 	FVector2D StoredDodgeDirection = FVector2D::ZeroVector;
 	
 	UPROPERTY()
-	float ActualSpeed = 0;
+	float ActualHorizontalSpeed = 0;
+
+	UPROPERTY()
+	float ActualVerticalSpeed = 0;
+
+	UPROPERTY()
+	int FrameCount = 0;
 	
 	UPROPERTY()
 	FRotator* cameraTurnVector = new FRotator(FRotator::ZeroRotator);

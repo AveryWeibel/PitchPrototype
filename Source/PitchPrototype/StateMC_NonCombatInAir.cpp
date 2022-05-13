@@ -35,7 +35,7 @@ void StateMC_NonCombatInAir::Start()
 void StateMC_NonCombatInAir::Execute(float DeltaTime)
 {
 	//apply movement inputs for this frame
-	JumpDirMultiplierAlpha = FMath::Lerp(1.0f, mainCharacter->jumpDirectionalMultiplier, FMath::Clamp<float>(mainCharacter->jumpDirMultiplierRampSpeed * DeltaTime, mainCharacter->jumpDirectionalMultiplier, 1));
+	//JumpDirMultiplierAlpha = FMath::Lerp(1.0f, mainCharacter->jumpDirectionalMultiplier, FMath::Clamp<float>(mainCharacter->jumpDirMultiplierRampSpeed * DeltaTime, mainCharacter->jumpDirectionalMultiplier, 1));
 	
 	//ApplyGravity();
 	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
@@ -45,7 +45,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	if(FMath::Abs(gravityAccumulation) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation += mainCharacter->fallingGravityAmount/36;
+		gravityAccumulation += mainCharacter->fallingGravityAmount * DeltaTime;
 	}
 	
 	//Move character
@@ -106,6 +106,8 @@ void StateMC_NonCombatInAir::Die()
 bool StateMC_NonCombatInAir::ApplyFallDamage()
 {
 	const float FallDist = FMath::Abs(InAirStartHeight - mainCharacter->bodyCollider->GetComponentLocation().Z);
+
+	UE_LOG(Log171InAir, Log, TEXT("FallDist: %f"), FallDist);
 
 	if(FallDist > mainCharacter->FallDamageDistThreshold)
 	{
