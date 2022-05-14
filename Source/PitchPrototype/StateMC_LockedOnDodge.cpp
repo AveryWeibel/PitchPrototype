@@ -6,6 +6,7 @@
 #include "StateMC_LockedOnDodge.h"
 #include "MainCharacter.h"
 #include "CustomDefines.h"
+#include "StateMC_NonCombatMove.h"
 
 StateMC_LockedOnDodge::StateMC_LockedOnDodge(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
@@ -53,6 +54,8 @@ void StateMC_LockedOnDodge::Execute(float DeltaTime)
 	if(DodgeElapsedTime >= mainCharacter->dodgeLength)
 	{
 		StoredDodgeDirection = FVector2D::ZeroVector;
+		mainCharacter->DodgeEndedTime = mainCharacter->GetWorld()->GetTimeSeconds();
+		UE_LOG(Log171General, Log, TEXT("From Dodge: %f"), mainCharacter->DodgeEndedTime);
 		RequestStateChange(TidesStateName::LockedOnMove);
 	}
 }
