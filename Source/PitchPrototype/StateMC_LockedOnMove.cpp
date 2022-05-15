@@ -165,7 +165,10 @@ void StateMC_LockedOnMove::Parry()
 void StateMC_LockedOnMove::Dodge()
 {
 	State_MainCharacter::Dodge();
-	if(DirVector.Size() > 0)
+	float ElapsedTimeSinceDodge = mainCharacter->GetWorld()->GetTimeSeconds() - mainCharacter->DodgeEndedTime;
+	UE_LOG(Log171LockedOnMove, Log, TEXT("Elapsed Time: %f, ended: %f"), ElapsedTimeSinceDodge, mainCharacter->DodgeEndedTime);
+	if( (ElapsedTimeSinceDodge > mainCharacter->dodgeCooldown) &&
+		 DirVector.Size() > 0)
 	{
 		RequestStateChange(TidesStateName::LockedOnDodging);
 	}
