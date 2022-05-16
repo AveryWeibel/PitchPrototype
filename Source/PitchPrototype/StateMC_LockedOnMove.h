@@ -46,5 +46,4 @@ protected:
 	float ParryLerpTarget;
 	UPROPERTY()
 	FVector dirToTarget;
-	bool Unsheathing = false;
 };

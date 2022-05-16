@@ -29,10 +29,4 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
 		FVector parryTarget;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Weapon")
-	FVector HandleLocation;
-
-	UPROPERTY(BlueprintReadWrite, Category="Weapon")
-		bool Sheathed = true;
-
 };

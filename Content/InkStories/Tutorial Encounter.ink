@@ -35,7 +35,7 @@ VAR destinationKnot = ""
 === guardfirstdialogue ===
 
     = tutorialstart
-    Oh you've finally Awoken. Took you long enough.
+    Oh you've finally Awoken. Took you <red>long enough</>.
 
     + [<red>Whats going on?</>]
         -> whoareyou
@@ -353,132 +353,6 @@ VAR destinationKnot = ""
         # function Start_Combat
         -> END
         
-
-    = anger1
-    Stop running away!
-    
-    + [Then stop trying to kill me.]
-        ~ anger += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [No.]
-        ~ anger += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [...]
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    
-    = anger2
-    I know I taught you how to dodge, but dodging is for losers. Stand your ground and fight back!
-    
-    + [Catch me if you can.]
-        ~ anger += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [Fine, prepare to die]
-        ~ anger -= 10
-        ~ happiness += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [No.]
-        ~ anger += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [...]
-        ~ anger += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-        
-    = anger3
-    <red>FIGHT BACK COWARD!</>
-    
-    + [We really don't need to kill each other]
-    -> bored
-    + [I can do this all day]
-    -> bored
-    
-    + [Fine, prepare to die]
-        ~ anger -= 10
-        ~ happiness += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    + [...]
-    -> bored
-    
-    = bored
-    Ugh fine, I was getting bored anyways.
-    
-    + [(leave)]
-    -> END
-    
-    = happiness1
-    Yes that's right, show me what you're made of!
-    
-    + [Prepare yourself!]
-        ~ happiness += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END    
-    + [What is wrong with you?]
-        {defaultListen("guardcombat.storylets")}
-        -> END    
-    + [...]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    
-    = happiness2
-    You must admit, you enjoy the thrill of battle too!
-    
-    + [I'm not as crazy as you]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    + [I fight out of necessity]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    + [yes!]
-        ~ happiness += 5
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    
-    = happiness3
-    HAHA THIS IS WHAT THE LOOP IS FOR
-    
-    + [You need therapy or something]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    + [AGREED]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    + [...]
-        {defaultListen("guardcombat.storylets")}
-        -> END   
-    
-    = deathsdoor
-    <red>ha... *cough* well met Whale... now- *cough* finish the job</>
-    
-    + [(continue)]
-        {defaultListen("guardcombat.storylets")}
-        -> END
-    
-    = storylets
-    { 
-        - health < 10 && TURNS_SINCE(-> deathsdoor) < 0:
-            -> deathsdoor
-        - happiness > 80 && TURNS_SINCE(-> happiness3) < 0:
-            -> happiness3
-        - happiness > 70 && TURNS_SINCE(-> happiness2) < 0:
-            -> happiness2
-        - happiness > 60 && TURNS_SINCE(-> happiness1) < 0:
-            -> happiness1
-        - anger > 80 && TURNS_SINCE(-> anger3) < 0:
-            -> anger3
-        - anger > 70 && TURNS_SINCE(-> anger2) < 0:
-            -> anger2
-        - anger > 60 && TURNS_SINCE(-> anger1) < 0:
-            -> anger1
-    }
-    
-
 === function listenEnemyHits(enemyHits, Knot)
     {listen(enemyHits, -1, -1, -1, -1, -1, -1, Knot, "", "", "", "", "", "")}
     
@@ -518,7 +392,6 @@ VAR destinationKnot = ""
     ~ LISTEN_enemyDodges = enemyDodges
     ~ LISTEN_playerDodges = playerDodges
     ~ LISTEN_timer = Ltimer
-
     ~ enemyHitsKnot = eHitKnot
     ~ playerHitsKnot = pHitKnot
     ~ enemyParriesKnot = eParryKnot
@@ -528,5 +401,5 @@ VAR destinationKnot = ""
     ~ timerKnot = tKnot
     
 === function defaultListen(Knot) ===
-    {listenSameKnot(1, 1, 2, 2, 2, 2, 20, Knot)}
+    {listenSameKnot(1, 1, 2, 2, 4, 5, 20, Knot)}
     # function Start_Combat
