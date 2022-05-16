@@ -26,7 +26,7 @@ public:
 	//Dictionary<MainCharacterActions, StateAxisDelegate> StateAxisDelegates;
 	//Dictionary<MainCharacterActions, StateActionDelegate> StateActionDelegates;
 
-protected:
+	protected:
 	//State overrides
 	void RequestStateChange(TidesStateName) override;
 	
@@ -66,7 +66,7 @@ protected:
 	//Move functions
 	UFUNCTION()
 	void MoveCharacter(float DeltaTime, float MovementModifier = 1, bool GroundSnap = true, float GravityAmount = 0, bool UseStickMagnitudeForSpeed = true, FVector2D
-	                   OverrideDirection = FVector2D::ZeroVector);
+					   OverrideDirection = FVector2D::ZeroVector);
 	
 	UFUNCTION()
 	void CalculateVerticalPosition(float DeltaTime, bool GroundSnap);
@@ -99,6 +99,10 @@ protected:
 	FHitResult chestSweepResult;
 	UPROPERTY()
 	FCollisionQueryParams groundTraceParams;
+
+	UPROPERTY()
+	FAttachmentTransformRules weaponAttachmentRules = FAttachmentTransformRules(EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, EAttachmentRule::KeepRelative, true);
+	
 	UPROPERTY()
 	bool IsGrounded = false;
 	
