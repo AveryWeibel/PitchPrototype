@@ -161,6 +161,9 @@ public:
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float WeaponSheatheSpeed;
 
+	UPROPERTY()
+		float DodgeEndedTime = 0;
+
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;
@@ -175,6 +178,9 @@ public:
 	UMainCharacterAnimInstance* Animator = nullptr;
 
 	//Combat Properties
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeCooldown = 1.5f;
+	
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
 		float dodgeLength;
 
