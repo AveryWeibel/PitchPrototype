@@ -12,7 +12,7 @@ State_MainCharacter::State_MainCharacter(AMainCharacter* mainCharacterPtr)
 {
 	mainCharacter = mainCharacterPtr;
 	check(mainCharacter);
-
+	
 	//Function pointer method (Abandoned)
 	//StateAxisDelegates.Add(StateAction::MoveForward, &State_MainCharacter::MoveForward);
 }
