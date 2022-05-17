@@ -673,6 +673,9 @@ VAR destinationKnot = ""
             -> anger2
         - anger > 60 && TURNS_SINCE(-> anger1) < 0:
             -> anger1
+        - else:
+            {defaultListen("guardcombat.storylets")}
+            -> END
     }
     
     = anger1
