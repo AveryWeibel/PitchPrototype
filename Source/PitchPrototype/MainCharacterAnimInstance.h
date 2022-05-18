@@ -75,6 +75,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 		FVector parryIKTarget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+		float SheatheArmAlpha = 0.0f;
+
 public:
 	FVector GetControlDirection();
 	
@@ -90,6 +93,12 @@ public:
 
 	UFUNCTION()
 		float GetParryAlpha();
+
+	UFUNCTION()
+		void SetSheatheAlpha(float value);
+
+	UFUNCTION()
+		float GetSheatheAlpha();
 
 	UFUNCTION()
 		void SetParryIKTarget(FVector value);

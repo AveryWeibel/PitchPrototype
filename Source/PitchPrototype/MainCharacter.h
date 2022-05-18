@@ -157,6 +157,12 @@ public:
 
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float takeHitMaxSpeed;
+	
+	UPROPERTY(Category = Combat, EditAnywhere)
+		float WeaponSheatheSpeed;
+
+	UPROPERTY()
+		float DodgeEndedTime = 0;
 
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
@@ -173,6 +179,9 @@ public:
 
 	//Combat Properties
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
+		float dodgeCooldown = 1.5f;
+	
+	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
 		float dodgeLength;
 
 	UPROPERTY(Category = Combat, EditAnywhere, BlueprintReadWrite)
@@ -186,6 +195,9 @@ public:
 
 	UFUNCTION(Category = Combat, BlueprintCallable)
 		float takeDamage(float damageAmount);
+
+	UPROPERTY(BlueprintReadWrite, Category="Weapon")
+		FVector SheatheElbowTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool inWater;

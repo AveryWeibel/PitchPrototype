@@ -29,6 +29,11 @@ void StateMC_LockedOnMove::Start()
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
+
+	if (mainCharacter->weapon->Sheathed)
+	{
+		Unsheathing = true;
+	}
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
@@ -41,9 +46,34 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 
 		mainCharacter->Animator->SetControlDirection(FVector(InputValues.Y, InputValues.X, 0));
 
-		if(mainCharacter->Animator->GetParryAlpha() >= .95)
+		if(mainCharacter->Animator->GetParryAlpha() >= .99)
 		{
 			ParryLerpTarget = 0;
+		}
+
+		if(Unsheathing)
+		{
+			UE_LOG(Log171LockedOnMove, Log, TEXT("SheatheAlpha: %f"), mainCharacter->Animator->GetSheatheAlpha());
+			if(mainCharacter->weapon->Sheathed)
+			{
+				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() + mainCharacter->WeaponSheatheSpeed * DeltaTime);
+				if(mainCharacter->Animator->GetSheatheAlpha() >= 0.99f)
+				{
+					mainCharacter->weapon->Sheathed = false;
+					mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("LeftHandSocket"));
+					UE_LOG(Log171LockedOnMove, Log, TEXT("Attach to hand"));
+				}
+			}
+			else
+			{
+				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() - mainCharacter->WeaponSheatheSpeed * DeltaTime);
+				if(mainCharacter->Animator->GetSheatheAlpha() <= 0.01f)
+				{
+					mainCharacter->Animator->SetSheatheAlpha(0.0f);
+					UE_LOG(Log171LockedOnMove, Log, TEXT("End sheathe animation"));
+					Unsheathing = false;
+				}
+			}
 		}
 		
 		mainCharacter->Animator->SetParryAlpha(FMath::Lerp(mainCharacter->Animator->GetParryAlpha(), ParryLerpTarget, 10 * DeltaTime));
@@ -165,7 +195,10 @@ void StateMC_LockedOnMove::Parry()
 void StateMC_LockedOnMove::Dodge()
 {
 	State_MainCharacter::Dodge();
-	if(DirVector.Size() > 0)
+	float ElapsedTimeSinceDodge = mainCharacter->GetWorld()->GetTimeSeconds() - mainCharacter->DodgeEndedTime;
+	UE_LOG(Log171LockedOnMove, Log, TEXT("Elapsed Time: %f, ended: %f"), ElapsedTimeSinceDodge, mainCharacter->DodgeEndedTime);
+	if( (ElapsedTimeSinceDodge > mainCharacter->dodgeCooldown) &&
+		 DirVector.Size() > 0)
 	{
 		RequestStateChange(TidesStateName::LockedOnDodging);
 	}
@@ -187,7 +220,6 @@ void StateMC_LockedOnMove::Interact()
 
 void StateMC_LockedOnMove::EndOverlapAI()
 {
-	return;
 	
 	if (!mainCharacter->InteractableList.Contains(mainCharacter->lockedObject)) {
 		mainCharacter->lockedObject = nullptr;
@@ -195,7 +227,7 @@ void StateMC_LockedOnMove::EndOverlapAI()
 		auto interactable = Cast<IInteractableInterface>(focusedInteractable);
 		interactable->Execute_PlayerUnLock(focusedInteractable);
 
-		SweepForInteractables();
+		//SweepForInteractables();
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 
