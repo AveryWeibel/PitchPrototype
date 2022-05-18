@@ -35,9 +35,9 @@ VAR destinationKnot = ""
 === guardfirstdialogue ===
 
     = tutorialstart
-    Oh you've finally Awoken. Took you <red>long enough</>.
+    Oh you've finally Awoken. Took you long enough.
 
-    + [<red>Whats going on?</>]
+    + [Whats going on?]
         -> whoareyou
     + [Who are you?]
         -> whoareyou
@@ -116,27 +116,27 @@ VAR destinationKnot = ""
     Oh I'll get to that in a minute. For now, why don't we have a little friendly sparring match to jog your memory on how to fight, the island is dangerous right now.
     
     + [Okay]
-        ->guardcombattutorial.start
+        -> guardcombattutorial.start
     + [Sure]
-        ->guardcombattutorial.start
+        -> guardcombattutorial.start
     + [I can't really say no, can I?]
-        ->nope
+        -> nope
     
     = loopcause
     Hmmm... I don't know, I never really thought about it too hard. It never seemed that important, you know? Why question such a blessing? I guess [GUARD CAPTAIN NAME] might have mentioned something about the cave at the east end of the island once or twice. You could try checking that out, or maybe ask [GUARD CAPTAIN NAME] yourself, though she doesn't speak much, and when she does, it doesn't make much sense to me.
     
     + [Where can I find (GUARD CAPTAIN NAME)?]
-        ->guardcaptaindirections
+        -> guardcaptaindirections
     
     + [Which end of the island is east?]
-        ->directions
+        -> directions
         
     = directions
     Oh right, you don't remember where anything is. This is the north side of the island, so east would be on the other side of the bay. The cave should be just past that cliff face. Also, [GUARD CAPTAIN NAME] should be in the town square right about now, up the hill just past the market, in case you were wondering.
     + [Okay]
         -> tutorialsegue
     + [Thanks for the directions]
-        ->directionsthanks
+        -> directionsthanks
     
     = guardcaptaindirections
     Oh right, you don't remember where anything is. She should be in the town square right about now, up the hill just past the market. And if you're wondering where the cave might be, this is the north side of the island, so east would be on the other side of the bay. The cave should be just past that cliff face.
@@ -144,21 +144,21 @@ VAR destinationKnot = ""
     + [Okay]
         -> tutorialsegue
     + [Thanks for the directions]
-        ->directionsthanks
+        -> directionsthanks
         
     = directionsthanks
     No problem. <>
-        ->tutorialsegue
+        -> tutorialsegue
     
     = tutorialsegue
     Now before you go off on your own, why don't we have a little friendly sparring match to jog your memory on how to fight, the island is dangerous right now.
     
     + [Okay]
-        ->guardcombattutorial.start
+        -> guardcombattutorial.start
     + [Sure]
-        ->guardcombattutorial.start
+        -> guardcombattutorial.start
     + [I can't really say no, can I?]
-        ->nope
+        -> nope
     
     = endloop
     What? Why would we want the loop to end? In the loop we are infinite; in the loop we are eternal. You'll come to understand soon enough.
@@ -176,7 +176,7 @@ VAR destinationKnot = ""
     # timer -1
     Okay so first things first, you need to know how to attack. Walk up to me and press RB to try hitting me with your sword.
     + [Okay]
-        {listenEnemyHits(1, "guardcombattutorial.hit")}
+        # {listenEnemyHits(1, "guardcombattutorial.hit")}
         ->END
     
     = hit
@@ -353,6 +353,135 @@ VAR destinationKnot = ""
         # function Start_Combat
         -> END
         
+
+    = anger1
+    Stop running away!
+    
+    + [Then stop trying to kill me.]
+        ~ anger = anger + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [No.]
+        ~ anger = anger + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [...]
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    
+    = anger2
+    I know I taught you how to dodge, but dodging is for losers. Stand your ground and fight back!
+    
+    + [Catch me if you can.]
+        ~ anger = anger + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [Fine, prepare to die]
+        ~ anger = anger - 10
+        ~ happiness = happiness + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [No.]
+        ~ anger = anger + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [...]
+        ~ anger = anger + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+        
+    = anger3
+    <red>FIGHT BACK COWARD!</>
+    
+    + [We really don't need to kill each other]
+    -> bored
+    + [I can do this all day]
+    -> bored
+    
+    + [Fine, prepare to die]
+        ~ anger = anger - 10
+        ~ happiness = happiness + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    + [...]
+    -> bored
+    
+    = bored
+    Ugh fine, I was getting bored anyways.
+    
+    + [(leave)]
+    -> END
+    
+    = happiness1
+    Yes that's right, show me what you're made of!
+    
+    + [Prepare yourself!]
+        ~ happiness = happiness + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END    
+    + [What is wrong with you?]
+        {defaultListen("guardcombat.storylets")}
+        -> END    
+    + [...]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    
+    = happiness2
+    You must admit, you enjoy the thrill of battle too!
+    
+    + [I'm not as crazy as you]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    + [I fight out of necessity]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    + [yes!]
+        ~ happiness = happiness + 5
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    
+    = happiness3
+    HAHA THIS IS WHAT THE LOOP IS FOR
+    
+    + [You need therapy or something]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    + [AGREED]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    + [...]
+        {defaultListen("guardcombat.storylets")}
+        -> END   
+    
+    = deathsdoor
+    <red>ha... *cough* well met Whale... now- *cough* finish the job</>
+    
+    + [(continue)]
+        {defaultListen("guardcombat.storylets")}
+        -> END
+    
+    = storylets
+    { 
+        - health < 10 && TURNS_SINCE(-> deathsdoor) < 0:
+            -> deathsdoor
+        - happiness > 80 && TURNS_SINCE(-> happiness3) < 0:
+            -> happiness3
+        - happiness > 70 && TURNS_SINCE(-> happiness2) < 0:
+            -> happiness2
+        - happiness > 60 && TURNS_SINCE(-> happiness1) < 0:
+            -> happiness1
+        - anger > 80 && TURNS_SINCE(-> anger3) < 0:
+            -> anger3
+        - anger > 70 && TURNS_SINCE(-> anger2) < 0:
+            -> anger2
+        - anger > 60 && TURNS_SINCE(-> anger1) < 0:
+            -> anger1
+        - else:
+            {defaultListen("guardcombat.storylets")}
+            -> END
+    }
+    
+
 === function listenEnemyHits(enemyHits, Knot)
     {listen(enemyHits, -1, -1, -1, -1, -1, -1, Knot, "", "", "", "", "", "")}
     
@@ -392,6 +521,7 @@ VAR destinationKnot = ""
     ~ LISTEN_enemyDodges = enemyDodges
     ~ LISTEN_playerDodges = playerDodges
     ~ LISTEN_timer = Ltimer
+
     ~ enemyHitsKnot = eHitKnot
     ~ playerHitsKnot = pHitKnot
     ~ enemyParriesKnot = eParryKnot
@@ -401,5 +531,5 @@ VAR destinationKnot = ""
     ~ timerKnot = tKnot
     
 === function defaultListen(Knot) ===
-    {listenSameKnot(1, 1, 2, 2, 4, 5, 20, Knot)}
+    {listenSameKnot(1, 1, 2, 2, 2, 2, 20, Knot)}
     # function Start_Combat
