@@ -164,12 +164,6 @@ public:
 	UPROPERTY()
 		float DodgeEndedTime = 0;
 
-	UPROPERTY(BlueprintReadWrite)
-		bool canRegen;
-
-	UFUNCTION(BlueprintImplementableEvent)
-		void PlayerTakeDamage();
-
 	//Properties for internal use
 	UPROPERTY(Category = GroundMovement, BlueprintReadOnly)
 		FVector currentPhysicsLinearVelocity;

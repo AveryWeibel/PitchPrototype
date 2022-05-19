@@ -308,8 +308,6 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 	UE_LOG(Log171General, Log, TEXT("Player taking %f damage"), damageAmount);
 
-	PlayerTakeDamage();
-
 	if (playerHealth <= 0.0f) {
 		playerHealth = 0.0f;
 		characterStateMachine->SendInput(StateAction::Die);
@@ -320,9 +318,6 @@ float AMainCharacter::takeDamage(float damageAmount) {
 
 void AMainCharacter::takeWaterDamage(float damage) {
 	playerHealth -= (damage * waterDamageMultiplier);
-
-	PlayerTakeDamage();
-
 	if(playerHealth <= 0)
 	{
 		characterStateMachine->SendInput(StateAction::Die);
