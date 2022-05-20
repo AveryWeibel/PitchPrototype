@@ -68,6 +68,12 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* MasterVolumeBar;
 
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+		UTextBlock* MusicVolumeText;
+
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+		USlider* MusicVolumeBar;
+
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* SFXVolumeText;
 
@@ -82,6 +88,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 		void OnMasterVolumeBarChanged(float Value);
+
+	UFUNCTION(BlueprintCallable)
+		void OnMusicVolumeBarChanged(float Value);
 
 	UFUNCTION(BlueprintCallable)
 		void OnSFXVolumeBarChanged(float Value);
