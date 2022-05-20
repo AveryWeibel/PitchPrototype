@@ -4,6 +4,7 @@
 		<relationship name="vca">
 			<destination>{e769de7b-6746-412f-b2d5-e9c10a04022b}</destination>
 			<destination>{aff9574e-56f0-4dfa-ac97-98f612b99625}</destination>
+			<destination>{6c4cefb8-0f91-4241-bff4-176a7323ea01}</destination>
 		</relationship>
 	</object>
 </objects>
