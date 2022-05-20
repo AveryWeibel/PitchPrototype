@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "DestructibleComponent.h"
 #include "DestructibleObj.generated.h"
 
 UCLASS()
@@ -14,6 +15,35 @@ class PITCHPROTOTYPE_API ADestructibleObj : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ADestructibleObj();
+
+	void Damage();
+	void Trigger();
+	void Destroy();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Destructible)
+	class UBoxComponent* TriggerComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Destructible)
+	class UDestructibleComponent* DestructibleComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	bool isTriggerEnabled;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	bool isDestroyed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	float maxHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	float currentHealth;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	float defaultDamage;
+
+	// Damage explosion in direction of where hit occurred
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Destructible)
+	float defaultImpulse;
 
 protected:
 	// Called when the game starts or when spawned
