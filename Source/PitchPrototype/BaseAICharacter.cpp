@@ -206,6 +206,8 @@ void ABaseAICharacter::Die()
 }
 
 void ABaseAICharacter::takeWaterDamage(float damage) {
+	if(!CanTakeWaterDamage) {return;}
+	
 	health -= damage;
 	AIHealthChange();
 

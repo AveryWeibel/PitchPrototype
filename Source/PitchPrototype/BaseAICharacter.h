@@ -122,6 +122,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Combat")
 		float dodgeSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
+		bool CanTakeWaterDamage = true;
+
 	float DodgeStartedTime;
 	float DodgeElapsedTime;
 	FVector DodgeMoveVelocity;
