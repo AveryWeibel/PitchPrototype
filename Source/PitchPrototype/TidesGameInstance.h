@@ -68,6 +68,15 @@ public:
 		void MasterVolumeChanged(float newVolume);
 
 	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
+		float MusicVolume;
+
+	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
+		void setMusicVolume(float newVolume);
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void MusicVolumeChanged(float newVolume);
+
+	UPROPERTY(Category = TidesGameInstance, EditAnywhere, BlueprintReadWrite)
 		float SFXVolume;
 
 	UFUNCTION(Category = TidesGameInstance, BlueprintCallable)
