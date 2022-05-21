@@ -12,6 +12,7 @@ UTidesGameInstance::UTidesGameInstance() {
 
 	CameraSensitivity = 100.0f;
 	MasterVolume = 0.5f;
+	MusicVolume = 0.5f;
 	SFXVolume = 0.5f;
 	fullscreen = false;
 }
@@ -38,6 +39,12 @@ void UTidesGameInstance::setMasterVolume(float newVolume)
 	MasterVolume = newVolume;
 	MasterVolumeChanged(MasterVolume);
 	//UE_LOG(LogTemp, Log, TEXT("New Master Volume: %d"), newVolume);
+}
+
+void UTidesGameInstance::setMusicVolume(float newVolume)
+{
+	MusicVolume = newVolume;
+	MusicVolumeChanged(MusicVolume);
 }
 
 void UTidesGameInstance::setSFXVolume(float newVolume)

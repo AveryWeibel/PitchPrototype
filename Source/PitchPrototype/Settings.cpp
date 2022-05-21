@@ -12,6 +12,7 @@ void USettings::NativeConstruct() {
 	FullScreenCheckBox->OnCheckStateChanged.AddUniqueDynamic(this, &USettings::OnFullScreenCheckBoxClicked);
 	CameraSensBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnCameraSensBarChanged);
 	MasterVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnMasterVolumeBarChanged);
+	MusicVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnMusicVolumeBarChanged);
 	SFXVolumeBar->OnValueChanged.AddUniqueDynamic(this, &USettings::OnSFXVolumeBarChanged);
 
 	ControllerButton->OnClicked.AddUniqueDynamic(this, &USettings::onControllerButtonClicked);
@@ -26,6 +27,7 @@ void USettings::syncSettings(ESlateVisibility type) {
 		gameInstance->fullscreen ? FullScreenCheckBox->SetCheckedState(ECheckBoxState::Checked) : FullScreenCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 		CameraSensBar->SetValue(gameInstance->CameraSensitivity);
 		MasterVolumeBar->SetValue(gameInstance->MasterVolume);
+		MusicVolumeBar->SetValue(gameInstance->MusicVolume);
 		SFXVolumeBar->SetValue(gameInstance->SFXVolume);
 	}
 	else
@@ -72,6 +74,11 @@ void USettings::OnCameraSensBarChanged(float Value) {
 
 void USettings::OnMasterVolumeBarChanged(float Value) {
 	gameInstance->setMasterVolume(Value);
+}
+
+void USettings::OnMusicVolumeBarChanged(float Value)
+{
+	gameInstance->setMusicVolume(Value);
 }
 
 void USettings::OnSFXVolumeBarChanged(float Value) {
