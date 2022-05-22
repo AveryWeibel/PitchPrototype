@@ -59,7 +59,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	*HorizontalDirVector = FVector::ZeroVector;
 	VerticalVector = 0;
 	
-	mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
+	//mainCharacter->bodyCollider->SetWorldRotation(FRotator(0, 0, 0));
 }
 
 void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundSnap)
@@ -163,7 +163,7 @@ void State_MainCharacter::PerformGroundCheck()
 
 void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
 {
-	if(FaceDirection.Size() == 0)
+	if(InputValues.Size() == 0)
 	{
 		return;
 	}
@@ -181,7 +181,7 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 			FMath::Clamp
 			(
 				turningRate * DeltaTime,
-				DeltaTime,
+				0.0f,
 				1.0f
 			)
 		)

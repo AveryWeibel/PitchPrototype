@@ -108,10 +108,14 @@ void AMainCharacter::BeginPlay()
 	playerMaxHealth = 100.0f;
 	playerHealth = playerMaxHealth;
 
+	// FRotator storedMeshRot = Mesh->GetComponentRotation();
+	//
 	if(bodyCollider->GetComponentRotation().Yaw != 0)
 	{
 		bodyCollider->SetWorldRotation(FRotator::ZeroRotator);
 	}
+	//
+	// Mesh->SetWorldRotation(storedMeshRot);
 } //End BeginPlay
 
 int AMainCharacter::NativeGetDialogueInt_Implementation(const FString& name)
