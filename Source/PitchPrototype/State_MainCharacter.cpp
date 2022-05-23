@@ -319,6 +319,11 @@ void State_MainCharacter::CallInteractBP()
 	mainCharacter->InteractBP();
 }
 
+void State_MainCharacter::StartIntroMontage()
+{
+	mainCharacter->StartIntroMontage();
+}
+
 void State_MainCharacter::SendInput(StateAction Action)
 {
 	switch (Action) {
@@ -357,6 +362,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 		break;
 	case StateAction::AnimHitboxInactive:
 		AnimHitboxInactive();
+		break;
+	case StateAction::EndIntroAnim:
+		EndIntroAnim();
 		break;
 	case StateAction::EndOverlapAI:
 		EndOverlapAI();
@@ -432,6 +440,10 @@ void State_MainCharacter::AnimHitboxActive()
 }
 
 void State_MainCharacter::AnimHitboxInactive()
+{
+}
+
+void State_MainCharacter::EndIntroAnim()
 {
 }
 

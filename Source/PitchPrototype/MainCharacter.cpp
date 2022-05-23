@@ -9,6 +9,7 @@
 #include "StateMC_NonCombatJump.h"
 #include "CustomDefines.h"
 #include "StateMC_Dead.h"
+#include "StateMC_Intro.h"
 #include "StateMC_InWater.h"
 #include "StateMC_LockedOnDodge.h"
 #include "StateMC_LockedOnMove.h"
@@ -90,6 +91,7 @@ void AMainCharacter::BeginPlay()
 	StateMC_LockedOnDodge* LockedOnDodge = new StateMC_LockedOnDodge(this);
 	StateMC_Dead* Dead = new StateMC_Dead(this);
 	StateMC_InWater* InWater = new StateMC_InWater(this);
+	StateMC_Intro* Intro = new StateMC_Intro(this);
 	//Add all to array
 	characterStateInstances.Add(NonCombatMove);
 	characterStateInstances.Add(NonCombatInAir);
@@ -100,9 +102,10 @@ void AMainCharacter::BeginPlay()
 	characterStateInstances.Add(LockedOnDodge);
 	characterStateInstances.Add(Dead);
 	characterStateInstances.Add(InWater);
+	characterStateInstances.Add(Intro);
 	
 	//Initialize state machine
-	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::NonCombatMove);
+	characterStateMachine = new StateMachine(characterStateInstances, TidesStateName::Intro);
 
 	//Combat Initialization
 	playerMaxHealth = 100.0f;
@@ -249,6 +252,19 @@ void AMainCharacter::RecieveAnimHitboxActive()
 void AMainCharacter::RecieveAnimHitboxInactive()
 {
 	characterStateMachine->SendInput(StateAction::AnimHitboxInactive);
+}
+
+void AMainCharacter::IntroAnimEnd()
+{
+	if(characterStateMachine)
+	{
+		characterStateMachine->SendInput(StateAction::EndIntroAnim);
+	}
+}
+
+void AMainCharacter::StartIntroMontage()
+{
+	Animator->StartIntroMontage();
 }
 
 void AMainCharacter::HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
