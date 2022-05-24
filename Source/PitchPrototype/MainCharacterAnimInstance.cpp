@@ -62,6 +62,16 @@ void UMainCharacterAnimInstance::NotifyAnimHitboxInactive()
 	}
 }
 
+void UMainCharacterAnimInstance::NotifyIntroAnimEnd()
+{
+	auto MainChar = Cast<AMainCharacter>(OwningPawn);
+
+	if(MainChar)
+	{
+		MainChar->IntroAnimEnd();
+	}
+}
+
 FVector UMainCharacterAnimInstance::GetControlDirection()
 {
 	return controlDirection;

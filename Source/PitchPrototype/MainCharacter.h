@@ -60,6 +60,9 @@ public:
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		float waterDamageMultiplier;
+
+	UPROPERTY(Category = Character, EditAnywhere)
+		float IntroWaitTime = 10;
 	
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
@@ -248,6 +251,10 @@ protected:
 	void RecieveAnimHitboxActive();
 
 	void RecieveAnimHitboxInactive();
+
+	void IntroAnimEnd();
+
+	void StartIntroMontage();
 
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

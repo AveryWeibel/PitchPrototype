@@ -127,6 +127,7 @@ public:
 	void MoveCameraUnLocked(float DeltaTime, float speedMod = 1);
 	void RagdollModel();
 	void CallInteractBP();
+	void StartIntroMontage();
 
 	//Implement State SendInput
 	void SendInput(StateAction) override;
@@ -150,6 +151,7 @@ public:
 	virtual void AnimEnd();
 	virtual void AnimHitboxActive();
 	virtual void AnimHitboxInactive();
+	virtual void EndIntroAnim();
 	virtual void Jump();
 	virtual void LockOn();
 	virtual void ToggleSprint();
