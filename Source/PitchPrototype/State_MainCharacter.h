@@ -78,7 +78,7 @@ public:
 	void PerformGroundCheck();
 
 	UFUNCTION()
-	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate);
+	void RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate, bool RequireInput = true);
 	
 	UFUNCTION()
 	void ApplyGravity(float GravityAmount, float DeltaTime);
