@@ -23,6 +23,12 @@ void UPauseMenu::NativeConstruct() {
 	QuitGameButton->OnHovered.AddUniqueDynamic(this, &UPauseMenu::OnQuitGameButtonHovered);
 	QuitGameButton->OnUnhovered.AddUniqueDynamic(this, &UPauseMenu::OnQuitGameButtonUnhovered);
 	QuitGameButton->OnClicked.AddUniqueDynamic(this, &UPauseMenu::OnQuitGameButtonClicked);
+
+	ButtonList.AddUnique(ResumeButton);
+	ButtonList.AddUnique(MeditateButton);
+	ButtonList.AddUnique(SettingsButton);
+	ButtonList.AddUnique(MainMenuButton);
+	ButtonList.AddUnique(QuitGameButton);
 }
 
 void UPauseMenu::PauseGame()
