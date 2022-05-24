@@ -49,16 +49,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* TeamName;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnPlayButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnOptionsButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnCreditsButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnQuitButtonClicked();
 
 	void NativeConstruct() override;
