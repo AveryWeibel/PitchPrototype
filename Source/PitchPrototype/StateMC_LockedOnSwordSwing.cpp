@@ -51,7 +51,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	//Maintain camera tracking
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
-	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity);
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
 	
 }
 

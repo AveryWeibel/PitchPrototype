@@ -161,9 +161,9 @@ void State_MainCharacter::PerformGroundCheck()
 
 }
 
-void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate)
+void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDirection, float turningRate, bool RequireInput)
 {
-	if(InputValues.Size() == 0)
+	if(RequireInput && InputValues.Size() == 0)
 	{
 		return;
 	}
