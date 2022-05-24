@@ -12,6 +12,11 @@ void UMainMenu::NativeConstruct() {
 	OptionsButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnOptionsButtonClicked);
 	CreditsButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnCreditsButtonClicked);
 	QuitButton->OnClicked.AddUniqueDynamic(this, &UMainMenu::OnQuitButtonClicked);
+
+	ButtonList.AddUnique(PlayButton);
+	ButtonList.AddUnique(OptionsButton);
+	ButtonList.AddUnique(CreditsButton);
+	ButtonList.AddUnique(QuitButton);
 }
 
 void UMainMenu::OnPlayButtonClicked() {
