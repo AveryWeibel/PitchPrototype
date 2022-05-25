@@ -27,4 +27,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TEnumAsByte<TidesStateName> ExitState;
+
+	bool playerDodgedAttack;
+
+	AMainCharacter* player;
 };

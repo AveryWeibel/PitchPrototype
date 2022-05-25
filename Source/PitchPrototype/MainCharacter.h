@@ -285,7 +285,6 @@ private:
 	StateMachine* characterStateMachine;
 	TArray<State*> characterStateInstances;
 
-
 	//Create input delegates for state machine
 	StateAxisDelegate MoveForwardDelegate;
 
@@ -293,6 +292,9 @@ private:
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:
+
+	StateMachine* GetStateMachine();
+
 	UFUNCTION(BlueprintCallable)
 		void EnterWater();
 

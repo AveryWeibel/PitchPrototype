@@ -4,6 +4,7 @@
 #include "TickThisAttack.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
+#include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
 
 struct FTickThisAttackMemory
 {
@@ -13,12 +14,16 @@ struct FTickThisAttackMemory
 UTickThisAttack::UTickThisAttack()
 {
 	bNotifyTick = true;
+	playerDodgedAttack = false;
 }
 
 EBTNodeResult::Type UTickThisAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	//UE_LOG(Log171General, Log, TEXT("Perform Attack Node"))
 	UTidesBTTaskNode::ExecuteTask(OwnerComp, NodeMemory);
+
+	playerDodgedAttack = false;
+	player = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
 
 	//FTickThisAttackMemory* TaskMemory = reinterpret_cast<FTickThisAttackMemory*>(NodeMemory);
 	
@@ -64,11 +69,28 @@ void UTickThisAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMem
 	if(weaponActive && hitPlayer && AIController)
 	{
 		auto AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
-		if(AICharacter)
+		if (AICharacter) {
 			hitPlayer->TakeWeaponHit(AICharacter->GetWeaponDamage());
+
+			//not sure if necessary since finish latent task returns
+			/*if (hitPlayer->GetStateMachine()->GetActiveStateName() == TidesStateName::LockedOnDodging) {
+				playerDodgedAttack = true;
+			}*/
+		}
 
 		OwnerComp.GetBlackboardComponent()->SetValueAsBool("WeaponActive", false);
 		FinishLatentTask(OwnerComp ,EBTNodeResult::Succeeded);
+	}
+
+
+
+	//dodge counter
+	if (!playerDodgedAttack && 
+		owningChar->GetDistanceTo(player) <= 300.0f &&
+		player->GetStateMachine()->GetActiveStateName() == TidesStateName::LockedOnDodging) {
+
+		playerDodgedAttack = true;
+		player->TakeWeaponHit(0);
 	}
 }
 
