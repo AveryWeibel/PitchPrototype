@@ -159,6 +159,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMainCharacter::ToggleSprint);
 }
 
+StateMachine* AMainCharacter::GetStateMachine()
+{
+	return characterStateMachine;
+}
+
 void AMainCharacter::EnterWater()
 {
 	characterStateMachine->SendInput(StateAction::EnterWater);

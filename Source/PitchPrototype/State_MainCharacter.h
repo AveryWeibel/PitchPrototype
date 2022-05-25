@@ -116,7 +116,7 @@ public:
 	FRotator cameraBoomRotationLerpTarget;
 
 	//Camera Inputs
-	float cameraFrontThreshold = 0.95f;
+	float cameraFrontThreshold = 0.85f;
 
 	//Functions for managed variables
 	void ConsumeCameraInput(float DeltaTime);
