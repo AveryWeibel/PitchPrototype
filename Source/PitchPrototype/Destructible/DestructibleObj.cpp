@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Components/BoxComponent.h"
 #include "DestructibleObj.h"
 
 // Sets default values
@@ -36,7 +36,7 @@ void ADestructibleObj::BeginPlay()
 
 	DestructibleComponent->OnComponentHit.AddDynamic(this, &ADestructibleObj::Damage);
 	
-	TriggerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADestructibleObj::Trigger); 
+	TriggerComponent->OnComponentBeginOverlap.AddDynamic(this, &ADestructibleObj::Trigger);
 
 	currentHealth = maxHealth;
 	
