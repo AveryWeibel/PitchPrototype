@@ -114,4 +114,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void ParrySound();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void LandedOnGround();
 };
