@@ -24,19 +24,22 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 		bool bIsPaused;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite)
+		TArray<UButton*> ButtonList;
+
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* ResumeButton;
 
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* ResumePanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* MeditateButton;
 
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* MeditatePanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* SettingsButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -45,13 +48,13 @@ protected:
 	UPROPERTY()
 		bool settingsWasOpen;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* MainMenuButton;
 
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* MainMenuPanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* QuitGameButton;
 
 	UPROPERTY(meta = (BindWidget))

@@ -44,26 +44,14 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 			hitAI->RecieveHit(10);
 		}
 	}
-
-	//Lerp to camera height
-	//& Kick camera to the side for framing
-	mainCharacter->cameraBoom->SetRelativeLocation(
-		FVector (
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().X, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().X, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Y, mainCharacter->cameraLockedHorizontalOffset * mainCharacter->cameraBoom->GetRightVector().Y, mainCharacter->cameraLerpAlpha * DeltaTime),
-			FMath::Lerp(mainCharacter->cameraBoom->GetRelativeLocation().Z, mainCharacter->cameraLockedHeight, mainCharacter->cameraLerpAlpha * DeltaTime)
-		)
-	);
 	
 	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
-
+	
 	//Maintain camera tracking
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
-	
-	dirToTarget.Z = 0;
-	mainCharacter->Mesh->SetWorldRotation(FMath::Lerp(mainCharacter->Mesh->GetRelativeRotation(),  dirToTarget.Rotation(), FMath::Clamp( mainCharacter->attackTrackingIntensity * DeltaTime, DeltaTime, mainCharacter->attackTrackingIntensity)));
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
 	
 }
 

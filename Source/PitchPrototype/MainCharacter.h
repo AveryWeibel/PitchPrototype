@@ -60,6 +60,9 @@ public:
 
 	UPROPERTY(Category = Character, EditAnywhere)
 		float waterDamageMultiplier;
+
+	UPROPERTY(Category = Character, EditAnywhere)
+		float IntroWaitTime = 10;
 	
 	UPROPERTY(Category = GroundMovement, EditAnywhere)
 		float accelerationForce;
@@ -249,6 +252,10 @@ protected:
 
 	void RecieveAnimHitboxInactive();
 
+	void IntroAnimEnd();
+
+	void StartIntroMontage();
+
 	UFUNCTION()
 	void HandleBodyHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -278,7 +285,6 @@ private:
 	StateMachine* characterStateMachine;
 	TArray<State*> characterStateInstances;
 
-
 	//Create input delegates for state machine
 	StateAxisDelegate MoveForwardDelegate;
 
@@ -286,6 +292,9 @@ private:
 	TScriptDelegate<FWeakObjectPtr> bodyHitDelegate;
 
 public:
+
+	StateMachine* GetStateMachine();
+
 	UFUNCTION(BlueprintCallable)
 		void EnterWater();
 

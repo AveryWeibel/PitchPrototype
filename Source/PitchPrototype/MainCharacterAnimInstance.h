@@ -44,6 +44,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "UpdateState"))
 		void RecieveStateUpdate(TidesStateName name);
 
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "StartIntroMontage"))
+	void StartIntroMontage();
+	
 	UFUNCTION(BlueprintCallable)
 		TidesStateName CheckState();
 
@@ -55,6 +58,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 		void NotifyAnimHitboxInactive();
+
+	UFUNCTION(BlueprintCallable)
+		void NotifyIntroAnimEnd();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")

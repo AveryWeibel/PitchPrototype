@@ -22,22 +22,25 @@ class PITCHPROTOTYPE_API UMainMenu : public UUserWidget
 	
 protected:
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite)
+		TArray<UButton*> ButtonList;
+
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* PlayButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* OptionsButton;
 
 	UPROPERTY(meta = (BindWidget))
 		USettings* SettingsWidget;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* CreditsButton;
 
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* CreditsPanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* QuitButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -46,16 +49,16 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UTextBlock* TeamName;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnPlayButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnOptionsButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnCreditsButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnQuitButtonClicked();
 
 	void NativeConstruct() override;
