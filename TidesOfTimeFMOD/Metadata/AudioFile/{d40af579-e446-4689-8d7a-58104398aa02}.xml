@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{d40af579-e446-4689-8d7a-58104398aa02}">
+		<property name="assetPath">
+			<value>Hybrid - Pass By - Drone,Evolving,Coarse,Rough,Tonal,Deep_01.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>53.374083333333331</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f01c5c14-19c8-4695-83d4-ee8380f635f6}</destination>
+		</relationship>
+	</object>
+</objects>
