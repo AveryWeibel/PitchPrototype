@@ -109,6 +109,10 @@ bool StateMC_NonCombatInAir::ApplyFallDamage()
 
 	if(FallDist > mainCharacter->FallDamageDistThreshold)
 	{
+		mainCharacter->Animator->LandedOnGround();
+
+		UE_LOG(Log171InAir, Log, TEXT("Fall height: %f"), FallDist);
+
 		const int DamageDist = FallDist - mainCharacter->FallDamageDistThreshold;
 		mainCharacter->takeDamage( (DamageDist / 100) * mainCharacter->DamagePerHundredUnits);
 		if(mainCharacter->playerHealth <= 0)
@@ -118,7 +122,6 @@ bool StateMC_NonCombatInAir::ApplyFallDamage()
 	}
 
 	return true;
-	UE_LOG(Log171InAir, Log, TEXT("Fall height: %f"), FallDist);
 }
 
 void StateMC_NonCombatInAir::LookUpRate(float Value)
