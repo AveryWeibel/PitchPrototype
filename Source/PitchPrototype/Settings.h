@@ -24,15 +24,15 @@ class PITCHPROTOTYPE_API USettings : public UUserWidget
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* SettingsButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* KeyboardButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* ControllerButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -41,28 +41,28 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UCanvasPanel* SettingsPanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* Title;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* GameplayTitle;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* FullScreenText;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UCheckBox* FullScreenCheckBox;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* CameraSensText;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* CameraSensBar;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* SoundTitle;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* MasterVolumeText;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
@@ -74,7 +74,7 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USlider* MusicVolumeBar;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UTextBlock* SFXVolumeText;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)

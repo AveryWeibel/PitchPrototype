@@ -17,6 +17,8 @@ void UMainMenu::NativeConstruct() {
 	ButtonList.AddUnique(OptionsButton);
 	ButtonList.AddUnique(CreditsButton);
 	ButtonList.AddUnique(QuitButton);
+
+	bIsFocusable = true;
 }
 
 void UMainMenu::OnPlayButtonClicked() {
@@ -27,6 +29,8 @@ void UMainMenu::OnOptionsButtonClicked() {
 	if (SettingsWidget->GetVisibility() == ESlateVisibility::Collapsed) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		CreditsPanel->SetVisibility(ESlateVisibility::Collapsed);
+		SettingsWidget->SetFocus();
+		SettingsWidget->SettingsButton->SetKeyboardFocus();
 	}
 	else
 	{
