@@ -32,7 +32,7 @@ void StateMC_NonCombatMove::Start()
 	
 	UE_LOG(Log171NonCombatMove, Log, TEXT("Enter State NonCombatMove"));
 
-	if(!mainCharacter->weapon->Sheathed)
+	if(!mainCharacter->weapon->Sheathed || mainCharacter->Animator->GetSheatheAlpha() > 0.01f)
 	{
 		Sheathing = true;
 	}

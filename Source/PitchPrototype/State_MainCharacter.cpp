@@ -354,6 +354,9 @@ void State_MainCharacter::SendInput(StateAction Action)
 	case StateAction::Interact:
 		Interact();
 		break;
+	case StateAction::Sheathe:
+		Sheathe();
+		break;
 	case StateAction::AnimEnd:
 		AnimEnd();
 		break;
@@ -496,6 +499,10 @@ void State_MainCharacter::StartOverlapAI()
 }
 
 void State_MainCharacter::EndOverlapAI()
+{
+}
+
+void State_MainCharacter::Sheathe()
 {
 }
 

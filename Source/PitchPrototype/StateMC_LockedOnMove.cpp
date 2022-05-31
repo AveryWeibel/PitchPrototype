@@ -29,11 +29,8 @@ void StateMC_LockedOnMove::Start()
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 		//GroundTraceResponseParams.DefaultResponseParam.
 	}
-
-	if (mainCharacter->weapon->Sheathed)
-	{
-		Unsheathing = true;
-	}
+	AnimatingArms = false;
+	ArmsRaised = false;
 }
 
 void StateMC_LockedOnMove::Execute(float DeltaTime)
@@ -51,27 +48,36 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 			ParryLerpTarget = 0;
 		}
 
-		if(Unsheathing)
+		if(AnimatingArms)
 		{
 			UE_LOG(Log171LockedOnMove, Log, TEXT("SheatheAlpha: %f"), mainCharacter->Animator->GetSheatheAlpha());
-			if(mainCharacter->weapon->Sheathed)
+			if(!ArmsRaised) // Move arms up
 			{
 				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() + mainCharacter->WeaponSheatheSpeed * DeltaTime);
 				if(mainCharacter->Animator->GetSheatheAlpha() >= 0.99f)
 				{
-					mainCharacter->weapon->Sheathed = false;
-					mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("LeftHandSocket"));
-					UE_LOG(Log171LockedOnMove, Log, TEXT("Attach to hand"));
+					if (mainCharacter->weapon->Sheathed) {
+						mainCharacter->weapon->Sheathed = false;
+						mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("LeftHandSocket"));
+						UE_LOG(Log171LockedOnMove, Log, TEXT("Attach to hand"));
+					}
+					else {
+						mainCharacter->weapon->Sheathed = true;
+						mainCharacter->weapon->AttachToComponent(mainCharacter->Mesh, weaponAttachmentRules, FName("BackSocket"));
+						UE_LOG(Log171LockedOnMove, Log, TEXT("Attach to back"));
+					}
+					ArmsRaised = true;
 				}
 			}
-			else
+			else // Move arms down
 			{
 				mainCharacter->Animator->SetSheatheAlpha(mainCharacter->Animator->GetSheatheAlpha() - mainCharacter->WeaponSheatheSpeed * DeltaTime);
 				if(mainCharacter->Animator->GetSheatheAlpha() <= 0.01f)
 				{
 					mainCharacter->Animator->SetSheatheAlpha(0.0f);
 					UE_LOG(Log171LockedOnMove, Log, TEXT("End sheathe animation"));
-					Unsheathing = false;
+					AnimatingArms = false;
+					ArmsRaised = false;
 				}
 			}
 		}
@@ -101,7 +107,15 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Rotate model towards the locked target
-	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->modelTurningRate);
+	FVector FaceDirection{};
+	if (mainCharacter->weapon->Sheathed) {
+		FaceDirection = mainCharacter->horizontalVelocity;
+	}
+	else {
+		FaceDirection = dirToTarget;
+	}
+
+	RotateCharacterModel(DeltaTime, FaceDirection, mainCharacter->modelTurningRate);
 
 	SweepForInteractables();
 }
@@ -141,10 +155,12 @@ void StateMC_LockedOnMove::LookUpRate(float Value)
 
 void StateMC_LockedOnMove::DoAttack()
 {
-	State_MainCharacter::DoAttack();
-	ParryLerpTarget = 0;
-	mainCharacter->Animator->SetParryAlpha(0);
-	RequestStateChange(TidesStateName::SwordAttack);
+	if (!mainCharacter->weapon->Sheathed) {
+		State_MainCharacter::DoAttack();
+		ParryLerpTarget = 0;
+		mainCharacter->Animator->SetParryAlpha(0);
+		RequestStateChange(TidesStateName::SwordAttack);
+	}
 }
 
 void StateMC_LockedOnMove::TakeHit()
@@ -215,6 +231,13 @@ void StateMC_LockedOnMove::Interact()
 
 		//Call BP implementation
 		CallInteractBP();
+	}
+}
+
+void StateMC_LockedOnMove::Sheathe()
+{
+	if (!AnimatingArms) {
+		AnimatingArms = true;
 	}
 }
 
