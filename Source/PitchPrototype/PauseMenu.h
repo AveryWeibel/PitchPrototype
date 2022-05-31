@@ -42,7 +42,7 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* SettingsButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USettings* SettingsWidget;
 
 	UPROPERTY()
@@ -69,43 +69,49 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		void UnpauseGame();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnResumeButtonHovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnResumeButtonUnhovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnResumeButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnMeditateButtonHovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnMeditateButtonUnhovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnMeditateButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnSettingsButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+		void OnSettingsButtonHovered();
+
+	UFUNCTION(BlueprintCallable)
+		void OnSettingsButtonUnhovered();
+
+	UFUNCTION(BlueprintCallable)
 		void OnMainMenuButtonHovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnMainMenuButtonUnhovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnMainMenuButtonClicked();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnQuitGameButtonHovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnQuitGameButtonUnhovered();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void OnQuitGameButtonClicked();
 
 	UFUNCTION()

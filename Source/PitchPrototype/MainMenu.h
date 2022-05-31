@@ -31,7 +31,7 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		UButton* OptionsButton;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 		USettings* SettingsWidget;
 
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)

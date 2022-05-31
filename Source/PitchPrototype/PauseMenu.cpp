@@ -15,6 +15,8 @@ void UPauseMenu::NativeConstruct() {
 	MeditateButton->OnClicked.AddUniqueDynamic(this, &UPauseMenu::OnMeditateButtonClicked);
 
 	SettingsButton->OnClicked.AddUniqueDynamic(this, &UPauseMenu::OnSettingsButtonClicked);
+	SettingsButton->OnHovered.AddUniqueDynamic(this, &UPauseMenu::OnSettingsButtonHovered);
+	SettingsButton->OnUnhovered.AddUniqueDynamic(this, &UPauseMenu::OnSettingsButtonUnhovered);
 
 	MainMenuButton->OnHovered.AddUniqueDynamic(this, &UPauseMenu::OnMainMenuButtonHovered);
 	MainMenuButton->OnUnhovered.AddUniqueDynamic(this, &UPauseMenu::OnMainMenuButtonUnhovered);
@@ -29,6 +31,8 @@ void UPauseMenu::NativeConstruct() {
 	ButtonList.AddUnique(SettingsButton);
 	ButtonList.AddUnique(MainMenuButton);
 	ButtonList.AddUnique(QuitGameButton);
+
+	bIsFocusable = true;
 }
 
 void UPauseMenu::PauseGame()
@@ -40,11 +44,13 @@ void UPauseMenu::PauseGame()
 
 	if (player) {
 		player->SetPause(true);
-		FInputModeUIOnly inputMode = FInputModeUIOnly::FInputModeUIOnly();
+		FInputModeGameAndUI inputMode = FInputModeGameAndUI::FInputModeGameAndUI();
 		inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockInFullscreen);
 		player->SetInputMode(inputMode);
 		player->bShowMouseCursor = true;
 	}
+
+	ResumeButton->SetKeyboardFocus();
 }
 
 void UPauseMenu::UnpauseGame()
@@ -63,14 +69,16 @@ void UPauseMenu::OnResumeButtonHovered()
 {
 	ResumePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	SettingsWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	//UE_LOG(Log171General, Log, TEXT("Resume Hovered"));
 }
 
 void UPauseMenu::OnResumeButtonUnhovered()
 {
 	ResumePanel->SetVisibility(ESlateVisibility::Collapsed);
-	if (settingsWasOpen) {
+	/*if (settingsWasOpen) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	}*/
 }
 
 void UPauseMenu::OnResumeButtonClicked()
@@ -91,9 +99,9 @@ void UPauseMenu::OnMeditateButtonHovered()
 void UPauseMenu::OnMeditateButtonUnhovered()
 {
 	MeditatePanel->SetVisibility(ESlateVisibility::Collapsed);
-	if (settingsWasOpen) {
+	/*if (settingsWasOpen) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	}*/
 }
 
 void UPauseMenu::OnMeditateButtonClicked()
@@ -114,6 +122,18 @@ void UPauseMenu::OnSettingsButtonClicked()
 	}
 }
 
+void UPauseMenu::OnSettingsButtonHovered()
+{
+	if (settingsWasOpen) {
+		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UPauseMenu::OnSettingsButtonUnhovered()
+{
+	SettingsWidget->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UPauseMenu::OnMainMenuButtonHovered()
 {
 	MainMenuPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -123,9 +143,9 @@ void UPauseMenu::OnMainMenuButtonHovered()
 void UPauseMenu::OnMainMenuButtonUnhovered()
 {
 	MainMenuPanel->SetVisibility(ESlateVisibility::Collapsed);
-	if (settingsWasOpen) {
+	/*if (settingsWasOpen) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	}*/
 }
 
 void UPauseMenu::OnMainMenuButtonClicked()
@@ -143,9 +163,9 @@ void UPauseMenu::OnQuitGameButtonHovered()
 void UPauseMenu::OnQuitGameButtonUnhovered()
 {
 	QuitPanel->SetVisibility(ESlateVisibility::Collapsed);
-	if (settingsWasOpen) {
+	/*if (settingsWasOpen) {
 		SettingsWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	}*/
 }
 
 void UPauseMenu::OnQuitGameButtonClicked()
