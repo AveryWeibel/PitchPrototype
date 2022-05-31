@@ -20,6 +20,8 @@ void USettings::NativeConstruct() {
 	SettingsButton->OnClicked.AddUniqueDynamic(this, &USettings::onSettingsButtonClicked);
 
 	this->OnVisibilityChanged.AddUniqueDynamic(this, &USettings::syncSettings);
+
+	bIsFocusable = true;
 }
 
 void USettings::syncSettings(ESlateVisibility type) {
