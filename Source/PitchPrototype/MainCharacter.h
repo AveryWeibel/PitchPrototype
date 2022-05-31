@@ -243,6 +243,8 @@ protected:
 
 	void Interact();
 
+	void Sheathe();
+
 	UFUNCTION(BlueprintImplementableEvent)
 		void InteractBP();
 	

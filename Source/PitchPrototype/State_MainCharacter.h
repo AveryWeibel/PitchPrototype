@@ -161,6 +161,7 @@ public:
 	virtual void TakeHit();
 	virtual void Die();
 	virtual void Interact();
+	virtual void Sheathe();
 	virtual void BeginOverlapFeet(AActor& OtherActor);
 	virtual void EndOverlapFeet(AActor& OtherActor);
 	virtual void StartOverlapAI();

@@ -49,6 +49,7 @@ enum StateAction
 	Die,
 	ToggleSprint,
 	Interact,
+	Sheathe,
 	AnimHitboxActive,
 	AnimHitboxInactive,
 	EndIntroAnim,

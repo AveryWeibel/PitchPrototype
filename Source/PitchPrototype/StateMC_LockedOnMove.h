@@ -37,6 +37,7 @@ protected:
 	virtual void Parry() override;
 	virtual void Dodge() override;
 	virtual void Interact() override;
+	virtual void Sheathe() override;
 
 	virtual void EndOverlapAI();
 
@@ -46,5 +47,6 @@ protected:
 	float ParryLerpTarget;
 	UPROPERTY()
 	FVector dirToTarget;
-	bool Unsheathing = false;
+	bool AnimatingArms = false;
+	bool ArmsRaised = false;
 };
