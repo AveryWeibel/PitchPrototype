@@ -172,7 +172,7 @@
 			<value>-2</value>
 		</property>
 		<relationship name="fadeInCurve">
-			<destination>{ad3286c0-e825-4922-bd3c-ce937ae94e5c}</destination>
+			<destination>{0da01bd8-9160-46b1-becb-2bd01db0b2ac}</destination>
 		</relationship>
 		<relationship name="fadeOutCurve">
 			<destination>{decd6bde-574a-4845-86ca-47ecbcdf7a81}</destination>
@@ -329,12 +329,12 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{ef66ea02-05d5-4c1c-9da9-2abb00d3e847}" />
-	<object class="FadeCurve" id="{ad3286c0-e825-4922-bd3c-ce937ae94e5c}">
+	<object class="FadeCurve" id="{0da01bd8-9160-46b1-becb-2bd01db0b2ac}">
 		<relationship name="startPoint">
-			<destination>{519d1206-f8b5-435b-83c8-d6029e528dbb}</destination>
+			<destination>{ad3e33ae-a7d6-46bb-9a00-fdba44628042}</destination>
 		</relationship>
 		<relationship name="endPoint">
-			<destination>{29935b6b-3fa6-4780-814d-c3ecbcb0d7b5}</destination>
+			<destination>{4b85d238-6d46-4500-aca8-b875f04ee808}</destination>
 		</relationship>
 	</object>
 	<object class="FadeCurve" id="{decd6bde-574a-4845-86ca-47ecbcdf7a81}">
@@ -409,7 +409,7 @@
 	</object>
 	<object class="AutomationPoint" id="{0d2752fb-54d5-4195-883b-d217663257c6}">
 		<property name="position">
-			<value>10</value>
+			<value>5</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -435,7 +435,7 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{d6d255ea-2818-442c-a88a-5e0e0e67612b}" />
-	<object class="AutomationPoint" id="{519d1206-f8b5-435b-83c8-d6029e528dbb}">
+	<object class="AutomationPoint" id="{ad3e33ae-a7d6-46bb-9a00-fdba44628042}">
 		<property name="position">
 			<value>182.82691609977323</value>
 		</property>
@@ -446,9 +446,9 @@
 			<value>-0.2547189</value>
 		</property>
 	</object>
-	<object class="AutomationPoint" id="{29935b6b-3fa6-4780-814d-c3ecbcb0d7b5}">
+	<object class="AutomationPoint" id="{4b85d238-6d46-4500-aca8-b875f04ee808}">
 		<property name="position">
-			<value>190</value>
+			<value>185</value>
 		</property>
 		<property name="value">
 			<value>1</value>
