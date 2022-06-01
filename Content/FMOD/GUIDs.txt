@@ -1,0 +1,25 @@
+{2ba0dd75-d495-4c80-8957-ed3f15c98067} bank:/Master
+{b3bdfda1-a5ee-00c2-0f1e-67c1e43a86ff} bank:/Master.strings
+{8fb3aaba-5183-4fc3-8f02-0524126233d2} bus:/
+{79248807-f9a2-4b71-b5ff-85c091cb2f9d} bus:/Master
+{236130ab-9b92-49d0-9fce-805e7c208283} bus:/Reverb
+{3e0ca858-6d71-46f5-be31-01ee0669cd67} event:/Ambience/Fire Ambience
+{383ffdfa-fb1d-43d5-b535-c2c1d5d2df7a} event:/Ambience/Ocean Ambience
+{c8081eee-0872-4be9-a895-1aa76a7b2ef7} event:/Ambience/Seagull Ambience
+{45b4bb3f-2a13-452f-8707-e8abec847d12} event:/BGM/BGM Transition
+{766545c1-2309-4cac-9c15-e54e0e776808} event:/BGM/Calm BGM
+{c7e62530-85c4-4733-bf81-1b01d438a950} event:/BGM/Tides_of_Time_Combat_Mode (1)
+{fe1ada5a-720a-4c8c-ba37-39de917fe0d1} event:/BGM/Tsunami Incoming
+{e412b61f-5042-436c-9595-648547278920} event:/Combat/Damage Taken
+{4476eca5-bee5-4732-9c0d-8fd2ef77f0be} event:/Combat/Sword Parry
+{650b4d3e-0529-4eb7-b470-ec9d296b4f84} event:/Combat/Sword Swing
+{c7fd3eb2-890f-44c9-882b-0cd60f228a15} event:/Footsteps/Footsteps - Concrete
+{b183e535-df9e-412c-8f0c-2f5db0cd65ef} event:/Footsteps/Footsteps - Grass
+{0b1dbd8c-4c5e-47e2-88ad-40808ab499d7} event:/Footsteps/Footsteps - Sand
+{167f76f9-949a-42bb-87f0-43da0a371c25} event:/Footsteps/Footsteps - Wood
+{a31e0c19-70aa-4744-81c0-8ef4db38271f} event:/Water/Treading Water SFX
+{f680c5f1-3e2b-41b5-845a-64e23b946899} parameter:/Distance
+{60551f9d-98fb-445f-a0e6-0085e57e4cac} parameter:/GameState
+{6c4cefb8-0f91-4241-bff4-176a7323ea01} vca:/BGM
+{e769de7b-6746-412f-b2d5-e9c10a04022b} vca:/Master
+{aff9574e-56f0-4dfa-ac97-98f612b99625} vca:/SFX
