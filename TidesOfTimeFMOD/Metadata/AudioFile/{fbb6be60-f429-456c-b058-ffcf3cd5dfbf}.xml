@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{fbb6be60-f429-456c-b058-ffcf3cd5dfbf}">
+		<property name="assetPath">
+			<value>Hybrid - Charge Impact - Hit,Black,Hole,Space,Explosion,Implosion,Gritty_01.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>35.730322916666665</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{f01c5c14-19c8-4695-83d4-ee8380f635f6}</destination>
+		</relationship>
+	</object>
+</objects>
