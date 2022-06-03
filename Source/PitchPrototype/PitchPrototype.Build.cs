@@ -10,6 +10,6 @@ public class PitchPrototype : ModuleRules
 		
 		bEnableExceptions = true;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "ApexDestruction", "AIModule", "GameplayTasks", "NavigationSystem" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "ApexDestruction", "AIModule", "GameplayTasks", "NavigationSystem"});
 	}
 }
