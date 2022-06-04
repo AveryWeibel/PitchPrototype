@@ -33,7 +33,7 @@ void ABaseAICharacter::BeginPlay()
 		UDialogueSystem* temp = Cast<UDialogueSystem>(Cast<UWidgetComponent>(it)->GetWidget());
 		if (temp) {
 			dialogueSystem = temp;
-			UE_LOG(LogTemp, Log, TEXT("dialogue system %s"), *dialogueSystem->GetName());
+			UE_LOG(LogTemp, Log, TEXT("dialogue system %s for %s"), *dialogueSystem->GetName(), *this->GetName());
 		}
 	}
 
