@@ -180,6 +180,13 @@ void StateMC_LockedOnMove::Die()
 void StateMC_LockedOnMove::Parry()
 {
 	State_MainCharacter::Parry();
+
+	if(AnimatingArms || mainCharacter->weapon->Sheathed || mainCharacter->Animator->GetMontageTime() > 0)
+	{
+		return;
+	}
+
+	mainCharacter->Animator->StartParryMontage();
 	
 	if(mainCharacter->Animator->GetParryAlpha() <= .05f) {
 
@@ -196,7 +203,7 @@ void StateMC_LockedOnMove::Parry()
 				mainCharacter->Animator->SetParryIKTarget(mainCharacter->lockedObject->GetActorLocation());
 			}
 		
-			ParryLerpTarget = 1;
+			//ParryLerpTarget = 1;
 			if(AI->Animator->GetParryable() && mainCharacter->GetDistanceTo(mainCharacter->lockedObject) < mainCharacter->parryDistance)
 			{
 				AI->RecieveParry();
@@ -239,6 +246,12 @@ void StateMC_LockedOnMove::Sheathe()
 	if (!AnimatingArms) {
 		AnimatingArms = true;
 	}
+}
+
+void StateMC_LockedOnMove::AnimEnd()
+{
+	State_MainCharacter::AnimEnd();
+	
 }
 
 void StateMC_LockedOnMove::EndOverlapAI()

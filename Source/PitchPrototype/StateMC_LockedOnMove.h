@@ -38,6 +38,7 @@ protected:
 	virtual void Dodge() override;
 	virtual void Interact() override;
 	virtual void Sheathe() override;
+	virtual void AnimEnd() override;
 
 	virtual void EndOverlapAI();
 
