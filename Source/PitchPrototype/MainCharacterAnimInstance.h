@@ -46,6 +46,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "StartIntroMontage"))
 	void StartIntroMontage();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "StartAttackMontage"))
+	void StartAttackMontage();
+
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "GetMontageTime"))
+	float GetMontageTime();
 	
 	UFUNCTION(BlueprintCallable)
 		TidesStateName CheckState();

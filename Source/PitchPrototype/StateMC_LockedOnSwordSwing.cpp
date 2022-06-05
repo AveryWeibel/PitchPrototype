@@ -7,6 +7,8 @@
 #include "MainCharacter.h"
 #include "CustomDefines.h"
 
+DEFINE_LOG_CATEGORY(Log171Attack);
+
 StateMC_LockedOnSwordSwing::StateMC_LockedOnSwordSwing(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
 	//Add new entry to StateName in State.h
@@ -21,6 +23,13 @@ StateMC_LockedOnSwordSwing::~StateMC_LockedOnSwordSwing()
 void StateMC_LockedOnSwordSwing::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnSwordSwing"));
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
+
+	mainCharacter->Animator->StartAttackMontage();
 }
 
 void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
@@ -45,14 +54,23 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 		}
 	}
 	
-	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
-	
-	//Maintain camera tracking
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
-	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
+
+	//Calculate movement this frame for attack
+	float MovementDeltaThisFrame = mainCharacter->AttackVectorCurve->GetFloatValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame;
 	
+	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: %f\nMontageTime: %f"), MovementDeltaThisFrame, mainCharacter->Animator->GetMontageTime());
+	if(mainCharacter->Animator->GetMontageTime() > 0)
+	{
+		MoveCharacter(DeltaTime, MovementDeltaThisFrame, true, mainCharacter->fallingGravityAmount, false,  FVector2D(dirToTarget));
+	}
+	
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
+
+
+	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetFloatValue(mainCharacter->Animator->GetMontageTime());
 }
 
 void StateMC_LockedOnSwordSwing::AnimEnd()

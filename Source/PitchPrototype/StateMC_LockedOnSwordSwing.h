@@ -8,6 +8,9 @@
 ///	<summary>
 /// Default Summary
 ///	</summary>
+
+DECLARE_LOG_CATEGORY_EXTERN(Log171Attack, Log, All);
+
 class PITCHPROTOTYPE_API StateMC_LockedOnSwordSwing : public State_MainCharacter
 {
 public:
@@ -31,4 +34,5 @@ protected:
 	//Internal variables
 	bool hitThisAttack = false;
 	bool hitboxActive = false;
+	float MovementValueLastFrame = 0;
 };

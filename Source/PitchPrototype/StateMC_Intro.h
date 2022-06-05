@@ -8,6 +8,8 @@
 ///	<summary>
 /// Default Summary
 ///	</summary>
+DECLARE_LOG_CATEGORY_EXTERN(Log171Intro, Log, All);
+
 class PITCHPROTOTYPE_API StateMC_Intro : public State_MainCharacter
 {
 public:
