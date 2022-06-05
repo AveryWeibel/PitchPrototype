@@ -60,8 +60,11 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Calculate movement this frame for attack
-	FVector MovementDeltaThisFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame;
-	FVector2D DirCorrectedDelta = FVector2D(dirToTarget.ForwardVector * MovementDeltaThisFrame.X) + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
+	FVector2D MovementDeltaThisFrame = FVector2D(mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame);
+	FVector2D ForwardComponent = FVector2D(dirToTarget * MovementDeltaThisFrame.X);
+	FVector2D RightComponent = FVector2D(ForwardComponent.Y, -ForwardComponent.X) * MovementDeltaThisFrame.Y;
+	
+	FVector2D DirCorrectedDelta = ForwardComponent + RightComponent; // + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
 	
 	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: X: %f, Y: %f\nMontageTime: %f"), MovementDeltaThisFrame.X, MovementDeltaThisFrame.Y, mainCharacter->Animator->GetMontageTime());
 	if(mainCharacter->Animator->GetMontageTime() > 0)
