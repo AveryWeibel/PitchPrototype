@@ -6,6 +6,9 @@
 #include "StateMC_LockedOnSwordSwing.h"
 #include "MainCharacter.h"
 #include "CustomDefines.h"
+#include "Curves/CurveVector.h"
+
+DEFINE_LOG_CATEGORY(Log171Attack);
 
 StateMC_LockedOnSwordSwing::StateMC_LockedOnSwordSwing(AMainCharacter* mainCharacter) : State_MainCharacter(mainCharacter)
 {
@@ -21,6 +24,13 @@ StateMC_LockedOnSwordSwing::~StateMC_LockedOnSwordSwing()
 void StateMC_LockedOnSwordSwing::Start()
 {
 	UE_LOG(LogTemp, Log, TEXT("Enter State StateMC_LockedOnSwordSwing"));
+	if(mainCharacter)
+	{
+		groundTraceParams.AddIgnoredActor(mainCharacter);
+		//GroundTraceResponseParams.DefaultResponseParam.
+	}
+
+	mainCharacter->Animator->StartAttackMontage();
 }
 
 void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
@@ -45,14 +55,27 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 		}
 	}
 	
-	//Rotate model towards the movement vector
 	FVector dirToTarget = mainCharacter->lockedObject->GetActorLocation() - mainCharacter->GetActorLocation();
-	
-	//Maintain camera tracking
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
-	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
+
+	//Calculate movement this frame for attack
+	FVector2D MovementDeltaThisFrame = FVector2D(mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame);
+	FVector2D ForwardComponent = FVector2D(dirToTarget * MovementDeltaThisFrame.X);
+	FVector2D RightComponent = FVector2D(ForwardComponent.Y, -ForwardComponent.X) * MovementDeltaThisFrame.Y;
 	
+	FVector2D DirCorrectedDelta = ForwardComponent + RightComponent; // + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
+	
+	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: X: %f, Y: %f\nMontageTime: %f"), MovementDeltaThisFrame.X, MovementDeltaThisFrame.Y, mainCharacter->Animator->GetMontageTime());
+	if(mainCharacter->Animator->GetMontageTime() > 0)
+	{
+		MoveCharacter(DeltaTime, 1.0f, true, mainCharacter->fallingGravityAmount, false, DirCorrectedDelta);
+	}
+	
+	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
+
+
+	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime());
 }
 
 void StateMC_LockedOnSwordSwing::AnimEnd()

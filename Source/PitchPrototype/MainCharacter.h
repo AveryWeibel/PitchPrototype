@@ -164,6 +164,9 @@ public:
 	UPROPERTY(Category = Combat, EditAnywhere)
 		float WeaponSheatheSpeed;
 
+	UPROPERTY(Category = Combat, EditAnywhere)
+		UCurveVector* AttackVectorCurve;
+
 	UPROPERTY()
 		float DodgeEndedTime = 0;
 

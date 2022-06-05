@@ -114,7 +114,7 @@ void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float Mov
 		DirVector = (RightDirectionVector + ForwardDirectionVector);
 	}
 	
-	if(InputValues.X != 0 || InputValues.Y != 0)
+	if((InputValues.X != 0 || InputValues.Y != 0) || DirVector == OverrideDirection)
 	{
 		// UE_LOG(Log171MainCharState, Log, TEXT("Damping Value: %f"),
 		// chestSweepResult.Normal.Z
