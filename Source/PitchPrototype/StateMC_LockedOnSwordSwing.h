@@ -34,5 +34,5 @@ protected:
 	//Internal variables
 	bool hitThisAttack = false;
 	bool hitboxActive = false;
-	float MovementValueLastFrame = 0;
+	FVector MovementValueLastFrame = FVector::ZeroVector;
 };

@@ -6,6 +6,7 @@
 #include "StateMC_LockedOnSwordSwing.h"
 #include "MainCharacter.h"
 #include "CustomDefines.h"
+#include "Curves/CurveVector.h"
 
 DEFINE_LOG_CATEGORY(Log171Attack);
 
@@ -59,18 +60,19 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	MoveCameraLocked(DeltaTime, dirToTarget);
 
 	//Calculate movement this frame for attack
-	float MovementDeltaThisFrame = mainCharacter->AttackVectorCurve->GetFloatValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame;
+	FVector MovementDeltaThisFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame;
+	FVector2D DirCorrectedDelta = FVector2D(dirToTarget.ForwardVector * MovementDeltaThisFrame.X) + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
 	
-	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: %f\nMontageTime: %f"), MovementDeltaThisFrame, mainCharacter->Animator->GetMontageTime());
+	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: X: %f, Y: %f\nMontageTime: %f"), MovementDeltaThisFrame.X, MovementDeltaThisFrame.Y, mainCharacter->Animator->GetMontageTime());
 	if(mainCharacter->Animator->GetMontageTime() > 0)
 	{
-		MoveCharacter(DeltaTime, MovementDeltaThisFrame, true, mainCharacter->fallingGravityAmount, false,  FVector2D(dirToTarget));
+		MoveCharacter(DeltaTime, 1.0f, true, mainCharacter->fallingGravityAmount, false, DirCorrectedDelta);
 	}
 	
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
 
 
-	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetFloatValue(mainCharacter->Animator->GetMontageTime());
+	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime());
 }
 
 void StateMC_LockedOnSwordSwing::AnimEnd()
