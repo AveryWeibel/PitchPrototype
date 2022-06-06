@@ -39,6 +39,7 @@ protected:
 	virtual void Interact() override;
 	virtual void Sheathe() override;
 	virtual void AnimEnd() override;
+	virtual void EnterWater() override;
 
 	virtual void EndOverlapAI();
 
