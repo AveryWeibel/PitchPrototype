@@ -37,4 +37,5 @@ protected:
 	float StoredStepHeight;
 	float TargetFloatHeight;
 	float BouyantGravity = 0;
+	float StoredMaxCameraPitch = 0;
 };

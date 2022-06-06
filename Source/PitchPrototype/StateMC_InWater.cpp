@@ -30,6 +30,10 @@ void StateMC_InWater::Start()
 	mainCharacter->StepUpHeight -= 10;
 
 	TargetFloatHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
+
+	StoredMaxCameraPitch = mainCharacter->MaxPitchvalue();
+	mainCharacter->SetMaxPitchvalue(-10);
+	mainCharacter->cameraBoom->ProbeChannel = ECC_Visibility;
 }
 
 void StateMC_InWater::Execute(float DeltaTime)
@@ -52,6 +56,8 @@ void StateMC_InWater::Execute(float DeltaTime)
 	if(IsGrounded)
 	{
 		mainCharacter->StepUpHeight = StoredStepHeight;
+		mainCharacter->SetMaxPitchvalue(StoredMaxCameraPitch);
+		mainCharacter->cameraBoom->ProbeChannel = ECC_Camera;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
@@ -86,6 +92,8 @@ void StateMC_InWater::BeginOverlapFeet(AActor& OtherActor)
 		State_MainCharacter::BeginOverlapFeet( OtherActor);
 		UE_LOG(Log171InWater, Log, TEXT("Enter Landscape from Water"));
 		mainCharacter->StepUpHeight = StoredStepHeight;
+		mainCharacter->SetMaxPitchvalue(StoredMaxCameraPitch);
+		mainCharacter->cameraBoom->ProbeChannel = ECC_Camera;
 		RequestStateChange(TidesStateName::NonCombatMove);
 	}
 }
