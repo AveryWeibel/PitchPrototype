@@ -20,6 +20,8 @@ VAR happiness = 50
 VAR fear = 50
 VAR anger = 50
 
+VAR startingKnot = "guardcaptainintro"
+
 #destinationKnots 
 VAR enemyHitsKnot = ""
 VAR playerHitsKnot = ""
