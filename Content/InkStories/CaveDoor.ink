@@ -1,5 +1,6 @@
 VAR canReadRunes = 0
 VAR doorOpen = 0
+VAR startingKnot = "readdoor"
 
 -> readdoor
 
