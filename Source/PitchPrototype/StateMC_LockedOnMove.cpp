@@ -118,7 +118,15 @@ void StateMC_LockedOnMove::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, FaceDirection, mainCharacter->modelTurningRate);
 
 	SweepForInteractables();
-}
+
+	if(!IsGrounded)
+	{
+		UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedObject->GetName());
+		Cast<IInteractableInterface>(mainCharacter->lockedObject)->Execute_PlayerUnLock(mainCharacter->lockedObject);
+		mainCharacter->lockedObject = nullptr;
+		RequestStateChange(TidesStateName::NonCombatInAir);
+	}
+} //End Execute
 
 void StateMC_LockedOnMove::MoveForward(float Value)
 {
@@ -176,6 +184,8 @@ void StateMC_LockedOnMove::Die()
 	State_MainCharacter::Die();
 	RequestStateChange(TidesStateName::Dead);
 }
+
+
 
 void StateMC_LockedOnMove::Parry()
 {
@@ -252,6 +262,17 @@ void StateMC_LockedOnMove::AnimEnd()
 {
 	State_MainCharacter::AnimEnd();
 	
+}
+
+void StateMC_LockedOnMove::EnterWater()
+{
+	State_MainCharacter::EnterWater();
+	UE_LOG(Log171LockedOnMove, Log, TEXT("Locked off of [%s]"), *mainCharacter->lockedObject->GetName());
+	Cast<IInteractableInterface>(mainCharacter->lockedObject)->Execute_PlayerUnLock(mainCharacter->lockedObject);
+	//*cameraTurnVector = mainCharacter->cameraBoom->GetComponentRotation();
+	mainCharacter->lockedObject = nullptr;
+	
+	RequestStateChange(TidesStateName::InWater);
 }
 
 void StateMC_LockedOnMove::EndOverlapAI()
