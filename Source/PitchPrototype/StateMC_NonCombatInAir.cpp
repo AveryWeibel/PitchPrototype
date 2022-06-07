@@ -45,11 +45,11 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	if(FMath::Abs(gravityAccumulation) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation += mainCharacter->fallingGravityAmount/36;
+		gravityAccumulation += mainCharacter->fallingGravityAmount;
 	}
 	
 	//Move character
-	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  true, gravityAccumulation, true);
+	MoveCharacter(DeltaTime,mainCharacter->jumpDirectionalMultiplier,  false, gravityAccumulation, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

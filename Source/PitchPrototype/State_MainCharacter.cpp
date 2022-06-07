@@ -26,12 +26,12 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 	//Sets HorizontalVector
 	CalculateVelocityHorizontal(DeltaTime, MovementModifier, UseStickMagnitudeForSpeed, OverrideDirection);
 
+	//Apply Gravity
+	ApplyGravity(GravityAmount, DeltaTime);
+
 	//Vertical must be checked after horizontal
 	//Sets VerticalVector
 	CalculateVerticalPosition(DeltaTime, GroundSnap);
-
-	//Apply Gravity
-	ApplyGravity(GravityAmount, DeltaTime);
 	
 	//Translate character
 	*movementVector = FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector);//FMath::Lerp(*movementVector, FVector(HorizontalDirVector->X, HorizontalDirVector->Y, VerticalVector), 1.0f * DeltaTime);
@@ -64,41 +64,46 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool GroundSnap)
 {
-	FVector GroundTraceVerticalOffset = FVector(0, 0, mainCharacter->StepUpHeight);
+	float StartOffset = 15;
+	
+	FVector GroundTraceVerticalOffset = FVector(0, 0, mainCharacter->StepUpHeight + StartOffset);
 	FCollisionShape GroundTraceShape = FCollisionShape::MakeSphere(mainCharacter->bodyCollider->GetScaledCapsuleRadius()/4);
 
 	//Perform ground check
-	const FVector GroundTraceEndLocation = mainCharacter->bodyCollider->GetComponentLocation() - GroundTraceVerticalOffset;
+	FVector GroundTraceStartLocation = mainCharacter->bodyCollider->GetComponentLocation();
+	GroundTraceStartLocation.Z -= (mainCharacter->bodyCollider->GetScaledCapsuleHalfHeight() - StartOffset);
+	
+	const FVector GroundTraceEndLocation = GroundTraceStartLocation - GroundTraceVerticalOffset;
 	if(
-		mainCharacter->GetWorld()->SweepSingleByChannel(
+		mainCharacter->GetWorld()->LineTraceSingleByChannel(
 			groundTraceResult,
-			mainCharacter->bodyCollider->GetComponentLocation(),
+			GroundTraceStartLocation,
 			GroundTraceEndLocation,
-			mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
 			ECC_Vehicle,
-			GroundTraceShape,
 			groundTraceParams
 		)
 	)
 	{
 		//parentStateMachine->SendInput(StateAction::OverlapFeet);
-		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
+		DrawDebugLine(mainCharacter->GetWorld(), GroundTraceStartLocation, GroundTraceEndLocation, FColor::Purple, false, 0.1f);
 		IsGrounded = true;
+
+		//Snap to ground if found
+		if(GroundSnap)
+		{
+			float NewHeight = groundTraceResult.Location.Z + mainCharacter->bodyCollider->GetScaledCapsuleHalfHeight() - StartOffset + groundTraceResult.Distance;
+			mainCharacter->bodyCollider->SetWorldLocation(FVector(groundTraceResult.Location.X, groundTraceResult.Location.Y, NewHeight));
+			UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+		}
+		
 		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
 	}
 	else
 	{
-		DrawDebugSphere(mainCharacter->GetWorld(), GroundTraceEndLocation, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
+		DrawDebugLine(mainCharacter->GetWorld(), GroundTraceStartLocation, GroundTraceEndLocation, FColor::Yellow, false, 0.1f);
 		IsGrounded = false;
 	}
 	//UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
-
-	//Snap to ground if found
-	if(GroundSnap && IsGrounded)
-	{
-		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
-		//UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
-	}
 }
 
 void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection)
@@ -165,7 +170,7 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 {
 	if(RequireInput && InputValues.Size() == 0)
 	{
-		return;
+		//return;
 	}
 	
 	mainCharacter->Mesh->SetWorldRotation(
@@ -190,7 +195,12 @@ void State_MainCharacter::RotateCharacterModel(float DeltaTime, FVector FaceDire
 
 void State_MainCharacter::ApplyGravity(float GravityAmount, float DeltaTime)
 {
-	VerticalVector += GravityAmount;// FMath::Clamp(GravityAmount * DeltaTime, -98.1f, 0.0f);
+	if(IsGrounded)
+	{
+		return;
+	}
+	
+	VerticalVector += GravityAmount * DeltaTime;// FMath::Clamp(GravityAmount * DeltaTime, -98.1f, 0.0f);
 }
 
 void State_MainCharacter::GetRightInput(float Value)
