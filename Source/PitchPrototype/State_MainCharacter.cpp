@@ -84,7 +84,7 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 		//parentStateMachine->SendInput(StateAction::OverlapFeet);
 		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
 		IsGrounded = true;
-		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
+		//UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
 	}
 	else
 	{

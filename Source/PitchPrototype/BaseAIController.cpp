@@ -36,13 +36,13 @@ void ABaseAIController::SetMoveTarget(FVector target)
 
 	if(BehaviorComp->IsRunning())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Behavior Tree Running"))
+		//UE_LOG(LogTemp, Log, TEXT("Behavior Tree Running"))
 	}
 
 	
 	if(BlackboardComp)
 	{
-		UE_LOG(LogTemp, Log, TEXT("CallSetTarget()"));
+		//UE_LOG(LogTemp, Log, TEXT("CallSetTarget()"));
 		BlackboardComp->SetValueAsVector("TargetDest", target);
 	}
 }

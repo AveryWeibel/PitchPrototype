@@ -4,7 +4,7 @@
 #include "DrawDebugHelpers.h"
 
 UFindDialogueCombatLocation::UFindDialogueCombatLocation() {
-	distance = 100.0f;
+	distance = 500.0f;
 	radius = 50.0f;
 }
 
@@ -15,9 +15,11 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 
 	FVector aiLocation = owningChar->GetActorLocation();
 
-	FVector directionAwayFromPlayer = UKismetMathLibrary::GetForwardVector(UKismetMathLibrary::FindLookAtRotation(aiLocation, playerLocation)) * distance * -1;
+	FVector directionAwayFromPlayer = aiLocation - playerLocation;
 
-	FVector target = playerLocation + directionAwayFromPlayer;
+	directionAwayFromPlayer.Normalize();
+
+	FVector target = playerLocation + directionAwayFromPlayer*distance;
 	
 	FCollisionQueryParams queryParams = FCollisionQueryParams::FCollisionQueryParams();
 	//queryParams.bDebugQuery = true;
@@ -32,7 +34,7 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 
 	for (float i = -1.0f; i <= 1.0f; ++i) {
 		for (float j = -1.0f; j <= 1.0f; ++j) {
-			traceCheckVector = (FVector::FVector(i, j, -1.0f)) * distance;
+			traceCheckVector = (FVector::FVector(i, j, -1.0f)) * 750.0f;
 			traceCheckVector += target;
 			hitSuccess = owningChar->GetWorld()->LineTraceSingleByChannel(hitResult, target + (FVector::UpVector * distance / 2.0f), traceCheckVector, ECollisionChannel::ECC_Visibility, queryParams);
 			if (hitSuccess) {
@@ -58,9 +60,10 @@ EBTNodeResult::Type UFindDialogueCombatLocation::ExecuteTask(UBehaviorTreeCompon
 		}
 	}
 
-	DrawDebugDirectionalArrow(owningChar->GetWorld(), target, target + totalOceanOffset, 15.0f, FColor::Purple, false, 3.0f, 0, 5.0f);
 	target += totalOceanOffset;
 	target += totalAirOffset;
+
+	DrawDebugDirectionalArrow(owningChar->GetWorld(), playerLocation, target, 15.0f, FColor::Purple, false, 3.0f, 0, 5.0f);
 
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
 
