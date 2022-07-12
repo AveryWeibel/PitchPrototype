@@ -24,9 +24,9 @@ EBTNodeResult::Type UBTT_SetFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		if (focus) {
 			AActor* pawn = Cast<AActor>(blackboard->GetValueAsObject(focusPawn.SelectedKeyName));
 
-			AIController->SetFocus(pawn, EAIFocusPriority::Default);
+			AIController->SetFocus(pawn, EAIFocusPriority::Gameplay);
 		} else {
-			AIController->ClearFocus(EAIFocusPriority::Default);
+			AIController->ClearFocus(EAIFocusPriority::Gameplay);
 		}
 
 		return EBTNodeResult::Succeeded;
