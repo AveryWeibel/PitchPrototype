@@ -34,6 +34,7 @@ void ABaseAICharacter::BeginPlay()
 		if (temp) {
 			dialogueSystem = temp;
 			UE_LOG(LogTemp, Log, TEXT("dialogue system %s for %s"), *dialogueSystem->GetName(), *this->GetName());
+			break;
 		}
 	}
 
