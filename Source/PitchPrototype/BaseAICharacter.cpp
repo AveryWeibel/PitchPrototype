@@ -54,10 +54,10 @@ void ABaseAICharacter::OnSeePlayer(APawn* Pawn)
 {
 	ABaseAIController* AIController = Cast<ABaseAIController>(GetController());
 	
-	UE_LOG(LogTemp, Log, TEXT("See Player"))
+	//UE_LOG(LogTemp, Log, TEXT("See Player"))
 	if(AIController)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
+		//UE_LOG(LogTemp, Log, TEXT("Valid Controller"))
 		AIController->SetMoveTarget(Pawn->GetActorLocation());
 		//AIController->UpdateState(TidesStateName::AI_NonCombatIdle, Animator);
 	}

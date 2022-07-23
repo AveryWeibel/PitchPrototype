@@ -87,8 +87,6 @@ void UBTT_MaintainDistanceStrafe::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	const float executingTime = owningChar->GetWorld()->GetTimeSeconds() - TaskMemory->taskStartTime;
 
 	FVector direction = owningChar->GetActorRightVector();
-	direction.Normalize();
-	direction.Z = 0;
 	direction *= speed;
 
 	if (!TaskMemory->rightDirection) {
@@ -97,6 +95,8 @@ void UBTT_MaintainDistanceStrafe::TickTask(UBehaviorTreeComponent& OwnerComp, ui
 	
 	//owningChar->GetCharacterMovement()->MoveSmooth(direction, DeltaSeconds);
 	owningChar->GetCharacterMovement()->AddImpulse(direction, true);
+
+	UE_LOG(Log171General, Log, TEXT("Velocity strafing: %s"), *owningChar->GetCharacterMovement()->Velocity.ToString());
 	
 	//UE_LOG(Log171GuardAI, Log, TEXT("Strafe Tick for %f"), executingTime);
 	//UE_LOG(Log171GuardAI, Log, TEXT("vector %f %f %f"), direction.X, direction.Y, direction.Z);

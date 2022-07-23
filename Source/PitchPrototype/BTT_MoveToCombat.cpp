@@ -37,6 +37,8 @@ void UBTT_MoveToCombat::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	owningChar->GetCharacterMovement()->AddImpulse(direction, true);
 
+	//UE_LOG(Log171General, Log, TEXT("Velocity moving away from player: %s"), *owningChar->GetCharacterMovement()->Velocity.ToString());
+
 	//UE_LOG(Log171General, Log, TEXT("current location %f %f %f"), aiLocation.X, aiLocation.Y, aiLocation.Z);
 	//UE_LOG(Log171General, Log, TEXT("target location %f %f %f"), targetLocation.X, targetLocation.Y, targetLocation.Z);
 

@@ -16,7 +16,7 @@ EBTNodeResult::Type UBTT_SetFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 
 	TidesStateName stateName = StaticCast<TidesStateName>(blackboard->GetValueAsEnum(FName::FName(TEXT("ActiveState"))));
 
-	if (stateName != TidesStateName::AI_NonCombatIdle && stateName != TidesStateName::AI_NonCombatPatrol) {
+	if (stateName != TidesStateName::AI_NonCombatIdle) {
 		blackboard->SetValueAsObject(focusPawn.SelectedKeyName, UGameplayStatics::GetPlayerPawn(owningChar->GetWorld(), 0));
 	}
 
@@ -24,9 +24,9 @@ EBTNodeResult::Type UBTT_SetFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		if (focus) {
 			AActor* pawn = Cast<AActor>(blackboard->GetValueAsObject(focusPawn.SelectedKeyName));
 
-			AIController->SetFocus(pawn, EAIFocusPriority::Default);
+			AIController->SetFocus(pawn, EAIFocusPriority::Gameplay);
 		} else {
-			AIController->ClearFocus(EAIFocusPriority::Default);
+			AIController->ClearFocus(EAIFocusPriority::Gameplay);
 		}
 
 		return EBTNodeResult::Succeeded;

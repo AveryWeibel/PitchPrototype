@@ -44,7 +44,7 @@ void State_MainCharacter::MoveCharacter(float DeltaTime, float MovementModifier,
 
 	//PositionLastFrame = mainCharacter->feetCollider->GetComponentLocation();
 
-	UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
+	//UE_LOG(Log171MainCharState, Log, TEXT("Horizontal Movement Speed: %f\nHorizontal Vector: X: %f, Y: %f"), ActualSpeed, HorizontalDirVector->X, HorizontalDirVector->Y);
 	if(VerticalVector > 0.0f)
 	{
 		//UE_LOG(Log171General, Log, TEXT("Vertical Vector: %f"), VerticalVector)
@@ -75,7 +75,7 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 			mainCharacter->bodyCollider->GetComponentLocation(),
 			GroundTraceEndLocation,
 			mainCharacter->bodyCollider->GetComponentRotation().Quaternion(),
-			ECollisionChannel::ECC_WorldStatic,
+			ECC_Vehicle,
 			GroundTraceShape,
 			groundTraceParams
 		)
@@ -84,20 +84,20 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 		//parentStateMachine->SendInput(StateAction::OverlapFeet);
 		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
 		IsGrounded = true;
-		UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
+		//UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
 	}
 	else
 	{
 		DrawDebugSphere(mainCharacter->GetWorld(), GroundTraceEndLocation, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Yellow, false, 0.1f);
 		IsGrounded = false;
 	}
-	UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
+	//UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
 
 	//Snap to ground if found
 	if(GroundSnap && IsGrounded)
 	{
 		mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
-		UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
+		//UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
 	}
 }
 
@@ -293,7 +293,7 @@ void State_MainCharacter::MoveCameraUnLocked(float DeltaTime, float speedMod)
 	//Rotate cameraBoom to face turnvector
 	cameraBoomRotationLerpTarget = mainCharacter->cameraBoom->GetRelativeRotation() + *cameraTurnVector;
 	cameraRotationLerpTarget.Roll = 0;
-	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, -60.0f, 60.0f);
+	cameraBoomRotationLerpTarget.Pitch = FMath::Clamp(cameraBoomRotationLerpTarget.Pitch, mainCharacter->MinPitchValue(), mainCharacter->MaxPitchvalue());
 	//UE_LOG(Log171MainCharState, Log, TEXT("cameraTurnVector: Pitch: %f, Yaw: %f, Roll: %f"), cameraTurnVector->Pitch, cameraTurnVector->Yaw, cameraTurnVector->Roll);
 	
 	mainCharacter->cameraBoom->SetRelativeRotation(FMath::Lerp(mainCharacter->cameraBoom->GetRelativeRotation(), cameraBoomRotationLerpTarget,  FMath::Clamp(mainCharacter->cameraLerpAlpha * DeltaTime, DeltaTime, mainCharacter->cameraLerpAlpha)));	

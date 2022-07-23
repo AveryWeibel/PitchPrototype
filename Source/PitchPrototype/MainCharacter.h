@@ -218,6 +218,32 @@ public:
 		void takeWaterDamage(float damage);
 
 protected:
+	//Used to clamp camera rotation
+	float MinPitchValue_ = -60;
+	float MaxPitchvalue_ = 60;
+public:
+	float MinPitchValue() const
+	{
+		return MinPitchValue_;
+	}
+
+	void SetMinPitchValue(float MinPitchValue)
+	{
+		this->MinPitchValue_ = MinPitchValue;
+	}
+
+	float MaxPitchvalue() const
+	{
+		return MaxPitchvalue_;
+	}
+
+	void SetMaxPitchvalue(float MaxPitchvalue)
+	{
+		this->MaxPitchvalue_ = MaxPitchvalue;
+	}
+
+protected:
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

@@ -20,6 +20,8 @@ VAR happiness = 50
 VAR fear = 50
 VAR anger = 50
 
+VAR startingKnot = "spellcasterintro"
+
 #destinationKnots 
 VAR enemyHitsKnot = ""
 VAR playerHitsKnot = ""
@@ -35,6 +37,7 @@ VAR destinationKnot = ""
 === spellcasterintro ===
 
     = start
+    # function starting_story
     Who are you? What are you doing here?
 
     + [I could ask you the same thing]
