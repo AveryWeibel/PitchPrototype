@@ -35,7 +35,7 @@ void StateMC_Intro::Execute(float DeltaTime)
 		StartIntro();
 	}
 
-	UE_LOG(Log171Intro, Log, TEXT("MontageTime: %f"), mainCharacter->Animator->GetMontageTime());
+	//UE_LOG(Log171Intro, Log, TEXT("MontageTime: %f"), mainCharacter->Animator->GetMontageTime());
 	
 	//UE_LOG(LogTemp, Log, TEXT("Execute State StateMC_Intro"));
 	MoveCameraUnLocked(DeltaTime);
