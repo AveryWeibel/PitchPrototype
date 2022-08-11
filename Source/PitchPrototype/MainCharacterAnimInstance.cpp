@@ -72,6 +72,11 @@ void UMainCharacterAnimInstance::NotifyIntroAnimEnd()
 	}
 }
 
+TEnumAsByte<TidesStateName> UMainCharacterAnimInstance::getCurrentAnimState()
+{
+	return currentAnimState;
+}
+
 FVector UMainCharacterAnimInstance::GetControlDirection()
 {
 	return controlDirection;
