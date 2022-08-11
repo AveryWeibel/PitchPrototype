@@ -17,6 +17,11 @@ TidesStateName UTownGuardAnimInstance::CheckState()
 	return currentAnimState;
 }
 
+void UTownGuardAnimInstance::SetState(TidesStateName state)
+{
+	currentAnimState = state;
+}
+
 void UTownGuardAnimInstance::RecieveAnimEndNotif()
 {
 	Cast<ABaseAICharacter>(OwningPawn)->RecieveAnimEnd();
