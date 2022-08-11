@@ -27,6 +27,9 @@ public:
 		TidesStateName CheckState();
 
 	UFUNCTION(BlueprintCallable)
+		void SetState(TidesStateName state);
+
+	UFUNCTION(BlueprintCallable)
 		void RecieveAnimEndNotif();
 
 	UFUNCTION(BlueprintCallable)

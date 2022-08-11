@@ -46,6 +46,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 			RequestStateChange(TidesStateName::LockedOnTakeHit);
 			hitThisAttack = true;
 			hitAI->Animator->ParrySound();
+			hitAI->Animator->SetState(TidesStateName::SwordParry);
 		} else if (hitAI->canDodge && Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatStrafe) {
 			hitAI->Dodge();
 			hitThisAttack = true;
