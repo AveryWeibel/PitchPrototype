@@ -27,7 +27,8 @@ enum TidesStateName {
 	AI_ParryStun,
 	AI_Dodge,
 	AI_CombatDialogueWait,
-	AI_Dead
+	AI_Dead,
+	SwordParry
 };
 
 
