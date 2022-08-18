@@ -46,6 +46,7 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 			RequestStateChange(TidesStateName::LockedOnTakeHit);
 			hitThisAttack = true;
 			hitAI->Animator->ParrySound();
+			hitAI->Animator->SetState(TidesStateName::SwordParry);
 		} else if (hitAI->canDodge && Cast<ABaseAIController>(hitAI->GetController())->GetState() == TidesStateName::AI_CombatStrafe) {
 			hitAI->Dodge();
 			hitThisAttack = true;
@@ -59,21 +60,22 @@ void StateMC_LockedOnSwordSwing::Execute(float DeltaTime)
 	dirToTarget.Z = 0;
 	MoveCameraLocked(DeltaTime, dirToTarget);
 
-	//Calculate movement this frame for attack
-	FVector2D MovementDeltaThisFrame = FVector2D(mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame);
-	FVector2D ForwardComponent = FVector2D(dirToTarget * MovementDeltaThisFrame.X);
-	FVector2D RightComponent = FVector2D(ForwardComponent.Y, -ForwardComponent.X) * MovementDeltaThisFrame.Y;
-	
-	FVector2D DirCorrectedDelta = ForwardComponent + RightComponent; // + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
-	
-	UE_LOG(Log171Attack, Log, TEXT("MovementDelta: X: %f, Y: %f\nMontageTime: %f"), MovementDeltaThisFrame.X, MovementDeltaThisFrame.Y, mainCharacter->Animator->GetMontageTime());
-	if(mainCharacter->Animator->GetMontageTime() > 0)
-	{
-		MoveCharacter(DeltaTime, 1.0f, true, mainCharacter->fallingGravityAmount, false, DirCorrectedDelta);
-	}
-	
 	RotateCharacterModel(DeltaTime, dirToTarget, mainCharacter->attackTrackingIntensity, false);
 
+	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime());
+
+	//Calculate movement this frame for attack
+	//FVector2D MovementDeltaThisFrame = FVector2D(mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime()) - MovementValueLastFrame);
+	FVector2D ForwardComponent = FVector2D(dirToTarget);
+	//FVector2D RightComponent = FVector2D(ForwardComponent.Y, -ForwardComponent.X) * MovementDeltaThisFrame.Y;
+	
+	//FVector2D DirCorrectedDelta = ForwardComponent; //+ RightComponent; + FVector2D(dirToTarget.RightVector * MovementDeltaThisFrame.Y);
+	
+	//UE_LOG(Log171Attack, Log, TEXT("MovementDelta: X: %f, Y: %f\nMontageTime: %f"), MovementDeltaThisFrame.X, MovementDeltaThisFrame.Y, mainCharacter->Animator->GetMontageTime());
+	if(mainCharacter->Animator->GetMontageTime() > 0)
+	{
+		MoveCharacter(DeltaTime, MovementValueLastFrame.X, true, mainCharacter->fallingGravityAmount, false, ForwardComponent);
+	}
 
 	MovementValueLastFrame = mainCharacter->AttackVectorCurve->GetVectorValue(mainCharacter->Animator->GetMontageTime());
 }

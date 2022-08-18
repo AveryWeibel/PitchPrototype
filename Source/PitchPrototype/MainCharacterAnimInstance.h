@@ -71,6 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void NotifyIntroAnimEnd();
 
+	UFUNCTION(BlueprintCallable)
+		TEnumAsByte<TidesStateName> getCurrentAnimState();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation Settings")
 		EAnimationType CurrentAnimation;
