@@ -56,7 +56,9 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, 1, true, mainCharacter->risingGravityAmount, true);
+	bool bSnapToGround = JumpElapsedTime > MinJumpStateTime;
+	
+	MoveCharacter(DeltaTime, 1, bSnapToGround, mainCharacter->risingGravityAmount, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

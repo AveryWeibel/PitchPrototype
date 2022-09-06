@@ -45,7 +45,7 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 
 	if(FMath::Abs(gravityAccumulation) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation += mainCharacter->fallingGravityAmount/36;
+		gravityAccumulation += mainCharacter->fallingGravityAmount * DeltaTime;
 	}
 	
 	//Move character

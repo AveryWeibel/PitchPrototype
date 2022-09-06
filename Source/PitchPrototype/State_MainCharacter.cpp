@@ -85,6 +85,10 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 		DrawDebugSphere(mainCharacter->GetWorld(), groundTraceResult.Location, GroundTraceShape.GetCapsuleRadius(), 20, FColor::Purple, false, 0.1f);
 		VerticalVector = FMath::Clamp(VerticalVector,0.0f, VerticalVector);
 		IsGrounded = true;
+		if(GroundSnap)
+		{
+			mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset - FVector(0, 0, GroundTraceShape.GetSphereRadius()));
+		}
 		//UE_LOG(Log171MainCharState, Log, TEXT("GroundTrace Hit: %s"), *groundTraceResult.Actor->GetName())
 	}
 	else
@@ -95,11 +99,9 @@ void State_MainCharacter::CalculateVerticalPosition(float DeltaTime, bool Ground
 	//UE_LOG(Log171MainCharState, Log, TEXT("IsGrounded: %s"), IsGrounded ? TEXT("True") : TEXT("False"));
 
 	//Snap to ground if found
-	if(GroundSnap && IsGrounded)
-	{
+
 		//mainCharacter->bodyCollider->SetWorldLocation(groundTraceResult.Location + GroundTraceVerticalOffset);
 		//UE_LOG(Log171MainCharState, Log, TEXT("Snapped to: X:%f Y:%f Z:%f"), mainCharacter->bodyCollider->GetComponentLocation().X, mainCharacter->bodyCollider->GetComponentLocation().Y, mainCharacter->bodyCollider->GetComponentLocation().Z);
-	}
 }
 
 void State_MainCharacter::CalculateVelocityHorizontal(float DeltaTime, float MovementModifier, bool UseStickMagnitudeForSpeed, FVector2D OverrideDirection)
