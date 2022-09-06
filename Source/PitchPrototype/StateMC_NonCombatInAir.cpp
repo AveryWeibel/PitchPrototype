@@ -19,14 +19,13 @@ StateMC_NonCombatInAir::~StateMC_NonCombatInAir()
 void StateMC_NonCombatInAir::Start()
 {
 	UE_LOG(Log171InAir, Log, TEXT("Enter State NonCombatInAir"));
-	gravityAccumulation = 0;
 	JumpDirMultiplierAlpha = 0;
+	gravityAccumulation = 0;
 
 	//Set Ground Trace Params
 	if(mainCharacter)
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
-		//GroundTraceResponseParams.DefaultResponseParam.
 	}
 
 	InAirStartHeight = mainCharacter->bodyCollider->GetComponentLocation().Z;
@@ -36,16 +35,13 @@ void StateMC_NonCombatInAir::Execute(float DeltaTime)
 {
 	//apply movement inputs for this frame
 	JumpDirMultiplierAlpha = FMath::Lerp(1.0f, mainCharacter->jumpDirectionalMultiplier, FMath::Clamp<float>(mainCharacter->jumpDirMultiplierRampSpeed * DeltaTime, mainCharacter->jumpDirectionalMultiplier, 1));
-	
-	//ApplyGravity();
-	//UE_LOG(Log171General, Log, TEXT("MovementVectorInAir: X: %f Y: %f Z: %f"), movementVector->X, movementVector->Y, movementVector->Z);
 
 	//Rotate model towards the movement vector
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
-
+	
 	if(FMath::Abs(gravityAccumulation) < mainCharacter->maxFallingSpeed)
 	{
-		gravityAccumulation += mainCharacter->fallingGravityAmount/36;
+		gravityAccumulation += mainCharacter->fallingGravityAmount * DeltaTime;
 	}
 	
 	//Move character

@@ -27,6 +27,7 @@ void StateMC_NonCombatJump::Start()
 	{
 		groundTraceParams.AddIgnoredActor(mainCharacter);
 	}
+	
 }
 
 void StateMC_NonCombatJump::Execute(float DeltaTime)
@@ -35,18 +36,21 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	JumpElapsedTime = mainCharacter->GetWorld()->TimeSeconds - JumpStartedTime;
 	
 	//Setup moveVector
-	if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
-	{
-		//upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
-		VerticalVector += mainCharacter->jumpAccel * DeltaTime;
-	}
+	 if (JumpElapsedTime < mainCharacter->MaxJumpAccelTime)
+	 {
+	 	upwardsVelocityAccumulation += mainCharacter->jumpAccel * DeltaTime;
+	 }
+	 else
+	 {
+	 	upwardsVelocityAccumulation += mainCharacter->risingGravityAmount * DeltaTime;
+	 }
+	
 	//Change to inair state once we start falling
-	else if (VerticalVector <= 0) {
-		gravityAccumulation = 0;
-		upwardsVelocityAccumulation = 0;
+	if (upwardsVelocityAccumulation < 0) {
 		UE_LOG(Log171NonCombatJump, Log, TEXT("Jump time: %f"), JumpElapsedTime);
 		JumpElapsedTime = 0;
 		JumpStartedTime = 0;
+		upwardsVelocityAccumulation = 0;
 		RequestStateChange(TidesStateName::NonCombatInAir);
 	}
 
@@ -56,7 +60,9 @@ void StateMC_NonCombatJump::Execute(float DeltaTime)
 	RotateCharacterModel(DeltaTime, mainCharacter->horizontalVelocity, mainCharacter->modelTurningRate);
 	
 	//Apply moveVector
-	MoveCharacter(DeltaTime, 1, true, mainCharacter->risingGravityAmount, true);
+	bool bSnapToGround = JumpElapsedTime > MinJumpStateTime;
+	
+	MoveCharacter(DeltaTime, 1, bSnapToGround, upwardsVelocityAccumulation, true);
 
 	//Move camera
 	MoveCameraUnLocked(DeltaTime);

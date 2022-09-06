@@ -37,4 +37,5 @@ protected:
 	float upwardsVelocityAccumulation = 0;
 	float JumpStartedTime = 0;
 	float JumpElapsedTime = 0;
+	float MinJumpStateTime = 0.5f; // This is used to prevent instantaneous exits from the jumping state so that the player has a chance to get off flat ground
 };
